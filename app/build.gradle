@@ -26,6 +26,17 @@ android {
             lintOptions {
                 disable 'MissingTranslation'
             }
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        // 输出apk名称
+                        def fileName = "rsftp_${defaultConfig.versionName}_${releaseTime()}_default_release.apk"
+                        //noinspection GroovyAssignabilityCheck
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+            }
         }
     }
     // Needed for retrolambda
@@ -58,4 +69,8 @@ android {
 //        exclude 'META-INF/dependencies.txt'
 //        exclude 'META-INF/LGPL2.1'
     }
+}
+
+static def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("GMT+08:00"));
 }
