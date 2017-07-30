@@ -68,6 +68,27 @@
 -dontwarn android.support.v7.**
 -keep class android.support.v7.**{*;}
 
+-dontwarn be.ppareit.**
+-keep class be.ppareit.**{*;}
+
+-dontwarn net.vrallev.**
+-keep class net.vrallev.**{*;}
+
+-dontwarn net.jcip.**
+-keep class net.jcip.**{*;}
+
+-dontwarn org.objectweb.asm.**
+-keep class org.objectweb.asm.**{*;}
+
+-dontwarn lombok.**
+-keep class lombok.**{*;}
+
+-dontwarn com.zwitserloot.cmdreader.**
+-keep class com.zwitserloot.cmdreader.**{*;}
+
+-dontwarn Class50.lombok.**
+-keep class Class50.lombok.**{*;}
+
 #讯飞语音
 -dontwarn com.iflytek.**
 -keep class com.iflytek.**{*;}
