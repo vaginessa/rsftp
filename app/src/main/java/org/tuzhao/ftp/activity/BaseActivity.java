@@ -1,5 +1,6 @@
 package org.tuzhao.ftp.activity;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 
 import com.umeng.analytics.MobclickAgent;
@@ -20,6 +21,10 @@ public class BaseActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+    }
+
+    public Activity getActivity() {
+        return this;
     }
 
 }

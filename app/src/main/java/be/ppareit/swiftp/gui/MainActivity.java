@@ -20,12 +20,14 @@
 package be.ppareit.swiftp.gui;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,8 +39,10 @@ import net.vrallev.android.cat.Cat;
 import org.tuzhao.ftp.BuildConfig;
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.activity.BaseActivity;
+import org.tuzhao.ftp.util.WeakRunnable;
 
 import be.ppareit.swiftp.App;
+import be.ppareit.swiftp.FsService;
 import be.ppareit.swiftp.FsSettings;
 
 /**
@@ -133,4 +137,32 @@ public class MainActivity extends BaseActivity{
 
         return true;
     }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog ad = new AlertDialog.Builder(getActivity())
+                             .setTitle(R.string.exit_title)
+                             .setMessage(R.string.exit_msg)
+                             .setPositiveButton(R.string.submit, (dialogInterface, i) -> {
+                                 getActivity().sendBroadcast(new Intent(FsService.ACTION_STOP_FTPSERVER));
+                                 getActivity().finish();
+                                 new Handler().postDelayed(new ExitRunnable(getActivity()), 1000);
+                             })
+                             .setNegativeButton(R.string.cancel, null)
+                             .create();
+        ad.show();
+    }
+
+    private static class ExitRunnable extends WeakRunnable<Activity> {
+
+        ExitRunnable(Activity context) {
+            super(context);
+        }
+
+        @Override
+        public void weakRun(Activity context) {
+            android.os.Process.killProcess(android.os.Process.myPid());
+        }
+    }
+
 }
