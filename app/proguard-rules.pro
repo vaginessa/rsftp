@@ -21,11 +21,10 @@
    public <init> (org.json.JSONObject);
 }
 
--keep public class com.myebox.stationebox.R$*{
+-keep public class org.tuzhao.ftp.R$*{
    public static final int *;
    public static final String *;
 }
-
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);

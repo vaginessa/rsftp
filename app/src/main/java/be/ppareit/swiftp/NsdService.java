@@ -32,6 +32,8 @@ import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
+import org.tuzhao.ftp.R;
+
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class NsdService extends Service {
     private static final String TAG = NsdService.class.getSimpleName();

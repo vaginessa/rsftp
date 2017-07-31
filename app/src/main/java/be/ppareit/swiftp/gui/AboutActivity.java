@@ -5,20 +5,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import be.ppareit.swiftp.BuildConfig;
+import org.tuzhao.ftp.BuildConfig;
+import org.tuzhao.ftp.R;
+import org.tuzhao.ftp.activity.BaseActivity;
+
 import be.ppareit.swiftp.FsSettings;
-import be.ppareit.swiftp.R;
 
-/**
- * Created by ppareit on 5/02/17.
- */
 
-public class AboutActivity extends AppCompatActivity {
-
+public class AboutActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

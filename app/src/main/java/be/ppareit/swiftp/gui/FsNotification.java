@@ -31,11 +31,12 @@ import android.os.Build.VERSION_CODES;
 
 import net.vrallev.android.cat.Cat;
 
+import org.tuzhao.ftp.R;
+
 import java.net.InetAddress;
 
 import be.ppareit.swiftp.FsService;
 import be.ppareit.swiftp.FsSettings;
-import be.ppareit.swiftp.R;
 
 public class FsNotification extends BroadcastReceiver {
 

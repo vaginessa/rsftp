@@ -27,7 +27,6 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -35,16 +34,18 @@ import android.widget.Toast;
 
 import net.vrallev.android.cat.Cat;
 
+import org.tuzhao.ftp.BuildConfig;
+import org.tuzhao.ftp.R;
+import org.tuzhao.ftp.activity.BaseActivity;
+
 import be.ppareit.swiftp.App;
-import be.ppareit.swiftp.BuildConfig;
 import be.ppareit.swiftp.FsSettings;
-import be.ppareit.swiftp.R;
 
 /**
  * This is the main activity for swiftp, it enables the user to start the server service
  * and allows the users to change the settings.
  */
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends BaseActivity{
 
     final static int PERMISSIONS_REQUEST_CODE = 12;
 

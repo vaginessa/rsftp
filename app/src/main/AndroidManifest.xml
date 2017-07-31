@@ -18,9 +18,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<manifest package="be.ppareit.swiftp"
+<manifest package="org.tuzhao.ftp"
           xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools">
+    >
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -30,25 +30,34 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
-        android:name=".App"
+        android:name="be.ppareit.swiftp.App"
         android:allowBackup="true"
         android:icon="@mipmap/launcher"
         android:label="@string/swiftp_name">
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="597e8a9dcae7e72512000f68"/>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="${CHANNEL_VALUE}"/>
+
         <activity
-            android:name=".gui.MainActivity"
+            android:name="be.ppareit.swiftp.gui.MainActivity"
             android:theme="@style/AppThemeDark">
         </activity>
         <activity
-            android:name=".gui.AboutActivity"
-            android:parentActivityName=".gui.MainActivity"
+            android:name="be.ppareit.swiftp.gui.AboutActivity"
+            android:parentActivityName="be.ppareit.swiftp.gui.MainActivity"
             android:theme="@style/AppThemeDark"/>
 
-        <service android:name=".FsService"/>
+        <service android:name="be.ppareit.swiftp.FsService"/>
 
         <receiver
-            android:name=".gui.FsNotification"
+            android:name="be.ppareit.swiftp.gui.FsNotification"
             android:exported="false">
             <intent-filter>
                 <action android:name="be.ppareit.swiftp.FTPSERVER_STARTED"/>
@@ -56,10 +65,10 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
             </intent-filter>
         </receiver>
 
-        <service android:name=".NsdService"/>
+        <service android:name="be.ppareit.swiftp.NsdService"/>
 
         <receiver
-            android:name=".NsdService$StartStopReceiver"
+            android:name="be.ppareit.swiftp.NsdService$StartStopReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="be.ppareit.swiftp.FTPSERVER_STARTED"/>
@@ -69,24 +78,24 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
 
         <!-- Don't export this receiver in free, this clashes with paid -->
         <receiver
-            android:name=".RequestStartStopReceiver"
+            android:name="be.ppareit.swiftp.RequestStartStopReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="be.ppareit.swiftp.ACTION_START_FTPSERVER"/>
                 <action android:name="be.ppareit.swiftp.ACTION_STOP_FTPSERVER"/>
             </intent-filter>
         </receiver>
-        <receiver android:name=".WifiStateChangeReceiver">
+        <receiver android:name="be.ppareit.swiftp.WifiStateChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.wifi.STATE_CHANGE"/>
             </intent-filter>
         </receiver>
 
-        <service android:name=".WifiStateChangeReceiver$StartServerService"/>
-        <service android:name=".WifiStateChangeReceiver$StopServerService"/>
+        <service android:name="be.ppareit.swiftp.WifiStateChangeReceiver$StartServerService"/>
+        <service android:name="be.ppareit.swiftp.WifiStateChangeReceiver$StopServerService"/>
 
         <receiver
-            android:name=".gui.FsWidgetProvider"
+            android:name="be.ppareit.swiftp.gui.FsWidgetProvider"
             android:exported="false"
             android:icon="@mipmap/launcher"
             android:label="@string/swiftp_name">
@@ -101,11 +110,11 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
                 android:resource="@xml/widget_info"/>
         </receiver>
 
-        <service android:name=".gui.FsWidgetProvider$UpdateService"/>
+        <service android:name="be.ppareit.swiftp.gui.FsWidgetProvider$UpdateService"/>
 
         <!-- Tasker/Locale integration -->
         <activity
-            android:name=".locale.EditActivity"
+            android:name="be.ppareit.swiftp.locale.EditActivity"
             android:exported="true"
             android:icon="@drawable/widget_on"
             android:label="@string/swiftp_name"
@@ -120,11 +129,10 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
         </activity>
 
         <receiver
-            android:name=".locale.FireReceiver"
+            android:name="be.ppareit.swiftp.locale.FireReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING"/>
-            </intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING"/>            </intent-filter>
         </receiver>
 
         <activity

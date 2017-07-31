@@ -46,6 +46,8 @@ import android.widget.Toast;
 
 import net.vrallev.android.cat.Cat;
 
+import org.tuzhao.ftp.R;
+
 import java.io.File;
 import java.net.InetAddress;
 import java.util.List;
@@ -54,7 +56,6 @@ import be.ppareit.android.DynamicMultiSelectListPreference;
 import be.ppareit.swiftp.App;
 import be.ppareit.swiftp.FsService;
 import be.ppareit.swiftp.FsSettings;
-import be.ppareit.swiftp.R;
 
 /**
  * This is the main activity for swiftp, it enables the user to start the server service

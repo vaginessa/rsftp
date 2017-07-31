@@ -30,9 +30,9 @@ import com.twofortyfouram.locale.sdk.client.ui.activity.AbstractPluginActivity;
 
 import net.vrallev.android.cat.Cat;
 
+import org.tuzhao.ftp.R;
+
 import be.ppareit.swiftp.FsSettings;
-import be.ppareit.swiftp.R;
-import be.ppareit.swiftp.Util;
 
 import static be.ppareit.swiftp.locale.SettingsBundleHelper.BUNDLE_BOOLEAN_RUNNING;
 import static be.ppareit.swiftp.locale.SettingsBundleHelper.generateBundle;

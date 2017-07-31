@@ -26,6 +26,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import org.tuzhao.ftp.R;
+
 public class RequestStartStopReceiver extends BroadcastReceiver {
 
     static final String TAG = RequestStartStopReceiver.class.getSimpleName();

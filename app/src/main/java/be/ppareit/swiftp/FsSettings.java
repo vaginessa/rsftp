@@ -26,6 +26,8 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import org.tuzhao.ftp.R;
+
 import java.io.File;
 import java.util.Set;
 import java.util.TreeSet;

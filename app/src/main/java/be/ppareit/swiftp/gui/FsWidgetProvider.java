@@ -31,10 +31,11 @@ import android.widget.RemoteViews;
 
 import net.vrallev.android.cat.Cat;
 
+import org.tuzhao.ftp.R;
+
 import java.net.InetAddress;
 
 import be.ppareit.swiftp.FsService;
-import be.ppareit.swiftp.R;
 
 /**
  * Simple widget for FTP Server.

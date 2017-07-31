@@ -14,36 +14,72 @@ android {
         targetSdkVersion 26
         versionCode 10000
         versionName "1.0.00"
+        // dex突破65535的限制
+        multiDexEnabled true
+        // 默认渠道
+        manifestPlaceholders = [CHANNEL_VALUE: "normal"]
     }
-    productFlavors {
 
+    productFlavors {
+        normal {
+            manifestPlaceholders = [CHANNEL_VALUE: "normal"]
+        }
+
+        a360 {
+            manifestPlaceholders = [CHANNEL_VALUE: "a360"]
+        }
     }
+
     buildTypes {
         release {
             shrinkResources true
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             lintOptions {
                 disable 'MissingTranslation'
             }
-            applicationVariants.all { variant ->
-                variant.outputs.each { output ->
-                    def outputFile = output.outputFile
-                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                        // 输出apk名称
-                        def fileName = "rsftp_${defaultConfig.versionName}_${releaseTime()}_default_release.apk"
-                        //noinspection GroovyAssignabilityCheck
-                        output.outputFile = new File(outputFile.parent, fileName)
-                    }
+            debuggable true
+            jniDebuggable true
+            renderscriptDebuggable true
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            debuggable true
+            jniDebuggable true
+            renderscriptDebuggable true
+            minifyEnabled true
+            zipAlignEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                def v = defaultConfig.versionName;
+                if (buildType.name == 'release') {
+                    v = v + "_release";
+                } else if (buildType.name == 'debug') {
+                    v = v + "_debug";
                 }
+                // 输出apk名称
+                def fileName = "rsftp_${v}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
+                //noinspection GroovyAssignabilityCheck
+                output.outputFile = new File(outputFile.parent, fileName)
             }
         }
     }
+
     // Needed for retrolambda
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    publishNonDefault true
 }
 
 dependencies {
@@ -54,6 +90,7 @@ dependencies {
     compile 'com.android.support:design:26.0.0-alpha1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     provided 'org.projectlombok:lombok:1.16.6'
+    compile 'com.umeng.analytics:analytics:latest.integration'
 }
 
 android {
@@ -72,5 +109,5 @@ android {
 }
 
 static def releaseTime() {
-    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("GMT+08:00"));
+    return new Date().format("yyyy-MM-dd-HH-mm", TimeZone.getTimeZone("GMT+08:00"));
 }
