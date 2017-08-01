@@ -38,6 +38,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="accept_wifi_label">接受 Wi-Fi 连接</string>
     <string name="wakelock_label">保持设备唤醒（最大 CPU 频率）</string>
     <string name="extra_label">其他</string>
+    <string name="experiment_label">实验功能</string>
     <string name="help_label">帮助</string>
     <string name="about_label">关于</string>
     <string name="help_dlg_title">实简FTP 帮助</string>

@@ -47,6 +47,7 @@ import android.widget.Toast;
 import net.vrallev.android.cat.Cat;
 
 import org.tuzhao.ftp.R;
+import org.tuzhao.ftp.activity.ServerActivity;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -244,6 +245,15 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         about.setOnPreferenceClickListener(preference -> {
             startActivity(new Intent(getActivity(), AboutActivity.class));
             return true;
+        });
+
+        Preference experiment = findPref("experiment");
+        experiment.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                startActivity(new Intent(getActivity(), ServerActivity.class));
+                return true;
+            }
         });
 
     }

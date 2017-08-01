@@ -64,6 +64,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="accept_wifi_label">Accept connection from wifi</string>
     <string name="wakelock_label">Keep device awake (full CPU speed)</string>
     <string name="extra_label">Extra</string>
+    <string name="experiment_label">Experiment</string>
     <string name="help_label">Help</string>
     <string name="about_label">About</string>
     <string name="help_dlg_title">FTP Server Help</string>

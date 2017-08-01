@@ -19,8 +19,7 @@ You should have received a copy of the GNU General Public License
 along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
 -->
 <manifest package="org.tuzhao.ftp"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -37,7 +36,6 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
         android:allowBackup="true"
         android:icon="@mipmap/launcher"
         android:label="@string/swiftp_name">
-
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="597e8a9dcae7e72512000f68"/>
@@ -132,11 +130,12 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
             android:name="be.ppareit.swiftp.locale.FireReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING"/>            </intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING"/>
+            </intent-filter>
         </receiver>
 
         <activity
-            android:name="org.tuzhao.ftp.activity.WelcomeActivity"
+            android:name=".activity.WelcomeActivity"
             android:theme="@style/AppThemeFullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -144,6 +143,9 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activity.ServerActivity"
+            android:theme="@style/AppThemeDark"/>
     </application>
 
 </manifest>
