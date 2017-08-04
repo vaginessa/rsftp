@@ -44,10 +44,13 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.vrallev.android.cat.Cat;
 
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.activity.PermissionActivity;
+import org.tuzhao.ftp.util.Umeng;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -79,8 +82,10 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         updateRunningState();
         runningPref.setOnPreferenceChangeListener((preference, newValue) -> {
             if ((Boolean) newValue) {
+                uEvent(Umeng.EVENT_01);
                 startServer();
             } else {
+                uEvent(Umeng.EVENT_02);
                 stopServer();
             }
             return true;
@@ -118,12 +123,14 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
                     R.string.username_validation_error, Toast.LENGTH_LONG).show();
                 return false;
             }
+            uEvent(Umeng.EVENT_03);
             stopServer();
             return true;
         });
 
         mPassWordPref = findPref("password");
         mPassWordPref.setOnPreferenceChangeListener((preference, newValue) -> {
+            uEvent(Umeng.EVENT_04);
             stopServer();
             return true;
         });
@@ -178,6 +185,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
                 return false;
             }
             preference.setSummary(newPortnumString);
+            uEvent(Umeng.EVENT_05);
             stopServer();
             return true;
         });
@@ -204,6 +212,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
                                                }
 
                                                preference.setSummary(path);
+                                               uEvent(Umeng.EVENT_06);
                                                stopServer();
                                            })
                                            .setNegativeButton(R.string.cancel, null)
@@ -221,6 +230,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         ListPreference theme = findPref("theme");
         theme.setSummary(theme.getEntry());
         theme.setOnPreferenceChangeListener((preference, newValue) -> {
+            uEvent(Umeng.EVENT_07);
             theme.setSummary(theme.getEntry());
             getActivity().recreate();
             return true;
@@ -384,6 +394,10 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
     @SuppressWarnings({"unchecked", "deprecation"})
     protected <T extends Preference> T findPref(CharSequence key) {
         return (T) findPreference(key);
+    }
+
+    private void uEvent(String id) {
+        MobclickAgent.onEvent(getActivity(), id);
     }
 
 }

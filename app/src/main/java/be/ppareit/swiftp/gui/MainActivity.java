@@ -33,6 +33,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.umeng.analytics.MobclickAgent;
+
 import org.tuzhao.ftp.BuildConfig;
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.activity.BaseActivity;
@@ -48,7 +50,7 @@ import be.ppareit.swiftp.FsSettings;
  * This is the main activity for RsFTP, it enables the user to start the server service
  * and allows the users to change the settings.
  */
-public class MainActivity extends BaseActivity{
+public class MainActivity extends BaseActivity {
 
     private boolean isNeedCheckAgain;
 
@@ -61,8 +63,8 @@ public class MainActivity extends BaseActivity{
         super.onCreate(savedInstanceState);
 
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, new PreferenceFragment())
-                .commit();
+            .replace(android.R.id.content, new PreferenceFragment())
+            .commit();
 
         permissionCheck();
     }
@@ -97,10 +99,10 @@ public class MainActivity extends BaseActivity{
             String to = "tuzhaocn@gmail.com";
             String subject = "FTP Server feedback";
             String message = "Device: " + Build.MODEL + "\n" +
-                    "Android version: " + VERSION.RELEASE + "-" + VERSION.SDK_INT + "\n" +
-                    "Application: " + BuildConfig.APPLICATION_ID + " (" + BuildConfig.FLAVOR + ")\n" +
-                    "Application version: " + BuildConfig.VERSION_NAME + " - " + BuildConfig.VERSION_CODE + "\n" +
-                    "Feedback: \n_";
+                                 "Android version: " + VERSION.RELEASE + "-" + VERSION.SDK_INT + "\n" +
+                                 "Application: " + BuildConfig.APPLICATION_ID + " (" + BuildConfig.FLAVOR + ")\n" +
+                                 "Application version: " + BuildConfig.VERSION_NAME + " - " + BuildConfig.VERSION_CODE + "\n" +
+                                 "Feedback: \n_";
 
             Intent email = new Intent(Intent.ACTION_SEND);
             email.putExtra(Intent.EXTRA_EMAIL, new String[]{to});
@@ -189,6 +191,7 @@ public class MainActivity extends BaseActivity{
     }
 
     private void appExit() {
+        MobclickAgent.onKillProcess(this);
         getActivity().sendBroadcast(new Intent(FsService.ACTION_STOP_FTPSERVER));
         getActivity().finish();
         new Handler().postDelayed(new ExitRunnable(getActivity()), 1000);

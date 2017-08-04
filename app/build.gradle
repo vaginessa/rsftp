@@ -28,6 +28,14 @@ android {
         a360 {
             manifestPlaceholders = [CHANNEL_VALUE: "a360"]
         }
+
+        xiaomi {
+            manifestPlaceholders = [CHANNEL_VALUE: "xiaomi"]
+        }
+
+        anzhi {
+            manifestPlaceholders = [CHANNEL_VALUE: "anzhi"]
+        }
     }
 
     buildTypes {
