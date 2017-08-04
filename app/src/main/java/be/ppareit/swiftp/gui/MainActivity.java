@@ -36,6 +36,7 @@ import android.view.MenuItem;
 import org.tuzhao.ftp.BuildConfig;
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.activity.BaseActivity;
+import org.tuzhao.ftp.activity.PermissionActivity;
 import org.tuzhao.ftp.util.PermissionUtil;
 import org.tuzhao.ftp.util.System;
 import org.tuzhao.ftp.util.WeakRunnable;
@@ -168,6 +169,12 @@ public class MainActivity extends BaseActivity{
                                      isNeedCheckAgain = true;
                                      dialog.dismiss();
                                      appSetting();
+                                 })
+                                 .setNeutralButton(R.string.permission_bt_detail, (dialog, i) -> {
+                                     isNeedCheckAgain = true;
+                                     dialog.dismiss();
+                                     Intent intent = new Intent(getActivity(), PermissionActivity.class);
+                                     getActivity().startActivity(intent);
                                  })
                                  .setNegativeButton(R.string.permission_bt_exit, (dialog, i) -> {
                                      isNeedCheckAgain = false;

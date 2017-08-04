@@ -47,6 +47,7 @@ import android.widget.Toast;
 import net.vrallev.android.cat.Cat;
 
 import org.tuzhao.ftp.R;
+import org.tuzhao.ftp.activity.PermissionActivity;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -222,6 +223,12 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         theme.setOnPreferenceChangeListener((preference, newValue) -> {
             theme.setSummary(theme.getEntry());
             getActivity().recreate();
+            return true;
+        });
+
+        Preference permission = findPref("permission");
+        permission.setOnPreferenceClickListener(preference -> {
+            startActivity(new Intent(getActivity(), PermissionActivity.class));
             return true;
         });
 

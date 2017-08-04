@@ -64,6 +64,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="accept_wifi_label">Accept connection from wifi</string>
     <string name="wakelock_label">Keep device awake (full CPU speed)</string>
     <string name="extra_label">Extra</string>
+    <string name="permission_label">Permission Explain</string>
     <string name="help_label">Help</string>
     <string name="about_label">About</string>
     <string name="help_dlg_title">FTP Server Help</string>
@@ -166,8 +167,30 @@ If you have any ideas or suggestions that you can send email to me.\n\n
 
     <string name="permission_bt_exit">Exit App</string>
     <string name="permission_bt_set">Setting</string>
+    <string name="permission_bt_detail">Explain</string>
 
     <string name="open_error_mail">can not open Mail app!</string>
     <string name="open_error_setting">can not open Setting  interface!</string>
+
+    <string name="permission_explain">
+        1.READ_EXTERNAL_STORAGE\n
+        read file for FTP Service.\n\n
+        2.WRITE_EXTERNAL_STORAGE\n
+        write file from other devices for FTP Service.\n\n
+        3.INTERNET\n
+        umeng service of application statistical.\n
+        FTP Service need internet to communicate with other devices.\n\n
+        4.ACCESS_NETWORK_STATE\n
+        umeng service of application statistical.\n
+        if do not have network we should not  start service.\n\n
+        5.ACCESS_WIFI_STATE\n
+        umeng service of application statistical.\n\n
+        6.WAKE_LOCK\n
+        keep the screen bright .\n\n
+        7.CHANGE_WIFI_MULTICAST_STATE\n
+        receive wifi broadcast.\n\n
+        8.READ_PHONE_STATE \n
+        umeng service of application statistical.\n
+    </string>
 
 </resources>

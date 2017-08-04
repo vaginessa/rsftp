@@ -34,8 +34,8 @@ public final class PermissionUtil {
                 String[] permissions = pi.requestedPermissions;
                 if (permissions != null) {
                     for (String item : permissions) {
+                        log("denied permission: " + item);
                         if (ContextCompat.checkSelfPermission(context, item) != PackageManager.PERMISSION_GRANTED) {
-                            log("denied permission: " + item);
                             list.add(item);
                         }
                     }

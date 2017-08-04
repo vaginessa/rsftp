@@ -106,4 +106,27 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="permission_bt_set">设置</string>
     <string name="permission_bt_exit">退出</string>
 
+    <string name="permission_explain">
+1.外部存储读权限\n
+FTP服务读文件。\n\n
+2.外部存储写权限\n
+其它设备向FTP服务端写文件。\n\n
+3.网络使用权限\n
+友盟应用统计服务需要。\n
+FTP服务和其它设备通过网络进行交互。\n\n
+4.获取网络状态权限\n
+友盟应用统计服务需要。\n
+FTP服务的启动需要判断当前网络状态。\n\n
+5.获取wifi状态权限\n
+友盟应用统计服务需要。\n\n
+6.WAKE_LOCK权限\n
+FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
+7.CHANGE_WIFI_MULTICAST_STATE权限\n
+接受手机系统发出的wifi广播。\n\n
+8.读取手机状态权限 \n
+友盟应用统计服务需要。\n\n
+    </string>
+    <string name="permission_bt_detail">权限说明</string>
+    <string name="permission_label">权限说明</string>
+
 </resources>
