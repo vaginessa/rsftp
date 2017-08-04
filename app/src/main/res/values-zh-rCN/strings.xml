@@ -128,5 +128,8 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
     </string>
     <string name="permission_bt_detail">权限说明</string>
     <string name="permission_label">权限说明</string>
+    <string name="about_contributor_list">
+        tuzhao\nQQ:406943270\nQQ群:1362290\nMail:tuzhaocn@gmail.com\nhttp://weibo.com/406943270
+    </string>
 
 </resources>

@@ -34,10 +34,12 @@ public final class PermissionUtil {
                 String[] permissions = pi.requestedPermissions;
                 if (permissions != null) {
                     for (String item : permissions) {
-                        log("denied permission: " + item);
+                        String flag = "request";
                         if (ContextCompat.checkSelfPermission(context, item) != PackageManager.PERMISSION_GRANTED) {
+                            flag = "denied";
                             list.add(item);
                         }
+                        log(flag + " permission: " + item);
                     }
                 }
             } catch (Exception e) {
@@ -48,6 +50,7 @@ public final class PermissionUtil {
 
     public void request() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            log("request permission size: " + list.size());
             if (list.size() > 0) {
                 String[] strings = new String[list.size()];
                 for (int i = 0; i < list.size(); i++) {
