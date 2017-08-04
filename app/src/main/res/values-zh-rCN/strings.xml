@@ -98,5 +98,12 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="exit_msg">是否要退出当前应用？\n点击确定将会结束FTP服务。</string>
     <string name="submit">确定</string>
     <string name="cancel">取消</string>
+    <string name="open_error_mail">打开邮箱应用失败！</string>
+    <string name="open_error_setting">打开设置界面失败！</string>
+    <string name="welcome_bottom">\@tuzhao.org</string>
+    <string name="permission_msg">当前应用所有声明的权限需要被允许，%s。如果你不允许所有权限的使用将会导致本应用不能正常运行。</string>
+    <string name="permission_note">权限提示</string>
+    <string name="permission_bt_set">设置</string>
+    <string name="permission_bt_exit">退出</string>
 
 </resources>

@@ -161,5 +161,13 @@ If you have any ideas or suggestions that you can send email to me.\n\n
 
     <string name="submit">Submit</string>
 
+    <string name="permission_note">Permission Note</string>
+    <string name="permission_msg">This app need all permissions granted,%s. If you don\'t give all permissions that will cause this app can not run normally.</string>
+
+    <string name="permission_bt_exit">Exit App</string>
+    <string name="permission_bt_set">Setting</string>
+
+    <string name="open_error_mail">can not open Mail app!</string>
+    <string name="open_error_setting">can not open Setting  interface!</string>
 
 </resources>
