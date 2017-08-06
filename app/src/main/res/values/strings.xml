@@ -140,7 +140,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     </string>
     <string name="about_description_title">Description</string>
     <string name="about_description_text">
-        RsFTP (实简FTP) allows you to run an ftp server on your android device.
+        RsFTP (实简FTP) allows you to run an ftp server on your android device.\nThis project id developed and maintained by myself,so we are limited test models in hand.Please understand that maybe there are some problems in operation.
     </string>
     <string name="about_libraries_title">Libraries</string>
     <string name="about_contributor_title">Contributors</string>
@@ -192,5 +192,13 @@ If you have any ideas or suggestions that you can send email to me.\n\n
         8.READ_PHONE_STATE \n
         umeng service of application statistical.\n
     </string>
+
+    <string name="dialog_fail_start_msg">Start FTP Service failure,do you have connected Wifi or Wired network?We do not support use of mobile data traffic,
+    because computers and mobile phones access each other only in the same LAN.\n\n
+    If you make sure that you have connected Wifi or Wired network,you can contact with me and tell me the details.You can find my contact information in the About interface.
+    </string>
+
+    <string name="wifi_setting">Wifi Setting</string>
+    <string name="wifi_open_error">open wifi setting failure</string>
 
 </resources>

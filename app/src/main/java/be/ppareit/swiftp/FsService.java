@@ -168,7 +168,7 @@ public class FsService extends Service implements Runnable {
     public void run() {
         Log.d(TAG, "Server thread running");
 
-        if (isConnectedToLocalNetwork() == false) {
+        if (!isConnectedToLocalNetwork()) {
             Log.w(TAG, "run: There is no local network, bailing out");
             stopSelf();
             sendBroadcast(new Intent(ACTION_FAILEDTOSTART));
@@ -321,9 +321,12 @@ public class FsService extends Service implements Runnable {
         Context context = App.getAppContext();
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = cm.getActiveNetworkInfo();
-        connected = ni != null
-                && ni.isConnected()
-                && (ni.getType() & (ConnectivityManager.TYPE_WIFI | ConnectivityManager.TYPE_ETHERNET)) != 0;
+        if (null != ni && ni.isConnected()) {
+            int type = ni.getType();
+            if (type == ConnectivityManager.TYPE_WIFI || type == ConnectivityManager.TYPE_ETHERNET) {
+                connected = true;
+            }
+        }
         if (!connected) {
             Log.d(TAG, "isConnectedToLocalNetwork: see if it is an WIFI AP");
             WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);

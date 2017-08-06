@@ -72,7 +72,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="notification_title">FTP Server 正在运行</string>
     <string name="notification_text">服务运行于 %s 端口</string>
 
-    <string name="running_summary_failed_to_get_ip_address">无法检索 URL</string>
+    <string name="running_summary_failed_to_get_ip_address">FTP server 启动失败，无法获取到当前手机IP地址。</string>
     <string name="username_validation_error">用户名至少需要包括一个或更多字符，不允许为空。</string>
     <string name="password_validation_error">密码至少需要包括一个或更多字符，不允许为空。</string>
     <string name="port_validation_error">端口号必须在 1 至 65535 之间。</string>
@@ -88,7 +88,8 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="dark_theme">黑暗主题</string>
     <string name="light_theme">亮白主题</string>
     <string name="mixed_theme">黑白混合主题</string>
-    <string name="about_description_text">实简FTP允许你运行一个FTP服务端在你的android设备上</string>
+    <string name="about_description_text">实简FTP允许你运行一个FTP服务端在你的android设备上。\n本应用由个人开发者进行开发和维护,所以手中的测试机型有限.如果在运行的过程中有任何错误还请你谅解。
+    </string>
     <string name="feedback">发送反馈</string>
     <string name="about">关于</string>
     <string name="autoconnect_summary">当选中的wifi网络连接时自动运行服务</string>
@@ -131,5 +132,10 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
     <string name="about_contributor_list">
         tuzhao\nQQ:406943270\nQQ群:1362290\nMail:tuzhaocn@gmail.com\nhttp://weibo.com/406943270
     </string>
+    <string name="dialog_fail_start_msg">启动FTP服务失败！你是否链接上WIFI或者有线网络？当前不支持使用手机数据流量，因为电脑和手机必须处在同一局域网内才能互相访问。\n\n
+    如果你确定你已经链接上了Wifi或者有线网络，你可以联系我并且告诉我详细的情况，你可以在关于界面找到我的联系方式。
+    </string>
+    <string name="wifi_open_error">打开wifi设置界面失败</string>
+    <string name="wifi_setting">WIFI设置</string>
 
 </resources>
