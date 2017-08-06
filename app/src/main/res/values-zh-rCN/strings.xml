@@ -73,7 +73,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="notification_title">FTP Server 正在运行</string>
     <string name="notification_text">服务运行于 %s 端口</string>
 
-    <string name="running_summary_failed_to_get_ip_address">无法检索 URL</string>
+    <string name="running_summary_failed_to_get_ip_address">FTP server 启动失败，无法获取到当前手机IP地址。</string>
     <string name="username_validation_error">用户名至少需要包括一个或更多字符，不允许为空。</string>
     <string name="password_validation_error">密码至少需要包括一个或更多字符，不允许为空。</string>
     <string name="port_validation_error">端口号必须在 1 至 65535 之间。</string>
@@ -89,7 +89,8 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="dark_theme">黑暗主题</string>
     <string name="light_theme">亮白主题</string>
     <string name="mixed_theme">黑白混合主题</string>
-    <string name="about_description_text">实简FTP允许你运行一个FTP服务端在你的android设备上</string>
+    <string name="about_description_text">实简FTP允许你运行一个FTP服务端在你的android设备上。\n本应用由个人开发者进行开发和维护,所以手中的测试机型有限.如果在运行的过程中有任何错误还请你谅解。
+    </string>
     <string name="feedback">发送反馈</string>
     <string name="about">关于</string>
     <string name="autoconnect_summary">当选中的wifi网络连接时自动运行服务</string>
@@ -99,5 +100,43 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="exit_msg">是否要退出当前应用？\n点击确定将会结束FTP服务。</string>
     <string name="submit">确定</string>
     <string name="cancel">取消</string>
+    <string name="open_error_mail">打开邮箱应用失败！</string>
+    <string name="open_error_setting">打开设置界面失败！</string>
+    <string name="welcome_bottom">\@tuzhao.org</string>
+    <string name="permission_msg">当前应用所有声明的权限需要被允许，%s。如果你不允许所有权限的使用将会导致本应用不能正常运行。</string>
+    <string name="permission_note">权限提示</string>
+    <string name="permission_bt_set">设置</string>
+    <string name="permission_bt_exit">退出</string>
+
+    <string name="permission_explain">
+1.外部存储读权限\n
+FTP服务读文件。\n\n
+2.外部存储写权限\n
+其它设备向FTP服务端写文件。\n\n
+3.网络使用权限\n
+友盟应用统计服务需要。\n
+FTP服务和其它设备通过网络进行交互。\n\n
+4.获取网络状态权限\n
+友盟应用统计服务需要。\n
+FTP服务的启动需要判断当前网络状态。\n\n
+5.获取wifi状态权限\n
+友盟应用统计服务需要。\n\n
+6.WAKE_LOCK权限\n
+FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
+7.CHANGE_WIFI_MULTICAST_STATE权限\n
+接受手机系统发出的wifi广播。\n\n
+8.读取手机状态权限 \n
+友盟应用统计服务需要。\n\n
+    </string>
+    <string name="permission_bt_detail">权限说明</string>
+    <string name="permission_label">权限说明</string>
+    <string name="about_contributor_list">
+        tuzhao\nQQ:406943270\nQQ群:1362290\nMail:tuzhaocn@gmail.com\nhttp://weibo.com/406943270
+    </string>
+    <string name="dialog_fail_start_msg">启动FTP服务失败！你是否链接上WIFI或者有线网络？当前不支持使用手机数据流量，因为电脑和手机必须处在同一局域网内才能互相访问。\n\n
+    如果你确定你已经链接上了Wifi或者有线网络，你可以联系我并且告诉我详细的情况，你可以在关于界面找到我的联系方式。
+    </string>
+    <string name="wifi_open_error">打开wifi设置界面失败</string>
+    <string name="wifi_setting">WIFI设置</string>
 
 </resources>

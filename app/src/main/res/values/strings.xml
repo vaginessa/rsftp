@@ -65,6 +65,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="wakelock_label">Keep device awake (full CPU speed)</string>
     <string name="extra_label">Extra</string>
     <string name="experiment_label">Experiment</string>
+    <string name="permission_label">Permission Explain</string>
     <string name="help_label">Help</string>
     <string name="about_label">About</string>
     <string name="help_dlg_title">FTP Server Help</string>
@@ -140,12 +141,12 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     </string>
     <string name="about_description_title">Description</string>
     <string name="about_description_text">
-        RsFTP (实简FTP) allows you to run an ftp server on your android device.
+        RsFTP (实简FTP) allows you to run an ftp server on your android device.\nThis project id developed and maintained by myself,so we are limited test models in hand.Please understand that maybe there are some problems in operation.
     </string>
     <string name="about_libraries_title">Libraries</string>
     <string name="about_contributor_title">Contributors</string>
-    <string name="about_contributor_list" translatable="false">
-        tuzhao\nQQ:406943270\nMail:tuzhaocn@gmail.com\nhttp://weibo.com/406943270
+    <string name="about_contributor_list">
+        tuzhao\nQQ:406943270\nQQ Group:1362290\nMail:tuzhaocn@gmail.com\nhttp://weibo.com/406943270
     </string>
 
     <string name="app_theme">Theme</string>
@@ -162,5 +163,43 @@ If you have any ideas or suggestions that you can send email to me.\n\n
 
     <string name="submit">Submit</string>
 
+    <string name="permission_note">Permission Note</string>
+    <string name="permission_msg">This app need all permissions granted,%s. If you don\'t give all permissions that will cause this app can not run normally.</string>
+
+    <string name="permission_bt_exit">Exit App</string>
+    <string name="permission_bt_set">Setting</string>
+    <string name="permission_bt_detail">Explain</string>
+
+    <string name="open_error_mail">can not open Mail app!</string>
+    <string name="open_error_setting">can not open Setting  interface!</string>
+
+    <string name="permission_explain">
+        1.READ_EXTERNAL_STORAGE\n
+        read file for FTP Service.\n\n
+        2.WRITE_EXTERNAL_STORAGE\n
+        write file from other devices for FTP Service.\n\n
+        3.INTERNET\n
+        umeng service of application statistical.\n
+        FTP Service need internet to communicate with other devices.\n\n
+        4.ACCESS_NETWORK_STATE\n
+        umeng service of application statistical.\n
+        if do not have network we should not  start service.\n\n
+        5.ACCESS_WIFI_STATE\n
+        umeng service of application statistical.\n\n
+        6.WAKE_LOCK\n
+        keep the screen bright .\n\n
+        7.CHANGE_WIFI_MULTICAST_STATE\n
+        receive wifi broadcast.\n\n
+        8.READ_PHONE_STATE \n
+        umeng service of application statistical.\n
+    </string>
+
+    <string name="dialog_fail_start_msg">Start FTP Service failure,do you have connected Wifi or Wired network?We do not support use of mobile data traffic,
+    because computers and mobile phones access each other only in the same LAN.\n\n
+    If you make sure that you have connected Wifi or Wired network,you can contact with me and tell me the details.You can find my contact information in the About interface.
+    </string>
+
+    <string name="wifi_setting">Wifi Setting</string>
+    <string name="wifi_open_error">open wifi setting failure</string>
 
 </resources>

@@ -39,15 +39,20 @@ import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.TwoStatePreference;
+import android.provider.Settings;
 import android.text.util.Linkify;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.vrallev.android.cat.Cat;
 
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.activity.ServerActivity;
+import org.tuzhao.ftp.activity.PermissionActivity;
+import org.tuzhao.ftp.util.Umeng;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -64,12 +69,15 @@ import be.ppareit.swiftp.FsSettings;
  */
 public class PreferenceFragment extends android.preference.PreferenceFragment implements OnSharedPreferenceChangeListener {
 
+    private static final int MSG_FAIL_START = 0x10;
+
     private EditTextPreference mPassWordPref;
-    private Handler mHandler = new Handler();
+    private Handler mHandler;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        createHandler();
         addPreferencesFromResource(R.xml.preferences);
 
         final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -79,8 +87,10 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         updateRunningState();
         runningPref.setOnPreferenceChangeListener((preference, newValue) -> {
             if ((Boolean) newValue) {
+                uEvent(Umeng.EVENT_01);
                 startServer();
             } else {
+                uEvent(Umeng.EVENT_02);
                 stopServer();
             }
             return true;
@@ -118,12 +128,14 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
                     R.string.username_validation_error, Toast.LENGTH_LONG).show();
                 return false;
             }
+            uEvent(Umeng.EVENT_03);
             stopServer();
             return true;
         });
 
         mPassWordPref = findPref("password");
         mPassWordPref.setOnPreferenceChangeListener((preference, newValue) -> {
+            uEvent(Umeng.EVENT_04);
             stopServer();
             return true;
         });
@@ -178,6 +190,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
                 return false;
             }
             preference.setSummary(newPortnumString);
+            uEvent(Umeng.EVENT_05);
             stopServer();
             return true;
         });
@@ -204,6 +217,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
                                                }
 
                                                preference.setSummary(path);
+                                               uEvent(Umeng.EVENT_06);
                                                stopServer();
                                            })
                                            .setNegativeButton(R.string.cancel, null)
@@ -221,8 +235,15 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         ListPreference theme = findPref("theme");
         theme.setSummary(theme.getEntry());
         theme.setOnPreferenceChangeListener((preference, newValue) -> {
+            uEvent(Umeng.EVENT_07);
             theme.setSummary(theme.getEntry());
             getActivity().recreate();
+            return true;
+        });
+
+        Preference permission = findPref("permission");
+        permission.setOnPreferenceClickListener(preference -> {
+            startActivity(new Intent(getActivity(), PermissionActivity.class));
             return true;
         });
 
@@ -256,6 +277,34 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
             }
         });
 
+    }
+
+    private void createHandler() {
+        mHandler = new Handler(getActivity().getMainLooper(), message -> {
+            switch (message.what) {
+                case MSG_FAIL_START:
+                    showFailStartDialog();
+                    break;
+            }
+            return false;
+        });
+    }
+
+    private void showFailStartDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.exit_title);
+        builder.setMessage(R.string.dialog_fail_start_msg);
+        builder.setPositiveButton(R.string.submit, null);
+        builder.setNegativeButton(R.string.wifi_setting, (dialogInterface, i) -> {
+            try {
+                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), R.string.wifi_open_error, Toast.LENGTH_LONG).show();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     @Override
@@ -357,6 +406,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
             final TwoStatePreference runningPref = findPref("running_switch");
             if (intent.getAction().equals(FsService.ACTION_FAILEDTOSTART)) {
                 runningPref.setChecked(false);
+                mHandler.sendEmptyMessage(MSG_FAIL_START);
                 mHandler.postDelayed(
                     () -> runningPref.setSummary(R.string.running_summary_failed),
                     100);
@@ -387,6 +437,10 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
     @SuppressWarnings({"unchecked", "deprecation"})
     protected <T extends Preference> T findPref(CharSequence key) {
         return (T) findPreference(key);
+    }
+
+    private void uEvent(String id) {
+        MobclickAgent.onEvent(getActivity(), id);
     }
 
 }

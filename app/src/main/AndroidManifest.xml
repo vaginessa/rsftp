@@ -27,7 +27,6 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
@@ -143,9 +142,16 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activity.ServerActivity"
             android:theme="@style/AppThemeDark"/>
+
+        <activity
+            android:name=".activity.PermissionActivity"
+            android:parentActivityName="be.ppareit.swiftp.gui.MainActivity"
+            android:theme="@style/AppThemeDark">
+        </activity>
     </application>
 
 </manifest>
