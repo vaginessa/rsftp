@@ -142,16 +142,20 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activity.ServerActivity"
             android:theme="@style/AppThemeDark"/>
-
         <activity
             android:name=".activity.PermissionActivity"
             android:parentActivityName="be.ppareit.swiftp.gui.MainActivity"
             android:theme="@style/AppThemeDark">
         </activity>
+
+        <service
+            android:name=".service.ServerConnectService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
     </application>
 
 </manifest>

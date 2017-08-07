@@ -7,6 +7,8 @@ import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
 
+import org.tuzhao.ftp.Fragment.SimpleDialogFragment;
+
 /**
  * zhaotu
  * 17-7-31
@@ -39,6 +41,24 @@ public class BaseActivity extends AppCompatActivity {
 
     public void log(String msg) {
         Log.d(this.getClass().getSimpleName(), msg);
+    }
+
+    private SimpleDialogFragment dialogFragment;
+
+    public void showLoadingDialog() {
+        if (dialogFragment == null)
+            dialogFragment = SimpleDialogFragment.newInstance();
+        if (!dialogFragment.isShowing()) {
+            dialogFragment.show(getFragmentManager(), "loadingDialogFragment");
+        }
+    }
+
+    public void dismissLoadingDialog() {
+        if (null != dialogFragment) {
+            if (dialogFragment.isShowing()) {
+                dialogFragment.dismiss();
+            }
+        }
     }
 
 }

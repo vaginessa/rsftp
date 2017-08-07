@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout style="@style/server_add_item_ll">
+
+        <TextView
+            style="@style/server_add_item_tv"
+            android:text="@string/server_add_address"/>
+
+        <EditText
+            android:id="@+id/server_add_address"
+            style="@style/server_add_item_et"
+            android:hint="@string/server_add_address_hint"/>
+    </LinearLayout>
+
+    <LinearLayout style="@style/server_add_item_ll">
+
+        <TextView
+            style="@style/server_add_item_tv"
+            android:text="@string/server_add_port"/>
+
+        <EditText
+            android:id="@+id/server_add_port"
+            style="@style/server_add_item_et"
+            android:hint="@string/server_add_port_hint"/>
+    </LinearLayout>
+
+    <LinearLayout style="@style/server_add_item_ll">
+
+        <TextView
+            style="@style/server_add_item_tv"
+            android:text="@string/server_add_account"/>
+
+        <EditText
+            android:id="@+id/server_add_account"
+            style="@style/server_add_item_et"
+            android:hint="@string/server_add_account_hint"/>
+    </LinearLayout>
+
+    <LinearLayout style="@style/server_add_item_ll">
+
+        <TextView
+            style="@style/server_add_item_tv"
+            android:text="@string/server_add_password"/>
+
+        <EditText
+            android:id="@+id/server_add_pwd"
+            style="@style/server_add_item_et"
+            android:hint="@string/server_add_account_hint"/>
+    </LinearLayout>
+
+    <LinearLayout style="@style/server_add_item_ll">
+
+        <Button
+            android:id="@+id/server_add_cancel"
+            style="@style/server_add_item_bt"
+            android:text="@string/cancel"
+            />
+
+        <Button
+            android:id="@+id/server_add_submit"
+            style="@style/server_add_item_bt"
+            android:text="@string/submit"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>
