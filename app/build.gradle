@@ -36,6 +36,18 @@ android {
         anzhi {
             manifestPlaceholders = [CHANNEL_VALUE: "anzhi"]
         }
+
+        baidu {
+            manifestPlaceholders = [CHANNEL_VALUE: "baidu"]
+        }
+
+        meizu {
+            manifestPlaceholders = [CHANNEL_VALUE: "meizu"]
+        }
+
+        tencent {
+            manifestPlaceholders = [CHANNEL_VALUE: "tencent"]
+        }
     }
 
     buildTypes {
