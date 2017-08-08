@@ -19,7 +19,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <resources>
-    <string name="swiftp_name">实简FTP</string>
+    <string name="swiftp_name">RsFTP</string>
     <string name="running_label">正在运行</string>
     <string name="running_summary_stopped">开始 FTP server</string>
     <string name="running_summary_started">FTP server 运行于 %s 端口</string>
@@ -40,9 +40,9 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="extra_label">其他</string>
     <string name="help_label">帮助</string>
     <string name="about_label">关于</string>
-    <string name="help_dlg_title">实简FTP 帮助</string>
+    <string name="help_dlg_title">RsFTP 帮助</string>
     <string name="help_dlg_message">\
-感谢您使用 实简FTP！\n\n\
+感谢您使用 RsFTP！\n\n\
 \
 此项目允许您在 Android 设备中运行 FTP 服务器，这意味
 着当您开启 FTP 服务的时候任何程序均可访问您设备中的
@@ -88,7 +88,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="dark_theme">黑暗主题</string>
     <string name="light_theme">亮白主题</string>
     <string name="mixed_theme">黑白混合主题</string>
-    <string name="about_description_text">实简FTP允许你运行一个FTP服务端在你的android设备上。\n本应用由个人开发者进行开发和维护,所以手中的测试机型有限.如果在运行的过程中有任何错误还请你谅解。
+    <string name="about_description_text">RsFTP允许你运行一个FTP服务端在你的android设备上。\n本应用由个人开发者进行开发和维护,所以手中的测试机型有限.如果在运行的过程中有任何错误还请你谅解。
     </string>
     <string name="feedback">发送反馈</string>
     <string name="about">关于</string>
