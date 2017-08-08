@@ -130,7 +130,7 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
     <string name="permission_bt_detail">权限说明</string>
     <string name="permission_label">权限说明</string>
     <string name="about_contributor_list">
-        tuzhao\nQQ:406943270\nQQ群:1362290\nMail:tuzhaocn@gmail.com\nhttp://weibo.com/406943270
+        tuzhao\nQQ:406943270\nQQ群:1362290\nMail:tuzhaocn@gmail.com\nhttp://weibo.com/406943270\n\nAnn.(logo design)\nQQ:260512173
     </string>
     <string name="dialog_fail_start_msg">启动FTP服务失败！你是否链接上WIFI或者有线网络？当前不支持使用手机数据流量，因为电脑和手机必须处在同一局域网内才能互相访问。\n\n
     如果你确定你已经链接上了Wifi或者有线网络，你可以联系我并且告诉我详细的情况，你可以在关于界面找到我的联系方式。
