@@ -74,7 +74,9 @@ public class WifiStateChangeReceiver extends BroadcastReceiver {
             if (FsSettings.getAutoConnectList().contains(wifiInfo.getSSID())) {
                 // sleep a short while so the network has time to truly connect
                 Util.sleepIgnoreInterrupt(1000);
-                sendBroadcast(new Intent(FsService.ACTION_START_FTPSERVER));
+                Intent wifi = new Intent(FsService.ACTION_START_FTPSERVER);
+                wifi.setPackage(this.getPackageName());
+                sendBroadcast(wifi);
             }
         }
     }
@@ -97,7 +99,9 @@ public class WifiStateChangeReceiver extends BroadcastReceiver {
             if (netInfo.isConnectedOrConnecting()) return;
 
             Cat.d("Wifi connection disconnected and no longer connecting, stopping the ftp server");
-            sendBroadcast(new Intent(FsService.ACTION_STOP_FTPSERVER));
+            Intent wifi = new Intent(FsService.ACTION_STOP_FTPSERVER);
+            wifi.setPackage(this.getPackageName());
+            sendBroadcast(wifi);
         }
     }
 }

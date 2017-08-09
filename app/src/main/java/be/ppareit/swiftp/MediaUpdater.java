@@ -65,6 +65,7 @@ public enum MediaUpdater {
                     final Context context = App.getAppContext();
                     Uri uri = Uri.parse("file://" + Environment.getExternalStorageDirectory());
                     Intent intent = new Intent(Intent.ACTION_MEDIA_MOUNTED, uri);
+                    intent.setPackage(context.getPackageName());
                     context.sendBroadcast(intent);
                 }
             }, 5000);

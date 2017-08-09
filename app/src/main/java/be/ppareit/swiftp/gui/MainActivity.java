@@ -192,7 +192,9 @@ public class MainActivity extends BaseActivity {
 
     private void appExit() {
         MobclickAgent.onKillProcess(this);
-        getActivity().sendBroadcast(new Intent(FsService.ACTION_STOP_FTPSERVER));
+        Intent intent = new Intent(FsService.ACTION_STOP_FTPSERVER);
+        intent.setPackage(getActivity().getPackageName());
+        getActivity().sendBroadcast(intent);
         getActivity().finish();
         new Handler().postDelayed(new ExitRunnable(getActivity()), 1000);
     }
