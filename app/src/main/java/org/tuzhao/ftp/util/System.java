@@ -37,6 +37,15 @@ public final class System {
         return language.endsWith("zh");
     }
 
+    public static void threadInfo() {
+        Thread thread = Thread.currentThread();
+        long id = thread.getId();
+        String name = thread.getName();
+        int priority = thread.getPriority();
+        ThreadGroup group = thread.getThreadGroup();
+        log("thread info[id: " + id + " name: " + name + " priority: " + priority + " group: " + group + " ]");
+    }
+
     private static void log(String msg) {
         Log.i(TAG, msg);
     }

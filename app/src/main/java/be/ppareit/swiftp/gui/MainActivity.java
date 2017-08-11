@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity {
         receiver = new WifiStateChangeReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-        registerReceiver(receiver, filter);
+        getApplicationContext().registerReceiver(receiver, filter);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (null != receiver)
-            unregisterReceiver(receiver);
+            getApplicationContext().unregisterReceiver(receiver);
     }
 
     @Override
