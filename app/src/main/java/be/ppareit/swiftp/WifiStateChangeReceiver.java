@@ -19,7 +19,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
 
 package be.ppareit.swiftp;
 
-import android.app.IntentService;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -27,13 +27,23 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 
 import net.vrallev.android.cat.Cat;
+
+import org.tuzhao.ftp.util.System;
+import org.tuzhao.ftp.util.WeakRunnable;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Detect if we get on a wifi network and possible start server.
  */
 public class WifiStateChangeReceiver extends BroadcastReceiver {
+
+    private final ExecutorService pool = Executors.newSingleThreadExecutor();
+
     @Override
     public void onReceive(Context context, Intent intent) {
         NetworkInfo info = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
@@ -43,28 +53,28 @@ public class WifiStateChangeReceiver extends BroadcastReceiver {
         }
         if (info.isConnected()) {
             Cat.d("We are connecting to a wifi network");
-            Intent startServerIntent = new Intent(context, StartServerService.class);
-            context.startService(startServerIntent);
+            pool.execute(new StartServerRunnable(context));
         } else {
+            final PendingResult async = goAsync();
             Cat.d("We are disconnected from wifi network");
-            Intent stopServerIntent = new Intent(context, StopServerService.class);
-            context.startService(stopServerIntent);
+            pool.execute(new StopServerRunnable(context, async));
         }
     }
 
-    static public class StartServerService extends IntentService {
+    private static class StartServerRunnable extends WeakRunnable<Context> {
 
-        public StartServerService() {
-            super(StartServerService.class.getSimpleName());
+        StartServerRunnable(Context context) {
+            super(context);
         }
 
         @Override
-        protected void onHandleIntent(Intent intent) {
+        public void weakRun(Context context) {
+            System.threadInfo();
             if (FsService.isRunning()) {
                 Cat.v("We are connecting to a new wifi network on a running server, ignore");
                 return;
             }
-            WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();
             if (wifiInfo == null) {
                 Cat.e("Null wifi info received, bailing");
@@ -74,49 +84,61 @@ public class WifiStateChangeReceiver extends BroadcastReceiver {
             if (FsSettings.getAutoConnectList().contains(wifiInfo.getSSID())) {
                 // sleep a short while so the network has time to truly connect
                 Util.sleepIgnoreInterrupt(1000);
-                sendBroadcast(new Intent(FsService.ACTION_START_FTPSERVER));
+                Intent wifi = new Intent(FsService.ACTION_START_FTPSERVER);
+                wifi.setPackage(context.getPackageName());
+                context.sendBroadcast(wifi);
             }
         }
     }
 
-    static public class StopServerService extends IntentService {
+    private static class StopServerRunnable extends WeakRunnable<Context> {
 
-        public StopServerService() {
-            super(StopServerService.class.getSimpleName());
+        private final String TAG = "StopServerRunnable";
+
+        private final PendingResult async;
+
+        StopServerRunnable(Context context, PendingResult async) {
+            super(context);
+            this.async = async;
         }
 
         @Override
-        protected void onHandleIntent(Intent intent) {
-            if (!FsService.isRunning()) return;
+        public void weakRun(Context context) {
+            System.threadInfo();
+            if (!FsService.isRunning()) {
+                finish();
+                return;
+            }
 
             Util.sleepIgnoreInterrupt(15000);
-            if (!FsService.isRunning()) return;
+            if (!FsService.isRunning()) {
+                finish();
+                return;
+            }
 
-            ConnectivityManager conManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+            ConnectivityManager conManager = (ConnectivityManager) context.getSystemService(Service.CONNECTIVITY_SERVICE);
             NetworkInfo netInfo = conManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-            if (netInfo.isConnectedOrConnecting()) return;
+            if (netInfo.isConnectedOrConnecting()) {
+                finish();
+                return;
+            }
 
             Cat.d("Wifi connection disconnected and no longer connecting, stopping the ftp server");
-            sendBroadcast(new Intent(FsService.ACTION_STOP_FTPSERVER));
+            Intent wifi = new Intent(FsService.ACTION_STOP_FTPSERVER);
+            wifi.setPackage(context.getPackageName());
+            context.sendBroadcast(wifi);
+            finish();
+        }
+
+        private void finish() {
+            try {
+                if (null != async)
+                    async.finish();
+                Log.v(TAG, "goAsync finish");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

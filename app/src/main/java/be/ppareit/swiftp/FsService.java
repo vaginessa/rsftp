@@ -171,7 +171,9 @@ public class FsService extends Service implements Runnable {
         if (!isConnectedToLocalNetwork()) {
             Log.w(TAG, "run: There is no local network, bailing out");
             stopSelf();
-            sendBroadcast(new Intent(ACTION_FAILEDTOSTART));
+            Intent intent = new Intent(ACTION_FAILEDTOSTART);
+            intent.setPackage(this.getPackageName());
+            sendBroadcast(intent);
             return;
         }
 
@@ -181,7 +183,9 @@ public class FsService extends Service implements Runnable {
         } catch (IOException e) {
             Log.w(TAG, "run: Unable to open port, bailing out.");
             stopSelf();
-            sendBroadcast(new Intent(ACTION_FAILEDTOSTART));
+            Intent intent = new Intent(ACTION_FAILEDTOSTART);
+            intent.setPackage(this.getPackageName());
+            sendBroadcast(intent);
             return;
         }
 
@@ -191,7 +195,9 @@ public class FsService extends Service implements Runnable {
 
         // A socket is open now, so the FTP server is started, notify rest of world
         Log.i(TAG, "Ftp Server up and running, broadcasting ACTION_STARTED");
-        sendBroadcast(new Intent(ACTION_STARTED));
+        Intent intent = new Intent(ACTION_STARTED);
+        intent.setPackage(this.getPackageName());
+        sendBroadcast(intent);
 
         while (!shouldExit) {
             if (wifiListener != null) {
@@ -229,7 +235,9 @@ public class FsService extends Service implements Runnable {
         Log.d(TAG, "Exiting cleanly, returning from run()");
 
         stopSelf();
-        sendBroadcast(new Intent(ACTION_STOPPED));
+        Intent stop = new Intent(ACTION_STOPPED);
+        stop.setPackage(this.getPackageName());
+        sendBroadcast(stop);
     }
 
     private void terminateAllSessions() {

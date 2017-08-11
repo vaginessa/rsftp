@@ -343,11 +343,15 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
     }
 
     private void startServer() {
-        getActivity().sendBroadcast(new Intent(FsService.ACTION_START_FTPSERVER));
+        Intent intent = new Intent(FsService.ACTION_START_FTPSERVER);
+        intent.setPackage(getActivity().getPackageName());
+        getActivity().sendBroadcast(intent);
     }
 
     private void stopServer() {
-        getActivity().sendBroadcast(new Intent(FsService.ACTION_STOP_FTPSERVER));
+        Intent intent = new Intent(FsService.ACTION_STOP_FTPSERVER);
+        intent.setPackage(getActivity().getPackageName());
+        getActivity().sendBroadcast(intent);
     }
 
     private void updateLoginInfo() {

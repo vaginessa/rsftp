@@ -23,7 +23,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
@@ -45,6 +47,7 @@ import org.tuzhao.ftp.util.WeakRunnable;
 
 import be.ppareit.swiftp.FsService;
 import be.ppareit.swiftp.FsSettings;
+import be.ppareit.swiftp.WifiStateChangeReceiver;
 
 /**
  * This is the main activity for RsFTP, it enables the user to start the server service
@@ -55,6 +58,7 @@ public class MainActivity extends BaseActivity {
     private boolean isNeedCheckAgain;
 
     private PermissionUtil permissionUtil;
+    private WifiStateChangeReceiver receiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +71,11 @@ public class MainActivity extends BaseActivity {
             .commit();
 
         permissionCheck();
+
+        receiver = new WifiStateChangeReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        getApplicationContext().registerReceiver(receiver, filter);
     }
 
     @Override
@@ -76,6 +85,13 @@ public class MainActivity extends BaseActivity {
         if (isNeedCheckAgain) {
             permissionCheck();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (null != receiver)
+            getApplicationContext().unregisterReceiver(receiver);
     }
 
     @Override
@@ -192,7 +208,9 @@ public class MainActivity extends BaseActivity {
 
     private void appExit() {
         MobclickAgent.onKillProcess(this);
-        getActivity().sendBroadcast(new Intent(FsService.ACTION_STOP_FTPSERVER));
+        Intent intent = new Intent(FsService.ACTION_STOP_FTPSERVER);
+        intent.setPackage(getActivity().getPackageName());
+        getActivity().sendBroadcast(intent);
         getActivity().finish();
         new Handler().postDelayed(new ExitRunnable(getActivity()), 1000);
     }
