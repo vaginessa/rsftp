@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
 
-import org.tuzhao.ftp.Fragment.SimpleDialogFragment;
+import org.tuzhao.ftp.fragment.SimpleDialogFragment;
 
 /**
  * zhaotu

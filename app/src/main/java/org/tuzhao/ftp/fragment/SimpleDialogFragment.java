@@ -1,4 +1,4 @@
-package org.tuzhao.ftp.Fragment;
+package org.tuzhao.ftp.fragment;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;

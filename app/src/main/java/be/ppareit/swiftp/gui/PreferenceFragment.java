@@ -50,8 +50,8 @@ import com.umeng.analytics.MobclickAgent;
 import net.vrallev.android.cat.Cat;
 
 import org.tuzhao.ftp.R;
-import org.tuzhao.ftp.activity.ServerActivity;
 import org.tuzhao.ftp.activity.PermissionActivity;
+import org.tuzhao.ftp.activity.ServerListActivity;
 import org.tuzhao.ftp.util.Umeng;
 
 import java.io.File;
@@ -272,7 +272,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         experiment.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                startActivity(new Intent(getActivity(), ServerActivity.class));
+                startActivity(new Intent(getActivity(), ServerListActivity.class));
                 return true;
             }
         });

@@ -6,14 +6,14 @@ import java.io.Serializable;
  * zhaotu
  * 17-8-7
  */
-public final class ServerAddItem implements Serializable {
+public final class ServerEntity implements Serializable {
 
     private String address;
     private String port;
     private String account;
     private String pwd;
 
-    public ServerAddItem() {
+    public ServerEntity() {
     }
 
     public String getAddress() {
@@ -46,5 +46,15 @@ public final class ServerAddItem implements Serializable {
 
     public void setPwd(String pwd) {
         this.pwd = pwd;
+    }
+
+    @Override
+    public String toString() {
+        return "ServerEntity{" +
+                   "address='" + address + '\'' +
+                   ", port='" + port + '\'' +
+                   ", account='" + account + '\'' +
+                   ", pwd='" + pwd + '\'' +
+                   '}';
     }
 }

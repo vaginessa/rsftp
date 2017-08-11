@@ -1,4 +1,4 @@
-package org.tuzhao.ftp.Fragment;
+package org.tuzhao.ftp.fragment;
 
 import android.app.Dialog;
 import android.app.DialogFragment;

@@ -1,4 +1,4 @@
-package org.tuzhao.ftp.Fragment;
+package org.tuzhao.ftp.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import org.tuzhao.ftp.R;
-import org.tuzhao.ftp.entity.ServerAddItem;
+import org.tuzhao.ftp.entity.ServerEntity;
 
 /**
  * zhaotu
@@ -67,7 +67,7 @@ public class ServerAddFragment extends BaseDialogFragment implements View.OnClic
                 if (checkInput()) {
                     getDialog().dismiss();
                     if (null != listener) {
-                        ServerAddItem server = new ServerAddItem();
+                        ServerEntity server = new ServerEntity();
                         server.setAccount(account);
                         server.setAddress(address);
                         server.setPort(port);
@@ -88,7 +88,7 @@ public class ServerAddFragment extends BaseDialogFragment implements View.OnClic
     }
 
     public interface OnCompleteListener {
-        void onComplete(ServerAddItem server);
+        void onComplete(ServerEntity server);
     }
 
 }

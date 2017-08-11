@@ -9,16 +9,11 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
-import org.tuzhao.ftp.Fragment.ServerAddFragment;
 import org.tuzhao.ftp.R;
-import org.tuzhao.ftp.entity.ServerAddItem;
 import org.tuzhao.ftp.service.ServerConnectService;
 
-public class ServerActivity extends BaseActivity implements ServerAddFragment.OnCompleteListener {
+public class ServerItemActivity extends BaseActivity {
 
     public static final String ACTION_SERVER_CONNECT = "action_server_connect";
     public static final String EXTRA_RESULT = "extra_result";
@@ -26,7 +21,6 @@ public class ServerActivity extends BaseActivity implements ServerAddFragment.On
     private ServerConnectConnection connection;
     private ServerConnectService.ServerConnectBinder binder;
 
-    private ServerAddFragment addFragment;
     private ServerBroadcastReceiver receiver;
 
     @Override
@@ -54,35 +48,6 @@ public class ServerActivity extends BaseActivity implements ServerAddFragment.On
             unbindService(connection);
         if (null != receiver) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_server, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.server_add) {
-            if (null == addFragment) {
-                addFragment = ServerAddFragment.newInstance();
-                addFragment.setOnCompleteListener(this);
-            }
-            if (!addFragment.isShowing()) {
-                addFragment.show(getFragmentManager(), "ServerAddFragment");
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public void onComplete(ServerAddItem server) {
-        if (null != binder) {
-            showLoadingDialog();
-            binder.connect(server);
         }
     }
 
@@ -117,7 +82,7 @@ public class ServerActivity extends BaseActivity implements ServerAddFragment.On
     }
 
     public static void sendConnectResult(Context context, boolean result) {
-        Intent intent = new Intent(ServerActivity.ACTION_SERVER_CONNECT);
+        Intent intent = new Intent(ServerItemActivity.ACTION_SERVER_CONNECT);
         intent.putExtra(EXTRA_RESULT, result);
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(context);
         manager.sendBroadcast(intent);

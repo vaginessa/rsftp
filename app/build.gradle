@@ -104,7 +104,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile group: 'commons-net', name: 'commons-net', version: '3.6'
+    compile 'commons-net:commons-net:3.6'
     compile 'net.vrallev.android:cat:1.0.2'
     compile 'com.twofortyfouram:android-plugin-client-sdk-for-locale:4.0.2'
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
@@ -112,6 +112,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.umeng.analytics:analytics:latest.integration'
     provided 'org.projectlombok:lombok:1.16.6'
+    compile 'junit:junit:4.12'
 }
 
 android {

@@ -7,8 +7,8 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 
-import org.tuzhao.ftp.activity.ServerActivity;
-import org.tuzhao.ftp.entity.ServerAddItem;
+import org.tuzhao.ftp.activity.ServerItemActivity;
+import org.tuzhao.ftp.entity.ServerEntity;
 import org.tuzhao.ftp.util.ServerClient;
 
 import java.util.concurrent.ExecutorService;
@@ -35,7 +35,7 @@ public class ServerConnectService extends Service {
                 case MSG_CONNECT:
                     boolean result = (boolean) message.obj;
                     if (!result) client = null;
-                    ServerActivity.sendConnectResult(getService(), result);
+                    ServerItemActivity.sendConnectResult(getService(), result);
                     break;
             }
             return true;
@@ -53,7 +53,7 @@ public class ServerConnectService extends Service {
     }
 
     public class ServerConnectBinder extends Binder {
-        public void connect(ServerAddItem server) {
+        public void connect(ServerEntity server) {
             getService().connect(server);
         }
     }
@@ -62,7 +62,7 @@ public class ServerConnectService extends Service {
         return this;
     }
 
-    private void connect(ServerAddItem server) {
+    private void connect(ServerEntity server) {
         RunnableConnect runnable = new RunnableConnect(handler, server);
         client = runnable.getServerClient();
         executor.execute(runnable);
@@ -71,10 +71,10 @@ public class ServerConnectService extends Service {
     private static class RunnableConnect implements Runnable {
 
         private Handler handler;
-        private ServerAddItem server;
+        private ServerEntity server;
         private ServerClient client;
 
-        RunnableConnect(Handler handler, ServerAddItem server) {
+        RunnableConnect(Handler handler, ServerEntity server) {
             this.handler = handler;
             this.server = server;
             this.client = new ServerClient();

@@ -34,7 +34,8 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
         android:name="be.ppareit.swiftp.App"
         android:allowBackup="true"
         android:icon="@mipmap/launcher"
-        android:label="@string/swiftp_name">
+        android:label="@string/swiftp_name"
+        android:theme="@style/AppThemeDark">
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="597e8a9dcae7e72512000f68"/>
@@ -138,7 +139,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.ServerActivity"
+            android:name=".activity.ServerItemActivity"
             android:theme="@style/AppThemeDark"/>
         <activity
             android:name=".activity.PermissionActivity"
@@ -151,6 +152,9 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
             android:enabled="true"
             android:exported="true">
         </service>
+
+        <activity android:name=".activity.ServerListActivity">
+        </activity>
     </application>
 
 </manifest>
