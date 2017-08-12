@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 /**
  * zhaotu
@@ -63,6 +64,10 @@ public class BaseDialogFragment extends DialogFragment {
 
     public interface OnDialogListener {
         void dismiss();
+    }
+
+    public void showMsg(String msg) {
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
     }
 
 }

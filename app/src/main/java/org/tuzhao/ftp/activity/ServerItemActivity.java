@@ -1,5 +1,6 @@
 package org.tuzhao.ftp.activity;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -8,25 +9,54 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 
 import org.tuzhao.ftp.R;
+import org.tuzhao.ftp.entity.ServerEntity;
 import org.tuzhao.ftp.service.ServerConnectService;
 
 public class ServerItemActivity extends BaseActivity {
 
     public static final String ACTION_SERVER_CONNECT = "action_server_connect";
     public static final String EXTRA_RESULT = "extra_result";
+    private static final String EXTRA_START = "extra_start";
+
 
     private ServerConnectConnection connection;
     private ServerConnectService.ServerConnectBinder binder;
 
     private ServerBroadcastReceiver receiver;
+    private ServerEntity server;
+
+    /**
+     * who want start ServerItemActivity must be call this method
+     * @param context    Activity
+     * @param parcelable ServerEntity
+     */
+    public static void start(Activity context, Parcelable parcelable) {
+        if (!(parcelable instanceof ServerEntity)) {
+            throw new RuntimeException("must give me a ServerEntity Instance!");
+        }
+        Intent intent = new Intent(context, ServerItemActivity.class);
+        intent.putExtra(EXTRA_START, parcelable);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server);
+
+        Parcelable parcelable = getIntent().getParcelableExtra(EXTRA_START);
+        if (null != parcelable && !(parcelable instanceof ServerEntity)) {
+            showMsg("receive server info error");
+            finish();
+            return;
+        } else {
+            server = (ServerEntity) parcelable;
+            log("start server info: " + server);
+        }
         startConnectService();
 
         IntentFilter filter = new IntentFilter();

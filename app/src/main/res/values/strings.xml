@@ -162,6 +162,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="exit_msg">Are you sure want to exit this app?\nIt will be kill FTP Server if you click submit button.</string>
 
     <string name="submit">Submit</string>
+    <string name="save">Save</string>
 
     <string name="permission_note">Permission Note</string>
     <string name="permission_msg">This app need all permissions granted,%s. If you don\'t give all permissions that will cause this app can not run normally.</string>
@@ -202,12 +203,17 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="wifi_setting">Wifi Setting</string>
     <string name="wifi_open_error">open wifi setting failure</string>
     <string name="server_add">Add FTP Server</string>
-    <string name="server_add_address">ip address:</string>
-    <string name="server_add_port">port:</string>
-    <string name="server_add_address_hint">eg:192.168.1.xxx</string>
+    <string name="server_add_address">Address:</string>
+    <string name="server_add_port">Port:</string>
+    <string name="server_add_address_hint">eg:192.168.1.xxx/test.com</string>
     <string name="server_add_port_hint">default:2121</string>
-    <string name="server_add_account">account:</string>
+    <string name="server_add_account">Account:</string>
     <string name="server_add_account_hint">default empty</string>
-    <string name="server_add_password">password:</string>
+    <string name="server_add_password">Password:</string>
+    <string name="ftp">FTP</string>
+
+    <string name="address_note_one">address can\'t empty</string>
+
+    <string name="address_filter">0123456789abcdefghijklmnopqrstuvwxyz.-</string>
 
 </resources>

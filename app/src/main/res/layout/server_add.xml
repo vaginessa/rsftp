@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp">
 
     <LinearLayout style="@style/server_add_item_ll">
 
@@ -14,6 +16,7 @@
         <EditText
             android:id="@+id/server_add_address"
             style="@style/server_add_item_et"
+            android:digits="@string/address_filter"
             android:hint="@string/server_add_address_hint"/>
     </LinearLayout>
 
@@ -26,7 +29,8 @@
         <EditText
             android:id="@+id/server_add_port"
             style="@style/server_add_item_et"
-            android:hint="@string/server_add_port_hint"/>
+            android:hint="@string/server_add_port_hint"
+            android:inputType="number"/>
     </LinearLayout>
 
     <LinearLayout style="@style/server_add_item_ll">
@@ -38,7 +42,8 @@
         <EditText
             android:id="@+id/server_add_account"
             style="@style/server_add_item_et"
-            android:hint="@string/server_add_account_hint"/>
+            android:hint="@string/server_add_account_hint"
+            android:inputType="text"/>
     </LinearLayout>
 
     <LinearLayout style="@style/server_add_item_ll">
@@ -50,7 +55,7 @@
         <EditText
             android:id="@+id/server_add_pwd"
             style="@style/server_add_item_et"
-            android:hint="@string/server_add_account_hint"/>
+            android:inputType="textPassword"/>
     </LinearLayout>
 
     <LinearLayout style="@style/server_add_item_ll">

@@ -12,6 +12,7 @@ public class RsSQLInfoTest {
     public void printSQLInfo() {
         println(RsSQLInfo.SQL_CREATE_ENTRIES);
         println(RsSQLInfo.SQL_DELETE_ENTRIES);
+        println(RsSQLInfo.SQL_QUERY_ENTRIES);
     }
 
     private void println(Object msg) {

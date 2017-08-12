@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    android:layout_marginTop="20dp">
+
+    <TextView
+        android:id="@+id/item_server_iv"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/server_item"
+        android:gravity="center_horizontal"
+        android:paddingTop="24dp"
+        android:text="@string/ftp"
+        android:textColor="@color/ftp"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:id="@+id/item_server_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_server_iv"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="@string/running_label"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"/>
+
+
+</RelativeLayout>

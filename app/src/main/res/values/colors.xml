@@ -5,4 +5,6 @@
     <color name="colorAccent">#000000</color>
 
     <color name="transparent">@android:color/transparent</color>
+
+    <color name="ftp">#5D749E</color>
 </resources>

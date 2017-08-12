@@ -14,11 +14,11 @@
     </style>
 
     <style name="server_add_item_ll">
-        <item name="android:layout_width">300dp</item>
-        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_width">310dp</item>
+        <item name="android:layout_height">50dp</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:paddingLeft">8dp</item>
-        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
     </style>
 
     <style name="server_add_item_tv">
@@ -34,6 +34,7 @@
         <item name="android:layout_weight">1</item>
         <item name="android:textSize">14sp</item>
         <item name="android:maxLength">30</item>
+        <item name="android:singleLine">true</item>
     </style>
 
     <style name="server_add_item_bt">
