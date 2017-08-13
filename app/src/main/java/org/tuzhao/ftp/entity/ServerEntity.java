@@ -17,12 +17,14 @@ public final class ServerEntity implements Serializable, Parcelable {
     private String port;
     private String account;
     private String pwd;
+    private int id;
 
     public ServerEntity() {
         address = "";
         port = "";
         account = "";
         pwd = "";
+        id = 0;
     }
 
     public String getAddress() {
@@ -57,6 +59,21 @@ public final class ServerEntity implements Serializable, Parcelable {
         this.pwd = pwd;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void update(ServerEntity entity) {
+        setAddress(entity.getAddress());
+        setPort(entity.getPort());
+        setAccount(entity.getAccount());
+        setPwd(entity.getPwd());
+    }
+
     @Override
     public String toString() {
         return "ServerEntity{" +
@@ -64,6 +81,7 @@ public final class ServerEntity implements Serializable, Parcelable {
                    ", port='" + port + '\'' +
                    ", account='" + account + '\'' +
                    ", pwd='" + pwd + '\'' +
+                   ", id=" + id +
                    '}';
     }
 
@@ -72,6 +90,7 @@ public final class ServerEntity implements Serializable, Parcelable {
         port = in.readString();
         account = in.readString();
         pwd = in.readString();
+        id = in.readInt();
     }
 
     public static final Creator<ServerEntity> CREATOR = new Creator<ServerEntity>() {
@@ -97,5 +116,6 @@ public final class ServerEntity implements Serializable, Parcelable {
         parcel.writeString(port);
         parcel.writeString(account);
         parcel.writeString(pwd);
+        parcel.writeInt(id);
     }
 }

@@ -34,7 +34,7 @@ public class ServerAddFragment extends BaseDialogFragment implements View.OnClic
     /**
      * 修改server实例模式
      */
-    public static final int START_TYPE_EDIT = 0x10;
+    public static final int START_TYPE_EDIT = 0x11;
     private int type;
 
     private EditText mServerAddress;
@@ -50,6 +50,8 @@ public class ServerAddFragment extends BaseDialogFragment implements View.OnClic
     private String pwd;
 
     private OnCompleteListener listener;
+
+    private ServerEntity server;
 
     public ServerAddFragment() {
     }
@@ -113,10 +115,10 @@ public class ServerAddFragment extends BaseDialogFragment implements View.OnClic
         Bundle bundle = getArguments();
         if (null != bundle) {
             this.type = bundle.getInt(EXTRA_TYPE);
-            ServerEntity server = bundle.getParcelable(EXTRA_DATA);
+            server = bundle.getParcelable(EXTRA_DATA);
             resetInterface(server);
         }
-
+        if (server == null) server = new ServerEntity();
         return view;
     }
 
@@ -131,7 +133,6 @@ public class ServerAddFragment extends BaseDialogFragment implements View.OnClic
                     getDialog().dismiss();
                     if (null != listener) {
                         resetInterface(null);
-                        ServerEntity server = new ServerEntity();
                         server.setAccount(account);
                         server.setAddress(address);
                         server.setPort(port);

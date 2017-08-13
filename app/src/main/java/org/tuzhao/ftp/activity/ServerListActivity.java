@@ -12,13 +12,15 @@ import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.db.RsDBHelper;
 import org.tuzhao.ftp.entity.ServerEntity;
 import org.tuzhao.ftp.fragment.ServerAddFragment;
+import org.tuzhao.ftp.fragment.ServerControlFragment;
 import org.tuzhao.ftp.util.ServerListRecyclerAdapter;
 
 import java.util.ArrayList;
 
 public class ServerListActivity extends BaseActivity implements ServerAddFragment.OnCompleteListener,
                                                                     ServerListRecyclerAdapter.OnItemClickListener,
-                                                                    ServerListRecyclerAdapter.OnItemLongClickListener {
+                                                                    ServerListRecyclerAdapter.OnItemLongClickListener,
+                                                                    ServerControlFragment.OnMenuClickListener {
 
     private ArrayList<ServerEntity> list = new ArrayList<>();
     private ServerAddFragment addFragment;
@@ -61,14 +63,22 @@ public class ServerListActivity extends BaseActivity implements ServerAddFragmen
 
     @Override
     public void onComplete(ServerEntity server, int TYPE) {
-        RsDBHelper helper = new RsDBHelper(this);
         log(server.toString());
-        long result = helper.addServer(server);
-        log("add server: " + result);
-        if (result != -1) {
-            list.add(server);
-            adapter.notifyDataSetChanged();
+        RsDBHelper helper = new RsDBHelper(this);
+        if (TYPE == ServerAddFragment.START_TYPE_ADD) {
+            long result = helper.addServer(server);
+            log("add server: " + result);
+            if (result != -1) {
+                list.add(server);
+            }
+        } else if (TYPE == ServerAddFragment.START_TYPE_EDIT) {
+            int update = helper.updateServer(server);
+            log("update server: " + update);
+            if (update != -1) {
+                updateList(server);
+            }
         }
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -80,6 +90,44 @@ public class ServerListActivity extends BaseActivity implements ServerAddFragmen
     @Override
     public boolean onItemLongClick(View v, Object data, int position) {
         log("item long click position: " + position + " data: " + data);
+        ServerControlFragment.show(getActivity(), (ServerEntity) data, this);
         return true;
+    }
+
+    @Override
+    public void onMenu(ServerEntity server, int position) {
+        switch (position) {
+            case 0:
+                showServerInfoDialog(server, ServerAddFragment.START_TYPE_EDIT);
+                break;
+            case 1:
+                int result = new RsDBHelper(this).deleteServer(server);
+                log("delete result: " + result);
+                int index = getSelectIndex(server);
+                if (result >= 1 && index != -1) {
+                    list.remove(index);
+                    adapter.notifyDataSetChanged();
+                    showMsg("delete server successful");
+                }
+                break;
+        }
+    }
+
+    private int getSelectIndex(ServerEntity server) {
+        int id = server.getId();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getId() == id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private void updateList(ServerEntity server) {
+        int selectIndex = getSelectIndex(server);
+        if (selectIndex != -1) {
+            ServerEntity entity = list.get(selectIndex);
+            entity.update(server);
+        }
     }
 }

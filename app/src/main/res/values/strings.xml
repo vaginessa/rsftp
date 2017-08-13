@@ -216,4 +216,9 @@ If you have any ideas or suggestions that you can send email to me.\n\n
 
     <string name="address_filter">0123456789abcdefghijklmnopqrstuvwxyz.-</string>
 
+    <string-array name="server_control_menu">
+        <item>Edit</item>
+        <item>Delete</item>
+    </string-array>
+
 </resources>

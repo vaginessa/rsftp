@@ -5,8 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.tuzhao.ftp.entity.ServerEntity;
 import org.tuzhao.ftp.db.ServerTable.ServerEntry;
+import org.tuzhao.ftp.entity.ServerEntity;
 
 import java.util.ArrayList;
 
@@ -72,11 +72,13 @@ public final class RsDBHelper {
                     String port = String.valueOf(cursor.getInt(cursor.getColumnIndex(ServerEntry.COLUMN_NAME_PORT)));
                     String account = cursor.getString(cursor.getColumnIndex(ServerEntry.COLUMN_NAME_ACCOUNT));
                     String password = cursor.getString(cursor.getColumnIndex(ServerEntry.COLUMN_NAME_PWD));
+                    int id = cursor.getInt(cursor.getColumnIndex(ServerEntry._ID));
                     ServerEntity entity = new ServerEntity();
                     entity.setAddress(address);
                     entity.setPort(port);
                     entity.setAccount(account);
                     entity.setPwd(password);
+                    entity.setId(id);
                     list.add(entity);
                 } while (cursor.moveToNext());
             }
@@ -85,4 +87,43 @@ public final class RsDBHelper {
         db.close();
         return list;
     }
+
+    public int deleteServer(ServerEntity server) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String selection = ServerEntry._ID + " LIKE ?";
+        String[] selectionArgs = {String.valueOf(server.getId())};
+        return db.delete(ServerEntry.TABLE_NAME, selection, selectionArgs);
+    }
+
+    public int updateServer(ServerEntity server) {
+        SQLiteDatabase db = null;
+        int update = -1;
+        try {
+            ContentValues values = new ContentValues();
+            values.put(ServerEntry.COLUMN_NAME_ADDRESS, server.getAddress());
+            values.put(ServerEntry.COLUMN_NAME_PORT, server.getPort());
+            values.put(ServerEntry.COLUMN_NAME_ACCOUNT, server.getAccount());
+            values.put(ServerEntry.COLUMN_NAME_PWD, server.getPwd());
+            String selection = ServerEntry._ID + "=?";
+            String[] selectionArgs = {String.valueOf(server.getId())};
+
+            db = helper.getWritableDatabase();
+            db.beginTransaction();
+            update = db.update(ServerEntry.TABLE_NAME, values, selection, selectionArgs);
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (null != db) {
+                    db.endTransaction();
+                    db.close();
+                }
+            } catch (Exception e) {
+                //...ignore...
+            }
+        }
+        return update;
+    }
+
 }
