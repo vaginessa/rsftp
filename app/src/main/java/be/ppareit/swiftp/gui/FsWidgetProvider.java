@@ -94,6 +94,7 @@ public class FsWidgetProvider extends AppWidgetProvider {
                 text = getString(R.string.swiftp_name);
             }
             Intent startIntent = new Intent(action);
+            startIntent.setPackage(getPackageName());
             PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
                     startIntent, 0);
             RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_layout);
