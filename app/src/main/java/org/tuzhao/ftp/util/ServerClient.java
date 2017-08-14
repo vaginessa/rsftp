@@ -3,6 +3,7 @@ package org.tuzhao.ftp.util;
 import android.util.Log;
 
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -94,6 +95,10 @@ public class ServerClient {
             e.printStackTrace();
         }
         return status;
+    }
+
+    public FTPFile[] listFiles() throws IOException {
+        return mFtpClient.listFiles();
     }
 
     //Passing Local File path/Uri

@@ -3,58 +3,45 @@ package org.tuzhao.ftp.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
+import android.os.Parcelable;
+import android.util.Log;
 
-import org.tuzhao.ftp.activity.ServerItemActivity;
 import org.tuzhao.ftp.entity.ServerEntity;
-import org.tuzhao.ftp.util.ServerClient;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ServerConnectService extends Service {
 
+    public static final String EXTRA_START = "EXTRA_START";
+
     private ExecutorService executor = Executors.newFixedThreadPool(5);
 
-    private static final int MSG_CONNECT = 0x10;
-
-    private Handler handler;
-    private ServerClient client;
+    private ServerEntity server;
 
     public ServerConnectService() {
 
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-        handler = new Handler(message -> {
-            switch (message.what) {
-                case MSG_CONNECT:
-                    boolean result = (boolean) message.obj;
-                    if (!result) client = null;
-                    ServerItemActivity.sendConnectResult(getService(), result);
-                    break;
-            }
-            return true;
-        });
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
     public IBinder onBind(Intent intent) {
+        Parcelable parcelable = intent.getParcelableExtra(EXTRA_START);
+        if (null != parcelable && (parcelable instanceof ServerEntity)) {
+            server = (ServerEntity) parcelable;
+            log("server info: " + server);
+        }
         return new ServerConnectBinder();
     }
 
     public class ServerConnectBinder extends Binder {
-        public void connect(ServerEntity server) {
-            getService().connect(server);
+
+        public void connect() {
+            getService().connect();
+        }
+
+        public void listFiles() {
+            getService().listFiles();
         }
     }
 
@@ -62,38 +49,17 @@ public class ServerConnectService extends Service {
         return this;
     }
 
-    private void connect(ServerEntity server) {
-        RunnableConnect runnable = new RunnableConnect(handler, server);
-        client = runnable.getServerClient();
+    private void listFiles() {
+        executor.execute(new RunnableListFiles(getService(), server));
+    }
+
+    private void connect() {
+        RunnableConnect runnable = new RunnableConnect(getService(), server);
         executor.execute(runnable);
     }
 
-    private static class RunnableConnect implements Runnable {
-
-        private Handler handler;
-        private ServerEntity server;
-        private ServerClient client;
-
-        RunnableConnect(Handler handler, ServerEntity server) {
-            this.handler = handler;
-            this.server = server;
-            this.client = new ServerClient();
-        }
-
-        ServerClient getServerClient() {
-            return client;
-        }
-
-        @Override
-        public void run() {
-            String address = server.getAddress();
-            int port = Integer.parseInt(server.getPort());
-            String account = server.getAccount();
-            String pwd = server.getPwd();
-            boolean result = client.connect(address, port, account, pwd);
-            Message message = Message.obtain(handler, MSG_CONNECT, result);
-            message.sendToTarget();
-        }
+    private static void log(String msg) {
+        Log.d("ServerConnectService", msg);
     }
 
 }

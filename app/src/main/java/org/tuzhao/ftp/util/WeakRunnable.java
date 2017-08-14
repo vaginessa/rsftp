@@ -1,5 +1,7 @@
 package org.tuzhao.ftp.util;
 
+import android.util.Log;
+
 import java.lang.ref.WeakReference;
 
 /**
@@ -23,5 +25,9 @@ public abstract class WeakRunnable<T> implements Runnable {
     }
 
     public abstract void weakRun(T t);
+
+    public void log(String msg) {
+        Log.d(this.getClass().getSimpleName(), msg);
+    }
 
 }

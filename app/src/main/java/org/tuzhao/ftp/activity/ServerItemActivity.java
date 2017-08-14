@@ -11,14 +11,19 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.View;
 
+import org.apache.commons.net.ftp.FTPFile;
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.entity.ServerEntity;
 import org.tuzhao.ftp.service.ServerConnectService;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 public class ServerItemActivity extends BaseActivity {
 
-    public static final String ACTION_SERVER_CONNECT = "action_server_connect";
+    public static final String ACTION_SERVER_LIST_FILES = "action_server_list_files";
     public static final String EXTRA_RESULT = "extra_result";
     private static final String EXTRA_START = "extra_start";
 
@@ -57,17 +62,19 @@ public class ServerItemActivity extends BaseActivity {
             server = (ServerEntity) parcelable;
             log("start server info: " + server);
         }
-        startConnectService();
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_SERVER_CONNECT);
+        filter.addAction(ACTION_SERVER_LIST_FILES);
         receiver = new ServerBroadcastReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+
+        startConnectService();
     }
 
     private void startConnectService() {
         connection = new ServerConnectConnection();
         Intent intent = new Intent(this, ServerConnectService.class);
+        intent.putExtra(ServerConnectService.EXTRA_START, (Parcelable) server);
         bindService(intent, connection, BIND_AUTO_CREATE);
     }
 
@@ -81,11 +88,18 @@ public class ServerItemActivity extends BaseActivity {
         }
     }
 
+    public void test(View view) {
+        if (null != binder)
+            binder.listFiles();
+    }
+
     private class ServerConnectConnection implements ServiceConnection {
 
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             binder = (ServerConnectService.ServerConnectBinder) iBinder;
+            binder.listFiles();
+            showLoadingDialog();
         }
 
         @Override
@@ -103,17 +117,29 @@ public class ServerItemActivity extends BaseActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-            if (action.equals(ACTION_SERVER_CONNECT)) {
+            if (action.equals(ACTION_SERVER_LIST_FILES)) {
                 dismissLoadingDialog();
-                boolean result = intent.getBooleanExtra(EXTRA_RESULT, false);
-                showMsg("server add result: " + result);
+                Serializable serializable = intent.getSerializableExtra(EXTRA_RESULT);
+                if (null != serializable) {
+                    ArrayList<FTPFile> list = (ArrayList<FTPFile>) serializable;
+                    log("array length: " + list.size());
+                    for (int i = 0; i < list.size(); i++) {
+                        FTPFile file = list.get(i);
+                        String name = file.getName();
+                        long size = file.getSize();
+                        long timeInMillis = file.getTimestamp().getTimeInMillis();
+                        log("name: " + name + " size: " + size + " time:" + timeInMillis);
+                    }
+                }
             }
         }
     }
 
-    public static void sendConnectResult(Context context, boolean result) {
-        Intent intent = new Intent(ServerItemActivity.ACTION_SERVER_CONNECT);
-        intent.putExtra(EXTRA_RESULT, result);
+    public static void sendListFilesResult(Context context, ArrayList<FTPFile> list) {
+        Intent intent = new Intent(ServerItemActivity.ACTION_SERVER_LIST_FILES);
+        if (list != null) {
+            intent.putExtra(EXTRA_RESULT, list);
+        }
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(context);
         manager.sendBroadcast(intent);
     }
