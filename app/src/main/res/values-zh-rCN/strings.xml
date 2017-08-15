@@ -138,5 +138,6 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
     </string>
     <string name="wifi_open_error">打开wifi设置界面失败</string>
     <string name="wifi_setting">WIFI设置</string>
+    <string name="refresh">刷新</string>
 
 </resources>

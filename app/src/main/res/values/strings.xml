@@ -215,6 +215,9 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="address_note_one">address can\'t empty</string>
 
     <string name="address_filter">0123456789abcdefghijklmnopqrstuvwxyz.-</string>
+    <string name="item_server_item_size_demo">15.2 KB</string>
+    <string name="item_server_item_time_demo">17/08/25 21:00</string>
+    <string name="refresh">refresh</string>
 
     <string-array name="server_control_menu">
         <item>Edit</item>

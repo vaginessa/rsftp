@@ -13,13 +13,14 @@ import org.tuzhao.ftp.db.RsDBHelper;
 import org.tuzhao.ftp.entity.ServerEntity;
 import org.tuzhao.ftp.fragment.ServerAddFragment;
 import org.tuzhao.ftp.fragment.ServerControlFragment;
+import org.tuzhao.ftp.util.OnItemClickListener;
+import org.tuzhao.ftp.util.OnItemLongClickListener;
 import org.tuzhao.ftp.util.ServerListRecyclerAdapter;
 
 import java.util.ArrayList;
 
 public class ServerListActivity extends BaseActivity implements ServerAddFragment.OnCompleteListener,
-                                                                    ServerListRecyclerAdapter.OnItemClickListener,
-                                                                    ServerListRecyclerAdapter.OnItemLongClickListener,
+                                                                    OnItemClickListener, OnItemLongClickListener,
                                                                     ServerControlFragment.OnMenuClickListener {
 
     private ArrayList<ServerEntity> list = new ArrayList<>();

@@ -115,15 +115,6 @@ public class ServerListRecyclerAdapter extends RecyclerView.Adapter implements V
     private OnItemClickListener itemClickListener;
     private OnItemLongClickListener itemLongClickListener;
 
-    public interface OnItemClickListener {
-        void onItemClick(View v, Object data, int position);
-    }
-
-
-    public interface OnItemLongClickListener {
-        boolean onItemLongClick(View v, Object data, int position);
-    }
-
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.itemClickListener = listener;
     }

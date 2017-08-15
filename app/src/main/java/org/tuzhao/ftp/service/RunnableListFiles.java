@@ -39,6 +39,8 @@ class RunnableListFiles extends WeakRunnable<Context> {
             client.connect(address, port);
             status = client.login(account, pwd);
             log("connect result: " + status);
+            String directory = client.printWorkingDirectory();
+            log("current path: " + directory);
         } catch (Exception e) {
             client = null;
             e.printStackTrace();

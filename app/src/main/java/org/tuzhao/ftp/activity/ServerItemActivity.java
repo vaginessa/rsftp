@@ -11,17 +11,27 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import org.apache.commons.net.ftp.FTPFile;
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.entity.ServerEntity;
 import org.tuzhao.ftp.service.ServerConnectService;
+import org.tuzhao.ftp.util.FTPFileComparator;
+import org.tuzhao.ftp.util.OnItemClickListener;
+import org.tuzhao.ftp.util.OnItemLongClickListener;
+import org.tuzhao.ftp.util.ServerItemRecyclerAdapter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
-public class ServerItemActivity extends BaseActivity {
+public class ServerItemActivity extends BaseActivity implements OnItemClickListener, OnItemLongClickListener {
 
     public static final String ACTION_SERVER_LIST_FILES = "action_server_list_files";
     public static final String EXTRA_RESULT = "extra_result";
@@ -48,6 +58,10 @@ public class ServerItemActivity extends BaseActivity {
         context.startActivity(intent);
     }
 
+    private RecyclerView mServerRv;
+    private ArrayList<FTPFile> filesList;
+    private ServerItemRecyclerAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +81,14 @@ public class ServerItemActivity extends BaseActivity {
         filter.addAction(ACTION_SERVER_LIST_FILES);
         receiver = new ServerBroadcastReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+
+        filesList = new ArrayList<>();
+        mServerRv = (RecyclerView) findViewById(R.id.server_item_rv);
+        adapter = new ServerItemRecyclerAdapter(this, filesList);
+        adapter.setOnItemLongClickListener(this);
+        adapter.setOnItemClickListener(this);
+        mServerRv.setLayoutManager(new LinearLayoutManager(this));
+        mServerRv.setAdapter(adapter);
 
         startConnectService();
     }
@@ -88,9 +110,35 @@ public class ServerItemActivity extends BaseActivity {
         }
     }
 
-    public void test(View view) {
-        if (null != binder)
-            binder.listFiles();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_server_item, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_refresh) {
+            if (null != binder) {
+                binder.listFiles();
+                showLoadingDialog();
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onItemClick(View v, Object data, int position) {
+        if (-1 != position) {
+            FTPFile ftpFile = filesList.get(position);
+
+        }
+    }
+
+    @Override
+    public boolean onItemLongClick(View v, Object data, int position) {
+        return false;
     }
 
     private class ServerConnectConnection implements ServiceConnection {
@@ -113,25 +161,27 @@ public class ServerItemActivity extends BaseActivity {
         }
     }
 
+    private FTPFileComparator comparator;
+
     private class ServerBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
             if (action.equals(ACTION_SERVER_LIST_FILES)) {
-                dismissLoadingDialog();
                 Serializable serializable = intent.getSerializableExtra(EXTRA_RESULT);
                 if (null != serializable) {
                     ArrayList<FTPFile> list = (ArrayList<FTPFile>) serializable;
-                    log("array length: " + list.size());
-                    for (int i = 0; i < list.size(); i++) {
-                        FTPFile file = list.get(i);
-                        String name = file.getName();
-                        long size = file.getSize();
-                        long timeInMillis = file.getTimestamp().getTimeInMillis();
-                        log("name: " + name + " size: " + size + " time:" + timeInMillis);
+                    if (null == comparator) {
+                        comparator = new FTPFileComparator();
                     }
+                    Collections.sort(list, comparator);
+                    log("array length: " + list.size());
+                    filesList.clear();
+                    filesList.addAll(list);
+                    adapter.notifyDataSetChanged();
                 }
             }
+            dismissLoadingDialog();
         }
     }
 
