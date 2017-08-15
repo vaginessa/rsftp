@@ -21,17 +21,21 @@ package be.ppareit.swiftp;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Environment;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
 import org.tuzhao.ftp.R;
+import org.tuzhao.ftp.util.System;
 
 public class RequestStartStopReceiver extends BroadcastReceiver {
 
     static final String TAG = RequestStartStopReceiver.class.getSimpleName();
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.v(TAG, "Received: " + intent.getAction());
@@ -42,7 +46,11 @@ public class RequestStartStopReceiver extends BroadcastReceiver {
                 Intent serverService = new Intent(context, FsService.class);
                 if (!FsService.isRunning()) {
                     warnIfNoExternalStorage();
-                    context.startService(serverService);
+                    if (System.isAndroidO()) {
+                        context.startForegroundService(serverService);
+                    } else {
+                        context.startService(serverService);
+                    }
                 }
             } else if (intent.getAction().equals(FsService.ACTION_STOP_FTPSERVER)) {
                 Intent serverService = new Intent(context, FsService.class);

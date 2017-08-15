@@ -21,6 +21,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
 package be.ppareit.swiftp;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -36,7 +37,10 @@ import android.util.Log;
 
 import net.vrallev.android.cat.Cat;
 
+import org.tuzhao.ftp.util.System;
+
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -49,6 +53,7 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
+import be.ppareit.swiftp.gui.FsNotification;
 import be.ppareit.swiftp.server.SessionThread;
 import be.ppareit.swiftp.server.TcpListener;
 
@@ -81,9 +86,25 @@ public class FsService extends Service implements Runnable {
     private PowerManager.WakeLock wakeLock;
     private WifiLock wifiLock = null;
 
+    private static WeakReference<Service> serverService;
+
+    public static void setForeground(int id, Notification notification) {
+        if (null != serverService) {
+            Service service = serverService.get();
+            if (null != service)
+                service.startForeground(id, notification);
+        }
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         shouldExit = false;
+
+        if (System.isAndroidO()) {
+            serverService = new WeakReference<>(this);
+            FsNotification.startingNotification(this);
+        }
+
         int attempts = 10;
         // The previous server thread may still be cleaning up, wait for it to finish.
         while (serverThread != null) {
@@ -128,6 +149,7 @@ public class FsService extends Service implements Runnable {
         try {
             serverThread.join(10000); // wait 10 sec for server thread to finish
         } catch (InterruptedException e) {
+            //...ignore...
         }
         if (serverThread.isAlive()) {
             Log.w(TAG, "Server thread failed to exit");
@@ -142,6 +164,7 @@ public class FsService extends Service implements Runnable {
                 listenSocket.close();
             }
         } catch (IOException e) {
+            //...ignore...
         }
 
         if (wifiLock != null) {

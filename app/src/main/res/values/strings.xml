@@ -200,5 +200,6 @@ If you have any ideas or suggestions that you can send email to me.\n\n
 
     <string name="wifi_setting">Wifi Setting</string>
     <string name="wifi_open_error">open wifi setting failure</string>
+    <string name="running">Running</string>
 
 </resources>

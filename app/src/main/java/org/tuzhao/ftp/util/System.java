@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.os.Build;
 import android.util.Log;
 
 import java.util.List;
@@ -44,6 +45,10 @@ public final class System {
         int priority = thread.getPriority();
         ThreadGroup group = thread.getThreadGroup();
         log("thread info[id: " + id + " name: " + name + " priority: " + priority + " group: " + group + " ]");
+    }
+
+    public static boolean isAndroidO() {
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O);
     }
 
     private static void log(String msg) {
