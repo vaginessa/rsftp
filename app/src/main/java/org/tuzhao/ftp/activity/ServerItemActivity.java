@@ -61,13 +61,14 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
         context.startActivity(intent);
     }
 
-    private RecyclerView mServerRv;
+    private String mCurrentPath;
     private ArrayList<FTPFile> filesList;
     private ServerItemRecyclerAdapter adapter;
 
     private TextView mCountTv;
     private TextView mPathTv;
     private TextView mSizeTv;
+    private RecyclerView mServerRv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,9 +136,7 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_refresh) {
             if (null != binder) {
-                showLoadingDialog();
-                updateAllToDefault();
-                binder.listFiles();
+                refresh();
             }
         }
         return true;
@@ -147,7 +146,16 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
     public void onItemClick(View v, Object data, int position) {
         if (-1 != position) {
             FTPFile ftpFile = filesList.get(position);
-
+            if (ftpFile.isDirectory()) {
+                String name = ftpFile.getName();
+                if (mCurrentPath.equals("/")) {
+                    mCurrentPath = mCurrentPath + name;
+                } else {
+                    mCurrentPath = mCurrentPath + "/" + name;
+                }
+                updateCurrentPath(mCurrentPath);
+                refresh();
+            }
         }
     }
 
@@ -161,7 +169,7 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             binder = (ServerConnectService.ServerConnectBinder) iBinder;
-            binder.listFiles();
+            binder.listFiles(null);
             showLoadingDialog();
         }
 
@@ -201,9 +209,18 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
                 dismissLoadingDialog();
             } else if (action.equals(System.ACTION_SERVER_CURRENT_PATH)) {
                 String path = System.getServerCurrentPath(intent);
+                mCurrentPath = path;
                 updateCurrentPath(path);
             }
         }
+    }
+
+    private void refresh() {
+        showLoadingDialog();
+        updateAllToDefault();
+        filesList.clear();
+        adapter.notifyDataSetChanged();
+        binder.listFiles(mCurrentPath);
     }
 
     private void updateAllToDefault() {

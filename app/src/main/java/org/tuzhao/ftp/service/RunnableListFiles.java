@@ -1,6 +1,7 @@
 package org.tuzhao.ftp.service;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -20,10 +21,12 @@ import java.util.Collections;
 class RunnableListFiles extends WeakRunnable<Context> {
 
     private ServerEntity server;
+    private String path;
 
-    RunnableListFiles(Context context, ServerEntity server) {
+    RunnableListFiles(Context context, ServerEntity server, String path) {
         super(context);
         this.server = server;
+        this.path = path;
     }
 
     @Override
@@ -40,6 +43,10 @@ class RunnableListFiles extends WeakRunnable<Context> {
             client.connect(address, port);
             status = client.login(account, pwd);
             log("connect result: " + status);
+            log("list files path: " + path);
+            if (!(path == null || TextUtils.isEmpty(path))) {
+                client.changeWorkingDirectory(path);
+            }
             String directory = client.printWorkingDirectory();
             log("current path: " + directory);
             System.sendServerCurrentPathBroadcast(context, directory);

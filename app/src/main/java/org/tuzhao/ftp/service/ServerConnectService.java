@@ -40,8 +40,8 @@ public class ServerConnectService extends Service {
             getService().connect();
         }
 
-        public void listFiles() {
-            getService().listFiles();
+        public void listFiles(String path) {
+            getService().listFiles(path);
         }
     }
 
@@ -49,8 +49,8 @@ public class ServerConnectService extends Service {
         return this;
     }
 
-    private void listFiles() {
-        executor.execute(new RunnableListFiles(getService(), server));
+    private void listFiles(String path) {
+        executor.execute(new RunnableListFiles(getService(), server, path));
     }
 
     private void connect() {

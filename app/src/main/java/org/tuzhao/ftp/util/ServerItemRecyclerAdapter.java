@@ -183,11 +183,16 @@ public class ServerItemRecyclerAdapter extends RecyclerView.Adapter implements V
     }
 
     public static String getSize(long size) {
+        float base = 1024F;
         String type = " KB";
-        float result = size / 1024F;
-        if (result > 1024F) {
-            result /= 1024F;
+        float result = size / base;
+        if (result > base) {
+            result /= base;
             type = " MB";
+        }
+        if (result > base) {
+            result /= base;
+            type = " GB";
         }
         return getNum(result) + type;
     }
