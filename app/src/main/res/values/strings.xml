@@ -218,6 +218,10 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="item_server_item_size_demo">15.2 KB</string>
     <string name="item_server_item_time_demo">17/08/25 21:00</string>
     <string name="refresh">refresh</string>
+    <string name="server_item_count">file count\n%s</string>
+    <string name="server_item_path">path: %S</string>
+    <string name="server_item_size">folder size\n%s</string>
+    <string name="error">error</string>
 
     <string-array name="server_control_menu">
         <item>Edit</item>

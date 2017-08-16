@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import org.apache.commons.net.ftp.FTPFile;
 import org.tuzhao.ftp.R;
@@ -26,6 +27,7 @@ import org.tuzhao.ftp.util.FTPFileComparator;
 import org.tuzhao.ftp.util.OnItemClickListener;
 import org.tuzhao.ftp.util.OnItemLongClickListener;
 import org.tuzhao.ftp.util.ServerItemRecyclerAdapter;
+import org.tuzhao.ftp.util.System;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,6 +36,7 @@ import java.util.Collections;
 public class ServerItemActivity extends BaseActivity implements OnItemClickListener, OnItemLongClickListener {
 
     public static final String ACTION_SERVER_LIST_FILES = "action_server_list_files";
+
     public static final String EXTRA_RESULT = "extra_result";
     private static final String EXTRA_START = "extra_start";
 
@@ -62,6 +65,10 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
     private ArrayList<FTPFile> filesList;
     private ServerItemRecyclerAdapter adapter;
 
+    private TextView mCountTv;
+    private TextView mPathTv;
+    private TextView mSizeTv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,11 +86,18 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_SERVER_LIST_FILES);
+        filter.addAction(System.ACTION_SERVER_CURRENT_PATH);
         receiver = new ServerBroadcastReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
 
-        filesList = new ArrayList<>();
         mServerRv = (RecyclerView) findViewById(R.id.server_item_rv);
+        mCountTv = (TextView) findViewById(R.id.server_item_count_tv);
+        mPathTv = (TextView) findViewById(R.id.server_item_path_tv);
+        mSizeTv = (TextView) findViewById(R.id.server_item_size_tv);
+
+        updateAllToDefault();
+
+        filesList = new ArrayList<>();
         adapter = new ServerItemRecyclerAdapter(this, filesList);
         adapter.setOnItemLongClickListener(this);
         adapter.setOnItemClickListener(this);
@@ -121,8 +135,9 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_refresh) {
             if (null != binder) {
-                binder.listFiles();
                 showLoadingDialog();
+                updateAllToDefault();
+                binder.listFiles();
             }
         }
         return true;
@@ -169,8 +184,9 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
             final String action = intent.getAction();
             if (action.equals(ACTION_SERVER_LIST_FILES)) {
                 Serializable serializable = intent.getSerializableExtra(EXTRA_RESULT);
+                ArrayList<FTPFile> list = null;
                 if (null != serializable) {
-                    ArrayList<FTPFile> list = (ArrayList<FTPFile>) serializable;
+                    list = (ArrayList<FTPFile>) serializable;
                     if (null == comparator) {
                         comparator = new FTPFileComparator();
                     }
@@ -180,9 +196,47 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
                     filesList.addAll(list);
                     adapter.notifyDataSetChanged();
                 }
+                updateFileCount(list == null ? 0 : list.size());
+                updateFolderSize(list);
+                dismissLoadingDialog();
+            } else if (action.equals(System.ACTION_SERVER_CURRENT_PATH)) {
+                String path = System.getServerCurrentPath(intent);
+                updateCurrentPath(path);
             }
-            dismissLoadingDialog();
         }
+    }
+
+    private void updateAllToDefault() {
+        updateCurrentPath("");
+        updateFileCount(0);
+        updateFolderSize(null);
+    }
+
+    private void updateCurrentPath(String path) {
+        String des = getString(R.string.server_item_path);
+        String real = (path == null ? this.getString(R.string.error) : path);
+        if (null != mPathTv) {
+            mPathTv.setText(String.format(des, real));
+        }
+    }
+
+    private void updateFileCount(int count) {
+        if (null != mCountTv)
+            mCountTv.setText(String.format(getString(R.string.server_item_count), String.valueOf(count)));
+    }
+
+    private void updateFolderSize(ArrayList<FTPFile> list) {
+        long size = 0;
+        if (null != list) {
+            for (int i = 0; i < list.size(); i++) {
+                FTPFile file = list.get(i);
+                if (file.isFile())
+                    size += file.getSize();
+            }
+        }
+        String s = ServerItemRecyclerAdapter.getSize(size);
+        if (null != mSizeTv)
+            mSizeTv.setText(String.format(getString(R.string.server_item_size), s));
     }
 
     public static void sendListFilesResult(Context context, ArrayList<FTPFile> list) {

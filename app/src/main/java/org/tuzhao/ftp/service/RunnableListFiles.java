@@ -6,6 +6,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.tuzhao.ftp.activity.ServerItemActivity;
 import org.tuzhao.ftp.entity.ServerEntity;
+import org.tuzhao.ftp.util.System;
 import org.tuzhao.ftp.util.WeakRunnable;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ class RunnableListFiles extends WeakRunnable<Context> {
             log("connect result: " + status);
             String directory = client.printWorkingDirectory();
             log("current path: " + directory);
+            System.sendServerCurrentPathBroadcast(context, directory);
         } catch (Exception e) {
             client = null;
             e.printStackTrace();

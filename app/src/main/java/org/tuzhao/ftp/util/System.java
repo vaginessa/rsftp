@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.util.List;
@@ -15,7 +16,24 @@ import java.util.Locale;
  */
 public final class System {
 
+    public static final String ACTION_SERVER_CURRENT_PATH = "action_server_current_path";
+    private static final String EXTRA_CURRENT_PATH = "extra_current_path";
+
     private static final String TAG = "System";
+
+    public static void sendServerCurrentPathBroadcast(Context context, String path) {
+        Intent intent = new Intent(ACTION_SERVER_CURRENT_PATH);
+        intent.putExtra(EXTRA_CURRENT_PATH, path);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
+    public static String getServerCurrentPath(Intent intent) {
+        String path = null;
+        if (null != intent) {
+            path = intent.getStringExtra(EXTRA_CURRENT_PATH);
+        }
+        return path;
+    }
 
     public static boolean isIntentAvailable(Context context, Intent intent) {
         final PackageManager packageManager = context.getPackageManager();
