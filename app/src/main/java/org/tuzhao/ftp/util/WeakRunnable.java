@@ -26,6 +26,10 @@ public abstract class WeakRunnable<T> implements Runnable {
 
     public abstract void weakRun(T t);
 
+    public void destroy() {
+        wr.clear();
+    }
+
     public void log(String msg) {
         Log.d(this.getClass().getSimpleName(), msg);
     }

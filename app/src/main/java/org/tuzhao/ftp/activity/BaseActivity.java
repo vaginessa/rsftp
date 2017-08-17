@@ -1,6 +1,7 @@
 package org.tuzhao.ftp.activity;
 
 import android.app.Activity;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -14,6 +15,8 @@ import org.tuzhao.ftp.fragment.SimpleDialogFragment;
  * 17-7-31
  */
 public class BaseActivity extends AppCompatActivity {
+
+    private Handler defaultHandler;
 
     @Override
     protected void onResume() {
@@ -29,6 +32,12 @@ public class BaseActivity extends AppCompatActivity {
 
     public Activity getActivity() {
         return this;
+    }
+
+    public Handler getDefaultHandler() {
+        if (null == defaultHandler)
+            defaultHandler = new Handler(this.getMainLooper());
+        return defaultHandler;
     }
 
     public void showMsg(String msg) {

@@ -22,15 +22,22 @@
             android:textSize="@dimen/server_item_state_tv"
             />
 
-        <TextView
-            android:id="@+id/server_item_path_tv"
+        <ScrollView
+            android:id="@+id/server_item_sv"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/server_item_path"
-            android:textSize="@dimen/server_item_state_tv"
-            />
+            android:scrollbars="none">
+
+            <TextView
+                android:id="@+id/server_item_path_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/server_item_path"
+                android:textSize="@dimen/server_item_state_tv"
+                />
+        </ScrollView>
 
         <TextView
             android:id="@+id/server_item_size_tv"

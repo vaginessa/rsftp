@@ -1,6 +1,7 @@
 package org.tuzhao.ftp.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,10 +14,12 @@ import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.apache.commons.net.ftp.FTPFile;
@@ -28,6 +31,7 @@ import org.tuzhao.ftp.util.OnItemClickListener;
 import org.tuzhao.ftp.util.OnItemLongClickListener;
 import org.tuzhao.ftp.util.ServerItemRecyclerAdapter;
 import org.tuzhao.ftp.util.System;
+import org.tuzhao.ftp.util.WeakRunnable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -68,6 +72,7 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
     private TextView mCountTv;
     private TextView mPathTv;
     private TextView mSizeTv;
+    private ScrollView mServerSv;
     private RecyclerView mServerRv;
 
     @Override
@@ -91,6 +96,7 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
         receiver = new ServerBroadcastReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
 
+        mServerSv = (ScrollView) findViewById(R.id.server_item_sv);
         mServerRv = (RecyclerView) findViewById(R.id.server_item_rv);
         mCountTv = (TextView) findViewById(R.id.server_item_count_tv);
         mPathTv = (TextView) findViewById(R.id.server_item_path_tv);
@@ -122,6 +128,9 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
             unbindService(connection);
         if (null != receiver) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        }
+        if (null != scrollRunnable) {
+            scrollRunnable.destroy();
         }
     }
 
@@ -185,6 +194,7 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
     }
 
     private FTPFileComparator comparator;
+    private ScrollRunnable scrollRunnable;
 
     private class ServerBroadcastReceiver extends BroadcastReceiver {
         @Override
@@ -211,7 +221,32 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
                 String path = System.getServerCurrentPath(intent);
                 mCurrentPath = path;
                 updateCurrentPath(path);
+                if (null == scrollRunnable) {
+                    scrollRunnable = new ScrollRunnable(getActivity(), mServerSv);
+                }
+                getDefaultHandler().post(scrollRunnable);
             }
+        }
+    }
+
+    private static class ScrollRunnable extends WeakRunnable<Context> {
+
+        private ScrollView view;
+
+        ScrollRunnable(Context context, ScrollView view) {
+            super(context);
+            this.view = view;
+        }
+
+        @Override
+        public void weakRun(Context context) {
+            if (null != view)
+                view.scrollTo(0, view.getMeasuredHeight());
+        }
+
+        @Override
+        public void destroy() {
+            view = null;
         }
     }
 
@@ -240,6 +275,36 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
     private void updateFileCount(int count) {
         if (null != mCountTv)
             mCountTv.setText(String.format(getString(R.string.server_item_count), String.valueOf(count)));
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (null == mCurrentPath || TextUtils.isEmpty(mCurrentPath)) {
+            super.onBackPressed();
+        } else if (mCurrentPath.endsWith("/")) {
+            showLeaveDialog();
+        } else {
+            int i = mCurrentPath.lastIndexOf("/");
+            if (i != 0) {
+                mCurrentPath = mCurrentPath.substring(0, i);
+            } else if (mCurrentPath.length() > 1) {
+                mCurrentPath = "/";
+            }
+            refresh();
+        }
+    }
+
+    private void showLeaveDialog() {
+        AlertDialog ad = new AlertDialog.Builder(getActivity())
+                             .setTitle(R.string.leave_title)
+                             .setMessage(R.string.leave_msg)
+                             .setPositiveButton(R.string.submit, (dialog, i) -> {
+                                 dialog.dismiss();
+                                 getActivity().finish();
+                             })
+                             .setNegativeButton(R.string.cancel, null)
+                             .create();
+        ad.show();
     }
 
     private void updateFolderSize(ArrayList<FTPFile> list) {

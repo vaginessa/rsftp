@@ -48,7 +48,7 @@ public class ServerItemRecyclerAdapter extends RecyclerView.Adapter implements V
         String name = ftpFile.getName();
         long timeInMillis = ftpFile.getTimestamp().getTimeInMillis();
 
-        viewHolder.mServerTypeIv.setImageResource(getFileDesImg(ftpFile));
+        viewHolder.mServerTypeIv.setImageResource(FileType.getFileDesImg(ftpFile));
         viewHolder.mServerTypeTv.setText(name);
         viewHolder.mServerTimeTv.setText(getDate(timeInMillis));
         if (ftpFile.isDirectory()) {
@@ -134,52 +134,6 @@ public class ServerItemRecyclerAdapter extends RecyclerView.Adapter implements V
         void setViewTag(int position) {
             this.item.setTag(position);
         }
-    }
-
-    private static int getFileDesImg(FTPFile file) {
-        int img = R.drawable.file_unknown;
-        if (file.isDirectory()) {
-            img = R.drawable.folder;
-        } else if (file.isFile()) {
-            switch (getFileType(file.getName())) {
-                case ".jpg":
-                    img = R.drawable.file_image;
-                    break;
-                case ".pdf":
-                    img = R.drawable.file_pdf;
-                    break;
-                case ".png":
-                    img = R.drawable.file_image;
-                    break;
-                case ".txt":
-                    img = R.drawable.file_txt;
-                    break;
-                case ".xml":
-                    img = R.drawable.file_xml;
-                    break;
-                case ".doc":
-                    img = R.drawable.file_doc;
-                    break;
-                case ".ppt":
-                    img = R.drawable.file_ppt;
-                    break;
-                default:
-                    img = R.drawable.file_file;
-                    break;
-            }
-        }
-        return img;
-    }
-
-    private static String getFileType(String name) {
-        String type = "unknown";
-        try {
-            int lastIndexOf = name.lastIndexOf(".");
-            type = name.substring(lastIndexOf, name.length());
-        } catch (Exception e) {
-            //...ignore...
-        }
-        return type;
     }
 
     public static String getSize(long size) {

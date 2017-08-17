@@ -143,5 +143,7 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
     <string name="server_item_path">当前:%s</string>
     <string name="server_item_size">文件夹大小\n%s</string>
     <string name="error">错误</string>
+    <string name="leave_title">离开提示</string>
+    <string name="leave_msg">你确定真的要离开吗？</string>
 
 </resources>
