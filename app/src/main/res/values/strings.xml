@@ -225,11 +225,15 @@ If you have any ideas or suggestions that you can send email to me.\n\n
 
     <string-array name="server_control_menu">
         <item>Edit</item>
+        <item>Advanced Settings</item>
         <item>Delete</item>
     </string-array>
 
     <string name="leave_title">Leave Note</string>
     <string name="leave_msg">Are you sure you\'re going to leave? </string>
+    <string name="local_folder">Local Folder:</string>
+    <string name="storage_out">Out</string>
+    <string name="storage_in">In</string>
 
 
 </resources>

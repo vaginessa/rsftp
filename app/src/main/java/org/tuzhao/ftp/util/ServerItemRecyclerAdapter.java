@@ -1,6 +1,7 @@
 package org.tuzhao.ftp.util;
 
 import android.app.Activity;
+import android.support.v4.util.SparseArrayCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.apache.commons.net.ftp.FTPFile;
 import org.tuzhao.ftp.R;
+import org.tuzhao.ftp.entity.RsFile;
+import org.tuzhao.ftp.fragment.SimpleRecyclerViewHolder;
 
 import java.math.RoundingMode;
 import java.text.NumberFormat;
@@ -23,16 +25,66 @@ import java.util.Date;
  */
 public class ServerItemRecyclerAdapter extends RecyclerView.Adapter implements View.OnClickListener, View.OnLongClickListener {
 
-    private Activity context;
-    private ArrayList<FTPFile> list;
+    private static final int TYPE_HEADER = 0x1000;
+    private static final int TYPE_FOOTER = 0x2000;
+    private static final int TYPE_NORMAL = 0x3000;
 
-    public ServerItemRecyclerAdapter(Activity context, ArrayList<FTPFile> list) {
+    private Activity context;
+    private ArrayList<RsFile> list;
+
+    private SparseArrayCompat<View> mHeaderViews = new SparseArrayCompat<>();
+    private SparseArrayCompat<View> mFootViews = new SparseArrayCompat<>();
+
+    public ServerItemRecyclerAdapter(Activity context, ArrayList<RsFile> list) {
         this.context = context;
         this.list = list;
     }
 
+    public void setHeaderView(View headerView) {
+        this.mHeaderViews.put(mHeaderViews.size() + TYPE_HEADER, headerView);
+    }
+
+    public void setFooterView(View footerView) {
+        this.mFootViews.put(mFootViews.size() + TYPE_FOOTER, footerView);
+    }
+
+    public int getHeadersCount() {
+        return mHeaderViews.size();
+    }
+
+    public int getFootersCount() {
+        return mFootViews.size();
+    }
+
+    private boolean isHeaderViewPos(int position) {
+        return position < getHeadersCount();
+    }
+
+    private boolean isFooterViewPos(int position) {
+        return position >= getHeadersCount() + getRealItemCount();
+    }
+
+    private int getRealItemCount() {
+        return list == null ? 0 : list.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (isHeaderViewPos(position)) {
+            return mHeaderViews.keyAt(position);
+        } else if (isFooterViewPos(position)) {
+            return mFootViews.keyAt(position);
+        }
+        return TYPE_NORMAL;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (null != mHeaderViews.get(viewType)) {
+            return new SimpleRecyclerViewHolder(context, mHeaderViews.get(viewType));
+        } else if (null != mFootViews.get(viewType)) {
+            return new SimpleRecyclerViewHolder(context, mFootViews.get(viewType));
+        }
         View inflate = LayoutInflater.from(context).inflate(R.layout.item_server_item, parent, false);
         inflate.setOnClickListener(this);
         inflate.setOnLongClickListener(this);
@@ -41,20 +93,24 @@ public class ServerItemRecyclerAdapter extends RecyclerView.Adapter implements V
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (isHeaderViewPos(position)) return;
+        if (isFooterViewPos(position)) return;
+
+        position = position - getHeadersCount();
         ServerItemViewHolder viewHolder = (ServerItemViewHolder) holder;
         viewHolder.setViewTag(position);
 
-        FTPFile ftpFile = list.get(position);
-        String name = ftpFile.getName();
-        long timeInMillis = ftpFile.getTimestamp().getTimeInMillis();
+        RsFile file = list.get(position);
+        String name = file.getName();
+        long timeInMillis = file.getModifyTimeMillis();
 
-        viewHolder.mServerTypeIv.setImageResource(FileType.getFileDesImg(ftpFile));
+        viewHolder.mServerTypeIv.setImageResource(FileType.getFileDesImg(file));
         viewHolder.mServerTypeTv.setText(name);
         viewHolder.mServerTimeTv.setText(getDate(timeInMillis));
-        if (ftpFile.isDirectory()) {
+        if (file.isDir()) {
             viewHolder.mServerSizeTv.setVisibility(View.GONE);
         } else {
-            long size = ftpFile.getSize();
+            long size = file.getSize();
             viewHolder.mServerSizeTv.setText(getSize(size));
             viewHolder.mServerSizeTv.setVisibility(View.VISIBLE);
         }
@@ -62,7 +118,7 @@ public class ServerItemRecyclerAdapter extends RecyclerView.Adapter implements V
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return getRealItemCount() + getHeadersCount() + getFootersCount();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package org.tuzhao.ftp.util;
 
-import org.apache.commons.net.ftp.FTPFile;
 import org.tuzhao.ftp.R;
+import org.tuzhao.ftp.entity.RsFile;
 
 /**
  * author: tuzhao
@@ -9,9 +9,9 @@ import org.tuzhao.ftp.R;
  */
 public final class FileType {
 
-    public static int getFileDesImg(FTPFile file) {
+    public static int getFileDesImg(RsFile file) {
         int img = R.drawable.file_unknown;
-        if (file.isDirectory()) {
+        if (file.isDir()) {
             img = R.drawable.folder;
         } else if (file.isFile()) {
             String type = getFileType(file.getName());

@@ -102,6 +102,9 @@ public class ServerListActivity extends BaseActivity implements ServerAddFragmen
                 showServerInfoDialog(server, ServerAddFragment.START_TYPE_EDIT);
                 break;
             case 1:
+                ServerSettingsActivity.start(getActivity(), server);
+                break;
+            case 2:
                 int result = new RsDBHelper(this).deleteServer(server);
                 log("delete result: " + result);
                 int index = getSelectIndex(server);

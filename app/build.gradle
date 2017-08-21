@@ -111,9 +111,9 @@ dependencies {
     compile 'com.android.support:design:26.0.0-alpha1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.umeng.analytics:analytics:latest.integration'
-    provided 'org.projectlombok:lombok:1.16.6'
     compile 'junit:junit:4.12'
     compile 'com.android.support:recyclerview-v7:26.0.0-alpha1'
+    provided 'org.projectlombok:lombok:1.16.6'
 }
 
 android {

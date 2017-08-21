@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import org.apache.commons.net.ftp.FTPFile;
 import org.tuzhao.ftp.R;
+import org.tuzhao.ftp.entity.RsFile;
 import org.tuzhao.ftp.entity.ServerEntity;
 import org.tuzhao.ftp.service.ServerConnectService;
 import org.tuzhao.ftp.util.FTPFileComparator;
@@ -66,7 +67,7 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
     }
 
     private String mCurrentPath;
-    private ArrayList<FTPFile> filesList;
+    private ArrayList<RsFile> filesList;
     private ServerItemRecyclerAdapter adapter;
 
     private TextView mCountTv;
@@ -154,8 +155,8 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
     @Override
     public void onItemClick(View v, Object data, int position) {
         if (-1 != position) {
-            FTPFile ftpFile = filesList.get(position);
-            if (ftpFile.isDirectory()) {
+            RsFile ftpFile = filesList.get(position);
+            if (ftpFile.isDir()) {
                 String name = ftpFile.getName();
                 if (mCurrentPath.equals("/")) {
                     mCurrentPath = mCurrentPath + name;
@@ -202,14 +203,15 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
             final String action = intent.getAction();
             if (action.equals(ACTION_SERVER_LIST_FILES)) {
                 Serializable serializable = intent.getSerializableExtra(EXTRA_RESULT);
-                ArrayList<FTPFile> list = null;
+                ArrayList<RsFile> list = null;
                 if (null != serializable) {
-                    list = (ArrayList<FTPFile>) serializable;
+                    ArrayList<FTPFile> ftpList = (ArrayList<FTPFile>) serializable;
                     if (null == comparator) {
                         comparator = new FTPFileComparator();
                     }
-                    Collections.sort(list, comparator);
-                    log("array length: " + list.size());
+                    Collections.sort(ftpList, comparator);
+                    log("array length: " + ftpList.size());
+                    list = System.convertFTPFileToRsFile(ftpList);
                     filesList.clear();
                     filesList.addAll(list);
                     adapter.notifyDataSetChanged();
@@ -307,11 +309,11 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
         ad.show();
     }
 
-    private void updateFolderSize(ArrayList<FTPFile> list) {
+    private void updateFolderSize(ArrayList<RsFile> list) {
         long size = 0;
         if (null != list) {
             for (int i = 0; i < list.size(); i++) {
-                FTPFile file = list.get(i);
+                RsFile file = list.get(i);
                 if (file.isFile())
                     size += file.getSize();
             }

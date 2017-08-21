@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="org.tuzhao.ftp.activity.ServerSettingsActivity">
+
+    <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <LinearLayout style="@style/server_settings_ll">
+
+            <TextView
+                style="@style/server_settings_tv"
+                android:text="@string/server_add_address"/>
+
+            <EditText
+                android:id="@+id/server_settings_address_et"
+                style="@style/server_settings_et"
+                android:digits="@string/address_filter"/>
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/server_settings_ll">
+
+            <TextView
+                style="@style/server_settings_tv"
+                android:text="@string/server_add_port"/>
+
+            <EditText
+                android:id="@+id/server_settings_port_et"
+                style="@style/server_settings_et"
+                android:inputType="number"/>
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/server_settings_ll">
+
+            <TextView
+                style="@style/server_settings_tv"
+                android:text="@string/server_add_account"/>
+
+            <EditText
+                android:id="@+id/server_settings_account_et"
+                style="@style/server_settings_et"
+                android:inputType="text"/>
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/server_settings_ll">
+
+            <TextView
+                style="@style/server_settings_tv"
+                android:text="@string/server_add_password"/>
+
+            <EditText
+                android:id="@+id/server_settings_pwd_et"
+                style="@style/server_settings_et"
+                android:inputType="textPassword"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="50dp"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/server_settings_tv"
+                android:text="@string/local_folder"
+                />
+
+            <EditText
+                android:id="@+id/server_settings_folder_et"
+                style="@style/server_settings_et"
+                android:clickable="true"
+                android:focusable="false"
+                android:inputType="textPassword"/>
+
+        </LinearLayout>
+
+        <LinearLayout style="@style/server_settings_ll">
+
+            <TextView
+                style="@style/server_settings_tv"
+                android:text=""/>
+
+            <TextView
+                android:id="@+id/server_settings_out_bt"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:textSize="14sp"
+                android:drawableLeft="@drawable/path_storage"
+                android:gravity="center|left"
+                android:text="@string/storage_out"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

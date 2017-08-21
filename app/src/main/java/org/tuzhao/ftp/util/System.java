@@ -7,6 +7,13 @@ import android.content.pm.ResolveInfo;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import org.apache.commons.net.ftp.FTPFile;
+import org.tuzhao.ftp.entity.RsFTPFile;
+import org.tuzhao.ftp.entity.RsFile;
+import org.tuzhao.ftp.entity.RsLocalFile;
+
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -62,6 +69,25 @@ public final class System {
         int priority = thread.getPriority();
         ThreadGroup group = thread.getThreadGroup();
         log("thread info[id: " + id + " name: " + name + " priority: " + priority + " group: " + group + " ]");
+    }
+
+    public static ArrayList<RsFile> convertFTPFileToRsFile(ArrayList<FTPFile> srcList) {
+        ArrayList<RsFile> files = new ArrayList<>();
+        for (int i = 0; i < srcList.size(); i++) {
+            FTPFile ftpFile = srcList.get(i);
+            files.add(new RsFTPFile(ftpFile));
+        }
+        return files;
+    }
+
+    public static ArrayList<RsFile> convertFileToRsFile(File[] srcList) {
+        ArrayList<RsFile> files = new ArrayList<>();
+        if (null != srcList) {
+            for (File file : srcList) {
+                files.add(new RsLocalFile(file));
+            }
+        }
+        return files;
     }
 
     private static void log(String msg) {

@@ -66,6 +66,7 @@ public final class ServerControlFragment extends DialogFragment {
         ServerControlDialogAdapter adapter = new ServerControlDialogAdapter(getActivity());
         builder.setAdapter(adapter, (dialogInterface, i) -> {
             log("position: " + i);
+            dialogInterface.dismiss();
             if (null != listener)
                 listener.onMenu(entity, i);
         });

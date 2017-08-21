@@ -155,6 +155,8 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
 
         <activity android:name=".activity.ServerListActivity">
         </activity>
+        <activity android:name=".activity.ServerSettingsActivity">
+        </activity>
     </application>
 
 </manifest>

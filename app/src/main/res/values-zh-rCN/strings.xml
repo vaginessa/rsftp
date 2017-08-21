@@ -145,5 +145,6 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
     <string name="error">错误</string>
     <string name="leave_title">离开提示</string>
     <string name="leave_msg">你确定真的要离开吗？</string>
+    <string name="storage_out">外部</string>
 
 </resources>
