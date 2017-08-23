@@ -20,7 +20,8 @@ final class RsSQLInfo {
             ServerEntry.COLUMN_NAME_ADDRESS + TEXT_TYPE + NOT_NULL + COMMA_SEP +
             ServerEntry.COLUMN_NAME_PORT + NUM_TYPE + " DEFAULT 2121" + COMMA_SEP +
             ServerEntry.COLUMN_NAME_ACCOUNT + TEXT_TYPE + NOT_NULL + COMMA_SEP +
-            ServerEntry.COLUMN_NAME_PWD + TEXT_TYPE + NOT_NULL +
+            ServerEntry.COLUMN_NAME_PWD + TEXT_TYPE + NOT_NULL + COMMA_SEP +
+            ServerEntry.COLUMN_NAME_SAVE_PATH + " VARCHAR(500)" +
             " )";
 
     public static final String SQL_DELETE_ENTRIES =

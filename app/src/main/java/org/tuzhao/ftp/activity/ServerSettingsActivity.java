@@ -5,15 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.tuzhao.ftp.R;
+import org.tuzhao.ftp.db.RsDBHelper;
 import org.tuzhao.ftp.entity.ServerEntity;
 import org.tuzhao.ftp.fragment.ChooseDirFragment;
 
 import java.io.File;
 
-public class ServerSettingsActivity extends BaseActivity implements View.OnClickListener {
+public class ServerSettingsActivity extends BaseActivity implements View.OnClickListener, ChooseDirFragment.OnSelectListener {
 
     private static final String EXTRA_SERVER = "extra_server";
 
@@ -28,8 +30,12 @@ public class ServerSettingsActivity extends BaseActivity implements View.OnClick
     }
 
     private ServerEntity server;
-
+    private EditText mPathEt;
     private TextView mOutTv;
+    private EditText mAddressEt;
+    private EditText mPortEt;
+    private EditText mAccountEt;
+    private EditText mPwdEt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +52,22 @@ public class ServerSettingsActivity extends BaseActivity implements View.OnClick
             log("start server info: " + server);
         }
 
-
+        mAddressEt = (EditText) findViewById(R.id.server_settings_address_et);
+        mPortEt = (EditText) findViewById(R.id.server_settings_port_et);
+        mAccountEt = (EditText) findViewById(R.id.server_settings_account_et);
+        mPwdEt = (EditText) findViewById(R.id.server_settings_pwd_et);
+        mPathEt = (EditText) findViewById(R.id.server_settings_folder_et);
         mOutTv = (TextView) findViewById(R.id.server_settings_out_bt);
         mOutTv.setOnClickListener(this);
+        updateInterface();
+    }
+
+    private void updateInterface() {
+        mAccountEt.setText(server.getAccount());
+        mAddressEt.setText(server.getAddress());
+        mPortEt.setText(server.getPort());
+        mPwdEt.setText(server.getPwd());
+        mPathEt.setText(server.getSavePath());
     }
 
     @Override
@@ -63,8 +82,15 @@ public class ServerSettingsActivity extends BaseActivity implements View.OnClick
                 path = filesDir.getAbsolutePath();
                 log("files dir path:" + path);
 
-                ChooseDirFragment.show(getActivity());
+                ChooseDirFragment.show(getActivity(), this);
                 break;
         }
+    }
+
+    @Override
+    public void onSelect(String path) {
+        server.setSavePath(path);
+        int update = new RsDBHelper(getActivity()).updateServer(server);
+        if (update != -1) updateInterface();
     }
 }

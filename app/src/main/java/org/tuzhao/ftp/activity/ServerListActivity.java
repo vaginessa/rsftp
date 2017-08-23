@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.db.RsDBHelper;
@@ -25,6 +26,7 @@ public class ServerListActivity extends BaseActivity implements ServerAddFragmen
 
     private ArrayList<ServerEntity> list = new ArrayList<>();
     private ServerAddFragment addFragment;
+    private TextView mNoteTv;
     private RecyclerView mListRv;
     private ServerListRecyclerAdapter adapter;
 
@@ -32,15 +34,35 @@ public class ServerListActivity extends BaseActivity implements ServerAddFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_server_list);
+        mNoteTv = (TextView) findViewById(R.id.server_list_note_tv);
         mListRv = (RecyclerView) findViewById(R.id.server_list_rv);
 
-        list.addAll(new RsDBHelper(this).getServerList());
         log(list.toString());
         adapter = new ServerListRecyclerAdapter(this, list);
         adapter.setOnItemClickListener(this);
         adapter.setOnItemLongClickListener(this);
         mListRv.setLayoutManager(new GridLayoutManager(this, 3));
         mListRv.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        log("onResume");
+        list.clear();
+        list.addAll(new RsDBHelper(this).getServerList());
+        adapter.notifyDataSetChanged();
+        updateNote();
+    }
+
+    private void updateNote() {
+        if (list.size() >= 1) {
+            mNoteTv.setText("");
+            mNoteTv.setVisibility(View.GONE);
+        } else {
+            mNoteTv.setText(R.string.server_add_note);
+            mNoteTv.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -80,6 +102,7 @@ public class ServerListActivity extends BaseActivity implements ServerAddFragmen
             }
         }
         adapter.notifyDataSetChanged();
+        updateNote();
     }
 
     @Override
@@ -113,6 +136,7 @@ public class ServerListActivity extends BaseActivity implements ServerAddFragmen
                     adapter.notifyDataSetChanged();
                     showMsg("delete server successful");
                 }
+                updateNote();
                 break;
         }
     }

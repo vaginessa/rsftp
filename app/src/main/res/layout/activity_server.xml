@@ -50,11 +50,22 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/server_item_note_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:textColor="@android:color/holo_red_light"
+        android:textSize="14sp"
+        android:visibility="invisible"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/server_item_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/server_item_state_ll"
         android:scrollbars="vertical"/>
+
 
 </RelativeLayout>

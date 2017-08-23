@@ -82,8 +82,7 @@
                 android:id="@+id/server_settings_folder_et"
                 style="@style/server_settings_et"
                 android:clickable="true"
-                android:focusable="false"
-                android:inputType="textPassword"/>
+                android:focusable="false"/>
 
         </LinearLayout>
 
@@ -97,10 +96,10 @@
                 android:id="@+id/server_settings_out_bt"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
-                android:textSize="14sp"
                 android:drawableLeft="@drawable/path_storage"
                 android:gravity="center|left"
-                android:text="@string/storage_out"/>
+                android:text="@string/storage_out"
+                android:textSize="14sp"/>
 
         </LinearLayout>
 

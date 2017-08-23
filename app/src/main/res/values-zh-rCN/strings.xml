@@ -146,5 +146,7 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
     <string name="leave_title">离开提示</string>
     <string name="leave_msg">你确定真的要离开吗？</string>
     <string name="storage_out">外部</string>
+    <string name="server_add">添加FTP服务器</string>
+    <string name="server_add_note">本地FTP服务器为空\n您可以点击菜单进行添加</string>
 
 </resources>

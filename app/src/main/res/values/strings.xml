@@ -210,6 +210,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="server_add_account">Account:</string>
     <string name="server_add_account_hint">default empty</string>
     <string name="server_add_password">Password:</string>
+    <string name="server_add_note">You don\'t have any FTP server.\nPlease add one.</string>
     <string name="ftp">FTP</string>
 
     <string name="address_note_one">address can\'t empty</string>

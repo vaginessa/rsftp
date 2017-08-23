@@ -7,6 +7,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,15 +18,18 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.entity.RsFile;
+import org.tuzhao.ftp.util.RsFileComparator;
 import org.tuzhao.ftp.util.OnItemClickListener;
 import org.tuzhao.ftp.util.ServerItemRecyclerAdapter;
 import org.tuzhao.ftp.util.System;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * author: tuzhao
@@ -35,7 +39,7 @@ public class ChooseDirFragment extends DialogFragment implements OnItemClickList
 
     private static final String FRAGMENT_TAG = "ChooseDirFragment";
 
-    public static void show(Activity context) {
+    public static void show(Activity context, OnSelectListener listener) {
         FragmentManager manager = context.getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         Fragment fragmentByTag = manager.findFragmentByTag(FRAGMENT_TAG);
@@ -44,6 +48,7 @@ public class ChooseDirFragment extends DialogFragment implements OnItemClickList
         }
         transaction.addToBackStack(null);
         ChooseDirFragment fragment = newInstance();
+        fragment.setOnSelectListener(listener);
         fragment.show(manager, FRAGMENT_TAG);
     }
 
@@ -59,9 +64,11 @@ public class ChooseDirFragment extends DialogFragment implements OnItemClickList
     private ScrollView mSv;
     private TextView mPathTv;
     private TextView mSizeTv;
+    private TextView mNoteTv;
     private RecyclerView mRv;
 
     private ArrayList<RsFile> filesList;
+    private RsFileComparator comparator;
     private ServerItemRecyclerAdapter adapter;
 
     private String mCurrentPath;
@@ -70,7 +77,7 @@ public class ChooseDirFragment extends DialogFragment implements OnItemClickList
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Choose Dir");
-        builder.setPositiveButton(R.string.submit, null);
+        builder.setPositiveButton(R.string.submit, new SubmitClickListener());
         builder.setNegativeButton(R.string.cancel, null);
         AlertDialog dialog = builder.create();
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.activity_server, null, false);
@@ -80,12 +87,41 @@ public class ChooseDirFragment extends DialogFragment implements OnItemClickList
         mPathTv = view.findViewById(R.id.server_item_path_tv);
         mSizeTv = view.findViewById(R.id.server_item_size_tv);
         mRv = view.findViewById(R.id.server_item_rv);
+        mNoteTv = view.findViewById(R.id.server_item_note_tv);
         dialog.setView(view);
         return dialog;
     }
 
+    private class SubmitClickListener implements DialogInterface.OnClickListener {
+
+        SubmitClickListener() {
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int position) {
+            File file = new File(mCurrentPath);
+            boolean ex = file.canExecute();
+            boolean wr = file.canWrite();
+            if (!ex) {
+                showMsg("Dir don't have X permission");
+            } else if (!wr) {
+                showMsg("Dir don't have W permission");
+            } else {
+                log("select dir: " + mCurrentPath);
+                getDialog().dismiss();
+                if (null != listener) {
+                    listener.onSelect(mCurrentPath);
+                }
+            }
+        }
+    }
+
     private static void log(String msg) {
         Log.d(FRAGMENT_TAG, msg);
+    }
+
+    private void showMsg(String msg) {
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -101,9 +137,9 @@ public class ChooseDirFragment extends DialogFragment implements OnItemClickList
             public void onClick(View view) {
                 log("click");
                 if (null == mCurrentPath || TextUtils.isEmpty(mCurrentPath)) {
-                    log("ignore...");
+                    showMsg("current path is empty");
                 } else if (mCurrentPath.endsWith("/")) {
-                    log("root");
+                    showMsg("has reached the root directory");
                 } else {
                     int i = mCurrentPath.lastIndexOf("/");
                     if (i != 0) {
@@ -146,11 +182,43 @@ public class ChooseDirFragment extends DialogFragment implements OnItemClickList
     private void refresh() {
         File file = new File(mCurrentPath);
         ArrayList<RsFile> rsFiles = System.convertFileToRsFile(file.listFiles());
+        if (null == comparator) {
+            comparator = new RsFileComparator();
+        }
+        Collections.sort(rsFiles, comparator);
         filesList.clear();
         filesList.addAll(rsFiles);
         adapter.notifyDataSetChanged();
         updateFileCount(rsFiles.size());
         updateFolderSize(rsFiles);
+        updateNoteTv(file);
+    }
+
+    private void updateNoteTv(File file) {
+        boolean ex = file.canExecute();
+        boolean wr = file.canWrite();
+        boolean re = file.canRead();
+        StringBuilder builder = new StringBuilder();
+        if (!ex) {
+            builder.append("Dir don't have X permission\n");
+        }
+        if (!re) {
+            builder.append("Dir don't have R permission\n");
+        }
+        if (!wr) {
+            builder.append("Dir don't have W permission\n");
+        }
+        if (builder.toString().length() > 0) {
+            if (null != mNoteTv) {
+                mNoteTv.setText(builder.toString());
+                mNoteTv.setVisibility(View.VISIBLE);
+            }
+        } else {
+            if (null != mNoteTv) {
+                mNoteTv.setText("");
+                mNoteTv.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 
     private void updateAllToDefault() {
@@ -184,6 +252,16 @@ public class ChooseDirFragment extends DialogFragment implements OnItemClickList
         String s = ServerItemRecyclerAdapter.getSize(size);
         if (null != mSizeTv)
             mSizeTv.setText(String.format(getString(R.string.server_item_size), s));
+    }
+
+    private OnSelectListener listener;
+
+    public void setOnSelectListener(OnSelectListener listener) {
+        this.listener = listener;
+    }
+
+    public interface OnSelectListener {
+        void onSelect(String path);
     }
 
 }
