@@ -94,6 +94,9 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_SERVER_LIST_FILES);
         filter.addAction(System.ACTION_SERVER_CURRENT_PATH);
+        filter.addAction(System.ACTION_SERVER_EXCEPTION_CONNECT);
+        filter.addAction(System.ACTION_SERVER_EXCEPTION_LOGIN);
+        filter.addAction(System.ACTION_SERVER_FAILED_LOGIN);
         receiver = new ServerBroadcastReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
 
@@ -227,6 +230,18 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
                     scrollRunnable = new ScrollRunnable(getActivity(), mServerSv);
                 }
                 getDefaultHandler().post(scrollRunnable);
+            } else if (action.equals(System.ACTION_SERVER_EXCEPTION_CONNECT)) {
+                String msg = System.getServerErrorConnectMsg(intent);
+                showNoteDialog(msg);
+                dismissLoadingDialog();
+            } else if (action.equals(System.ACTION_SERVER_EXCEPTION_LOGIN)) {
+                String msg = System.getServerErrorLoginMsg(intent);
+                showNoteDialog(msg);
+                dismissLoadingDialog();
+            } else if (action.equals(System.ACTION_SERVER_FAILED_LOGIN)) {
+                String msg = getString(R.string.failed_login);
+                showNoteDialog(msg);
+                dismissLoadingDialog();
             }
         }
     }

@@ -93,8 +93,17 @@
                 android:text=""/>
 
             <TextView
+                android:id="@+id/server_settings_in_bt"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:drawableLeft="@drawable/path_phone"
+                android:gravity="center|left"
+                android:text="@string/storage_in"
+                android:textSize="14sp"/>
+
+            <TextView
                 android:id="@+id/server_settings_out_bt"
-                android:layout_width="80dp"
+                android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:drawableLeft="@drawable/path_storage"
                 android:gravity="center|left"

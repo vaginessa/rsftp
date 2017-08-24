@@ -102,7 +102,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="cancel">取消</string>
     <string name="open_error_mail">打开邮箱应用失败！</string>
     <string name="open_error_setting">打开设置界面失败！</string>
-    <string name="welcome_bottom">\@tuzhao.org</string>
+    <string name="welcome_bottom">tuzhao.org</string>
     <string name="permission_msg">当前应用所有声明的权限需要被允许，%s。如果你不允许所有权限的使用将会导致本应用不能正常运行。</string>
     <string name="permission_note">权限提示</string>
     <string name="permission_bt_set">设置</string>
@@ -145,8 +145,22 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
     <string name="error">错误</string>
     <string name="leave_title">离开提示</string>
     <string name="leave_msg">你确定真的要离开吗？</string>
-    <string name="storage_out">外部</string>
+    <string name="storage_out">外部存储</string>
     <string name="server_add">添加FTP服务器</string>
     <string name="server_add_note">本地FTP服务器为空\n您可以点击菜单进行添加</string>
+    <string name="note">提示</string>
+    <string name="failed_login">登陆失败，请检查你的用户名和密码是否正确。</string>
+    <string name="failed_external_storage">请确保外置存储卡已插入当前手机。</string>
+    <string name="storage_in">内部存储</string>
+    <string name="server_add_account">用户名：</string>
+    <string name="server_add_address">地址：</string>
+    <string name="server_add_password">密码：</string>
+    <string name="server_add_port">端口号：</string>
+    <string name="local_folder">存储路径：</string>
 
+    <string-array name="server_control_menu">
+        <item>编辑</item>
+        <item>高级设置</item>
+        <item>删除</item>
+    </string-array>
 </resources>

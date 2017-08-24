@@ -3,6 +3,7 @@ package org.tuzhao.ftp.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.view.View;
 import android.widget.EditText;
@@ -12,8 +13,6 @@ import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.db.RsDBHelper;
 import org.tuzhao.ftp.entity.ServerEntity;
 import org.tuzhao.ftp.fragment.ChooseDirFragment;
-
-import java.io.File;
 
 public class ServerSettingsActivity extends BaseActivity implements View.OnClickListener, ChooseDirFragment.OnSelectListener {
 
@@ -31,7 +30,6 @@ public class ServerSettingsActivity extends BaseActivity implements View.OnClick
 
     private ServerEntity server;
     private EditText mPathEt;
-    private TextView mOutTv;
     private EditText mAddressEt;
     private EditText mPortEt;
     private EditText mAccountEt;
@@ -57,8 +55,10 @@ public class ServerSettingsActivity extends BaseActivity implements View.OnClick
         mAccountEt = (EditText) findViewById(R.id.server_settings_account_et);
         mPwdEt = (EditText) findViewById(R.id.server_settings_pwd_et);
         mPathEt = (EditText) findViewById(R.id.server_settings_folder_et);
-        mOutTv = (TextView) findViewById(R.id.server_settings_out_bt);
+        TextView mOutTv = (TextView) findViewById(R.id.server_settings_out_bt);
+        TextView mInTv = (TextView) findViewById(R.id.server_settings_in_bt);
         mOutTv.setOnClickListener(this);
+        mInTv.setOnClickListener(this);
         updateInterface();
     }
 
@@ -74,15 +74,15 @@ public class ServerSettingsActivity extends BaseActivity implements View.OnClick
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.server_settings_out_bt:
-                File cacheDir = getCacheDir();
-                String path = cacheDir.getAbsolutePath();
-                log("cache path:" + path);
-
-                File filesDir = getFilesDir();
-                path = filesDir.getAbsolutePath();
-                log("files dir path:" + path);
-
-                ChooseDirFragment.show(getActivity(), this);
+                if (isExternalStorageWritable()) {
+                    String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+                    ChooseDirFragment.show(getActivity(), path, this);
+                } else {
+                    showNoteDialog(getString(R.string.failed_external_storage));
+                }
+                break;
+            case R.id.server_settings_in_bt:
+                ChooseDirFragment.show(getActivity(), "", this);
                 break;
         }
     }
@@ -93,4 +93,10 @@ public class ServerSettingsActivity extends BaseActivity implements View.OnClick
         int update = new RsDBHelper(getActivity()).updateServer(server);
         if (update != -1) updateInterface();
     }
+
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
 }

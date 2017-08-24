@@ -156,7 +156,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="app_logo">app logo</string>
 
     <string name="welcome_note">do the Real Simple best FTP Server</string>
-    <string name="welcome_bottom">\@tuzhao.org</string>
+    <string name="welcome_bottom">tuzhao.org</string>
 
     <string name="exit_title">FTP Server Note</string>
     <string name="exit_msg">Are you sure want to exit this app?\nIt will be kill FTP Server if you click submit button.</string>
@@ -233,8 +233,11 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="leave_title">Leave Note</string>
     <string name="leave_msg">Are you sure you\'re going to leave? </string>
     <string name="local_folder">Local Folder:</string>
-    <string name="storage_out">Out</string>
-    <string name="storage_in">In</string>
+    <string name="storage_out">Out Storage</string>
+    <string name="storage_in">In Storage</string>
+    <string name="note">Note</string>
+    <string name="failed_login">Login failed,please check your account and password.</string>
+    <string name="failed_external_storage">Can\'t find external storage at current mobile.</string>
 
 
 </resources>

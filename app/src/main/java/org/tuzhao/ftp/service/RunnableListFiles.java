@@ -10,6 +10,7 @@ import org.tuzhao.ftp.entity.ServerEntity;
 import org.tuzhao.ftp.util.System;
 import org.tuzhao.ftp.util.WeakRunnable;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -31,18 +32,38 @@ class RunnableListFiles extends WeakRunnable<Context> {
 
     @Override
     public void weakRun(Context context) {
-        boolean status = false;
+        boolean status;
         FTPClient client;
+        String address = server.getAddress();
+        int port = Integer.parseInt(server.getPort());
+        String account = server.getAccount();
+        String pwd = server.getPwd();
+        client = new FTPClient();
+        client.setDefaultTimeout(15000);
+        client.setAutodetectUTF8(true);
+
         try {
-            String address = server.getAddress();
-            int port = Integer.parseInt(server.getPort());
-            String account = server.getAccount();
-            String pwd = server.getPwd();
-            client = new FTPClient();
-            client.setAutodetectUTF8(true);
             client.connect(address, port);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.sendServerConnectExceptionBroadcast(context, e.getMessage());
+            return;
+        }
+
+        try {
             status = client.login(account, pwd);
-            log("connect result: " + status);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.sendServerLoginExceptionBroadcast(context, e.getMessage());
+            return;
+        }
+
+        log("connect result: " + status);
+        if (!status) {
+            System.sendServerLoginFailed(context);
+        }
+
+        try {
             log("list files path: " + path);
             if (!(path == null || TextUtils.isEmpty(path))) {
                 client.changeWorkingDirectory(path);

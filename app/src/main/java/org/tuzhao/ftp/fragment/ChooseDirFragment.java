@@ -38,8 +38,9 @@ import java.util.Collections;
 public class ChooseDirFragment extends DialogFragment implements OnItemClickListener {
 
     private static final String FRAGMENT_TAG = "ChooseDirFragment";
+    private static final String EXTRA_PATH = "extra_path";
 
-    public static void show(Activity context, OnSelectListener listener) {
+    public static void show(Activity context, String openPath, OnSelectListener listener) {
         FragmentManager manager = context.getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         Fragment fragmentByTag = manager.findFragmentByTag(FRAGMENT_TAG);
@@ -48,6 +49,9 @@ public class ChooseDirFragment extends DialogFragment implements OnItemClickList
         }
         transaction.addToBackStack(null);
         ChooseDirFragment fragment = newInstance();
+        Bundle bundle = new Bundle();
+        bundle.putString(EXTRA_PATH, openPath);
+        fragment.setArguments(bundle);
         fragment.setOnSelectListener(listener);
         fragment.show(manager, FRAGMENT_TAG);
     }
@@ -147,7 +151,6 @@ public class ChooseDirFragment extends DialogFragment implements OnItemClickList
                     } else if (mCurrentPath.length() > 1) {
                         mCurrentPath = "/";
                     }
-                    updateCurrentPath(mCurrentPath);
                     refresh();
                 }
             }
@@ -157,8 +160,15 @@ public class ChooseDirFragment extends DialogFragment implements OnItemClickList
         mRv.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRv.setAdapter(adapter);
 
-        File filesDir = getActivity().getFilesDir();
-        mCurrentPath = filesDir.getAbsolutePath();
+        Bundle bundle = getArguments();
+        if (null != bundle) {
+            mCurrentPath = bundle.getString(EXTRA_PATH, "");
+            log("external storage path: " + mCurrentPath);
+        }
+        if (null == mCurrentPath || mCurrentPath.equals("")) {
+            File filesDir = getActivity().getFilesDir();
+            mCurrentPath = filesDir.getAbsolutePath();
+        }
         refresh();
     }
 
@@ -173,13 +183,13 @@ public class ChooseDirFragment extends DialogFragment implements OnItemClickList
                 } else {
                     mCurrentPath = mCurrentPath + "/" + name;
                 }
-                updateCurrentPath(mCurrentPath);
                 refresh();
             }
         }
     }
 
     private void refresh() {
+        updateCurrentPath(mCurrentPath);
         File file = new File(mCurrentPath);
         ArrayList<RsFile> rsFiles = System.convertFileToRsFile(file.listFiles());
         if (null == comparator) {

@@ -24,7 +24,13 @@ import java.util.Locale;
 public final class System {
 
     public static final String ACTION_SERVER_CURRENT_PATH = "action_server_current_path";
+    public static final String ACTION_SERVER_EXCEPTION_CONNECT = "action_server_connect_exception";
+    public static final String ACTION_SERVER_EXCEPTION_LOGIN = "action_server_login_exception";
+    public static final String ACTION_SERVER_FAILED_LOGIN = "action_server_failed_login";
+
     private static final String EXTRA_CURRENT_PATH = "extra_current_path";
+    private static final String EXTRA_ERROR_CONNECT_MSG = "extra_error_msg";
+    private static final String EXTRA_ERROR_LOGIN_MSG = "extra_login_msg";
 
     private static final String TAG = "System";
 
@@ -34,12 +40,45 @@ public final class System {
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
+    public static void sendServerConnectExceptionBroadcast(Context context, String errorMsg) {
+        Intent intent = new Intent(ACTION_SERVER_EXCEPTION_CONNECT);
+        intent.putExtra(EXTRA_ERROR_CONNECT_MSG, errorMsg);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
+    public static void sendServerLoginExceptionBroadcast(Context context, String errorMsg) {
+        Intent intent = new Intent(ACTION_SERVER_EXCEPTION_LOGIN);
+        intent.putExtra(EXTRA_ERROR_LOGIN_MSG, errorMsg);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
+    public static void sendServerLoginFailed(Context context) {
+        Intent intent = new Intent(ACTION_SERVER_FAILED_LOGIN);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
     public static String getServerCurrentPath(Intent intent) {
         String path = null;
         if (null != intent) {
             path = intent.getStringExtra(EXTRA_CURRENT_PATH);
         }
         return path;
+    }
+
+    public static String getServerErrorConnectMsg(Intent intent) {
+        String msg = null;
+        if (null != intent) {
+            msg = intent.getStringExtra(EXTRA_ERROR_CONNECT_MSG);
+        }
+        return msg;
+    }
+
+    public static String getServerErrorLoginMsg(Intent intent) {
+        String msg = null;
+        if (null != intent) {
+            msg = intent.getStringExtra(EXTRA_ERROR_LOGIN_MSG);
+        }
+        return msg;
     }
 
     public static boolean isIntentAvailable(Context context, Intent intent) {

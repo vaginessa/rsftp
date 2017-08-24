@@ -1,6 +1,7 @@
 package org.tuzhao.ftp.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
 
+import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.fragment.SimpleDialogFragment;
 
 /**
@@ -49,7 +51,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void log(String msg) {
-        Log.d(this.getClass().getSimpleName(), msg);
+        Log.d("activity", msg);
     }
 
     private SimpleDialogFragment dialogFragment;
@@ -68,6 +70,14 @@ public class BaseActivity extends AppCompatActivity {
                 dialogFragment.dismiss();
             }
         }
+    }
+
+    public void showNoteDialog(String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.note);
+        builder.setMessage(msg);
+        builder.setPositiveButton(R.string.submit, null);
+        builder.create().show();
     }
 
 }
