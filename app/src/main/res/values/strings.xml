@@ -238,6 +238,18 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="note">Note</string>
     <string name="failed_login">Login failed,please check your account and password.</string>
     <string name="failed_external_storage">Can\'t find external storage at current mobile.</string>
+    <string name="back_des">parent directory</string>
+    <string name="choose_dir">Choose Dir</string>
+
+    <string name="dir_permission_x_failed">Dir don\'t have X permission</string>
+    <string name="dir_permission_w_failed">Dir don\'t have W permission</string>
+    <string name="dir_permission_r_failed">Dir don\'t have R permission</string>
+    <string name="dir_root_note">Has reached the root directory</string>
+
+    <string name="path_empty">current path is empty</string>
+    <string name="server_info_save_successful">server info save successful.</string>
+    <string name="server_info_save_failure">server info save failure.</string>
+    <string name="server_encoding">encoding:</string>
 
 
 </resources>

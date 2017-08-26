@@ -112,6 +112,30 @@
 
         </LinearLayout>
 
+        <LinearLayout style="@style/server_settings_ll">
+
+            <TextView
+                style="@style/server_settings_tv"
+                android:text="@string/server_encoding"
+                />
+
+            <Spinner
+                android:id="@+id/server_settings_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:entries="@array/server_encoding"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/server_settings_save_bt"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="2dp"
+            android:text="@string/save"
+            android:textAllCaps="false"
+            android:textSize="16sp"/>
+
     </LinearLayout>
 
 </ScrollView>

@@ -76,10 +76,13 @@ class RunnableListFiles extends WeakRunnable<Context> {
         int port = Integer.parseInt(server.getPort());
         String account = server.getAccount();
         String pwd = server.getPwd();
+        String encoding = server.getEncoding();
+        log("encoding: " + encoding);
         client = new FTPClient();
         client.setDefaultTimeout(15000);
-        client.setAutodetectUTF8(true);
-
+        if (null != encoding && encoding.equals("UTF8")) {
+            client.setAutodetectUTF8(true);
+        }
         try {
             client.connect(address, port);
         } catch (IOException e) {

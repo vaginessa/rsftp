@@ -37,7 +37,6 @@ public class ServerListActivity extends BaseActivity implements ServerAddFragmen
         mNoteTv = (TextView) findViewById(R.id.server_list_note_tv);
         mListRv = (RecyclerView) findViewById(R.id.server_list_rv);
 
-        log(list.toString());
         adapter = new ServerListRecyclerAdapter(this, list);
         adapter.setOnItemClickListener(this);
         adapter.setOnItemLongClickListener(this);
@@ -51,6 +50,7 @@ public class ServerListActivity extends BaseActivity implements ServerAddFragmen
         log("onResume");
         list.clear();
         list.addAll(new RsDBHelper(this).getServerList());
+        log(list.toString());
         adapter.notifyDataSetChanged();
         updateNote();
     }

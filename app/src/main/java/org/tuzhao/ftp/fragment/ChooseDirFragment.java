@@ -80,7 +80,7 @@ public class ChooseDirFragment extends DialogFragment implements OnItemClickList
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Choose Dir");
+        builder.setTitle(R.string.choose_dir);
         builder.setPositiveButton(R.string.submit, new SubmitClickListener());
         builder.setNegativeButton(R.string.cancel, null);
         AlertDialog dialog = builder.create();
@@ -107,9 +107,9 @@ public class ChooseDirFragment extends DialogFragment implements OnItemClickList
             boolean ex = file.canExecute();
             boolean wr = file.canWrite();
             if (!ex) {
-                showMsg("Dir don't have X permission");
+                showMsg(getString(R.string.dir_permission_x_failed));
             } else if (!wr) {
-                showMsg("Dir don't have W permission");
+                showMsg(getString(R.string.dir_permission_w_failed));
             } else {
                 log("select dir: " + mCurrentPath);
                 getDialog().dismiss();
@@ -141,9 +141,9 @@ public class ChooseDirFragment extends DialogFragment implements OnItemClickList
             public void onClick(View view) {
                 log("click");
                 if (null == mCurrentPath || TextUtils.isEmpty(mCurrentPath)) {
-                    showMsg("current path is empty");
+                    showMsg(getString(R.string.path_empty));
                 } else if (mCurrentPath.endsWith("/")) {
-                    showMsg("has reached the root directory");
+                    showMsg(getString(R.string.dir_root_note));
                 } else {
                     int i = mCurrentPath.lastIndexOf("/");
                     if (i != 0) {
@@ -210,13 +210,16 @@ public class ChooseDirFragment extends DialogFragment implements OnItemClickList
         boolean re = file.canRead();
         StringBuilder builder = new StringBuilder();
         if (!ex) {
-            builder.append("Dir don't have X permission\n");
+            builder.append(getString(R.string.dir_permission_x_failed));
+            builder.append("\n");
         }
         if (!re) {
-            builder.append("Dir don't have R permission\n");
+            builder.append(getString(R.string.dir_permission_r_failed));
+            builder.append("\n");
         }
         if (!wr) {
-            builder.append("Dir don't have W permission\n");
+            builder.append(getString(R.string.dir_permission_w_failed));
+            builder.append("\n");
         }
         if (builder.toString().length() > 0) {
             if (null != mNoteTv) {

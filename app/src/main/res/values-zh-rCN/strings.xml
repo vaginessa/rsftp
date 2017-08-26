@@ -163,4 +163,15 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
         <item>高级设置</item>
         <item>删除</item>
     </string-array>
+    <string name="back_des">向上一级</string>
+    <string name="choose_dir">选择文件夹</string>
+    <string name="dir_permission_r_failed">文件夹没有读权限</string>
+    <string name="dir_permission_w_failed">文件夹没有写权限</string>
+    <string name="dir_permission_x_failed">文件夹没有进入权限</string>
+    <string name="dir_root_note">已经到达根目录了</string>
+    <string name="path_empty">当前路径为空</string>
+    <string name="save">保存</string>
+    <string name="server_info_save_failure">FTP服务器信息保存失败。</string>
+    <string name="server_info_save_successful">FTP服务器信息保存成功。</string>
+    <string name="server_encoding">编码：</string>
 </resources>
