@@ -18,22 +18,60 @@ import java.util.Collections;
  * author: tuzhao
  * 2017-08-14 23:56
  */
-
 class RunnableListFiles extends WeakRunnable<Context> {
+
+    private final Object object = new Object();
 
     private ServerEntity server;
     private String path;
+    private FTPClient client;
+    private boolean flag;
 
     RunnableListFiles(Context context, ServerEntity server, String path) {
         super(context);
         this.server = server;
         this.path = path;
+        this.flag = true;
+    }
+
+    void taskClose() {
+        log("task close start");
+        setFlag(false);
+        try {
+            if (null != client) {
+                client.abort();
+            }
+        } catch (Exception e) {
+            //...ignore...
+        }
+        try {
+            if (null != client) {
+                client.disconnect();
+            }
+        } catch (Exception e) {
+            //...ignore...
+        }
+        client = null;
+        log("task close end");
+    }
+
+    private void setFlag(boolean flag) {
+        synchronized (object) {
+            this.flag = flag;
+            log("task process flag set: " + this.flag);
+        }
+    }
+
+    private boolean getFlag() {
+        synchronized (object) {
+            log("task process flag get : " + flag);
+            return flag;
+        }
     }
 
     @Override
     public void weakRun(Context context) {
         boolean status;
-        FTPClient client;
         String address = server.getAddress();
         int port = Integer.parseInt(server.getPort());
         String account = server.getAccount();
@@ -46,7 +84,9 @@ class RunnableListFiles extends WeakRunnable<Context> {
             client.connect(address, port);
         } catch (IOException e) {
             e.printStackTrace();
-            System.sendServerConnectExceptionBroadcast(context, e.getMessage());
+            if (getFlag()) {
+                System.sendServerConnectExceptionBroadcast(context, e.getMessage());
+            }
             return;
         }
 
@@ -54,13 +94,17 @@ class RunnableListFiles extends WeakRunnable<Context> {
             status = client.login(account, pwd);
         } catch (IOException e) {
             e.printStackTrace();
-            System.sendServerLoginExceptionBroadcast(context, e.getMessage());
+            if (getFlag()) {
+                System.sendServerLoginExceptionBroadcast(context, e.getMessage());
+            }
             return;
         }
 
         log("connect result: " + status);
         if (!status) {
-            System.sendServerLoginFailed(context);
+            if (getFlag()) {
+                System.sendServerLoginFailed(context);
+            }
         }
 
         try {
@@ -70,7 +114,9 @@ class RunnableListFiles extends WeakRunnable<Context> {
             }
             String directory = client.printWorkingDirectory();
             log("current path: " + directory);
-            System.sendServerCurrentPathBroadcast(context, directory);
+            if (getFlag()) {
+                System.sendServerCurrentPathBroadcast(context, directory);
+            }
         } catch (Exception e) {
             client = null;
             e.printStackTrace();
@@ -88,7 +134,9 @@ class RunnableListFiles extends WeakRunnable<Context> {
             list = new ArrayList<>();
             Collections.addAll(list, array);
         }
-        ServerItemActivity.sendListFilesResult(context, list);
+        if (getFlag()) {
+            ServerItemActivity.sendListFilesResult(context, list);
+        }
         try {
             if (null != client) {
                 client.abort();

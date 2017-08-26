@@ -121,13 +121,15 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
     private void startConnectService() {
         connection = new ServerConnectConnection();
         Intent intent = new Intent(this, ServerConnectService.class);
-        intent.putExtra(ServerConnectService.EXTRA_START, (Parcelable) server);
+        startService(intent);
         bindService(intent, connection, BIND_AUTO_CREATE);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (null != binder)
+            binder.clear();
         if (null != connection)
             unbindService(connection);
         if (null != receiver) {
@@ -182,6 +184,7 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             binder = (ServerConnectService.ServerConnectBinder) iBinder;
+            binder.setServer(server);
             binder.listFiles(null);
             showLoadingDialog();
         }

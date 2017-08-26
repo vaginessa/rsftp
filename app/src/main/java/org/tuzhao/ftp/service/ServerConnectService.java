@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.Parcelable;
 import android.util.Log;
 
 import org.tuzhao.ftp.entity.ServerEntity;
@@ -14,11 +13,12 @@ import java.util.concurrent.Executors;
 
 public class ServerConnectService extends Service {
 
-    public static final String EXTRA_START = "EXTRA_START";
+    private static final String TAG = "ServerConnectService";
 
-    private ExecutorService executor = Executors.newFixedThreadPool(5);
+    private ExecutorService executor = Executors.newFixedThreadPool(1);
 
     private ServerEntity server;
+    private RunnableListFiles runnableListFiles;
 
     public ServerConnectService() {
 
@@ -26,12 +26,13 @@ public class ServerConnectService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        Parcelable parcelable = intent.getParcelableExtra(EXTRA_START);
-        if (null != parcelable && (parcelable instanceof ServerEntity)) {
-            server = (ServerEntity) parcelable;
-            log("server info: " + server);
-        }
         return new ServerConnectBinder();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        log("onDestroy");
     }
 
     public class ServerConnectBinder extends Binder {
@@ -40,8 +41,29 @@ public class ServerConnectService extends Service {
             getService().connect();
         }
 
+        /**
+         * ser connect FTP server info
+         * @param server FTP server instance
+         */
+        public void setServer(ServerEntity server) {
+            getService().setServer(server);
+        }
+
+        /**
+         * list of all files of specify FTP server directory path
+         * @param path FTP server directory path
+         */
         public void listFiles(String path) {
             getService().listFiles(path);
+        }
+
+        /**
+         * clear current server info<br>
+         * cancel all runnable
+         */
+        public void clear() {
+            getService().clearServer();
+            getService().cancelListTask();
         }
     }
 
@@ -49,8 +71,27 @@ public class ServerConnectService extends Service {
         return this;
     }
 
+    private void clearServer() {
+        this.server = null;
+    }
+
+    private void setServer(ServerEntity server) {
+        this.server = server;
+    }
+
+    private void cancelListTask() {
+        log("clear");
+        if (null != runnableListFiles)
+            runnableListFiles.taskClose();
+        runnableListFiles = null;
+    }
+
     private void listFiles(String path) {
-        executor.execute(new RunnableListFiles(getService(), server, path));
+        if (null != runnableListFiles) {
+            runnableListFiles.taskClose();
+        }
+        runnableListFiles = new RunnableListFiles(getService(), server, path);
+        executor.execute(runnableListFiles);
     }
 
     private void connect() {
@@ -59,7 +100,7 @@ public class ServerConnectService extends Service {
     }
 
     private static void log(String msg) {
-        Log.d("ServerConnectService", msg);
+        Log.d(TAG, msg);
     }
 
 }

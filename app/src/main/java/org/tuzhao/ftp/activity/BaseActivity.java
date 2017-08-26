@@ -51,7 +51,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void log(String msg) {
-        Log.d("activity", msg);
+        Log.d(this.getClass().getSimpleName(), msg);
     }
 
     private SimpleDialogFragment dialogFragment;
