@@ -15,6 +15,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,6 +25,7 @@ import android.widget.TextView;
 
 import org.apache.commons.net.ftp.FTPFile;
 import org.tuzhao.ftp.R;
+import org.tuzhao.ftp.entity.RsFTPFile;
 import org.tuzhao.ftp.entity.RsFile;
 import org.tuzhao.ftp.entity.ServerEntity;
 import org.tuzhao.ftp.service.ServerConnectService;
@@ -38,11 +40,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ServerItemActivity extends BaseActivity implements OnItemClickListener, OnItemLongClickListener {
+public final class ServerItemActivity extends BaseActivity implements OnItemClickListener,
+                                                                          OnItemLongClickListener {
 
-    public static final String ACTION_SERVER_LIST_FILES = "action_server_list_files";
+    private static final String ACTION_SERVER_LIST_FILES = "action_server_list_files";
 
-    public static final String EXTRA_RESULT = "extra_result";
+    private static final String EXTRA_RESULT = "extra_result";
     private static final String EXTRA_START = "extra_start";
 
 
@@ -110,12 +113,37 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
 
         filesList = new ArrayList<>();
         adapter = new ServerItemRecyclerAdapter(this, filesList);
+        setHeaderView();
         adapter.setOnItemLongClickListener(this);
         adapter.setOnItemClickListener(this);
         mServerRv.setLayoutManager(new LinearLayoutManager(this));
         mServerRv.setAdapter(adapter);
 
         startConnectService();
+    }
+
+    private void setHeaderView() {
+        View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.back, null);
+        headerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                log("click");
+                if (null == mCurrentPath || TextUtils.isEmpty(mCurrentPath)) {
+                    showMsg(getString(R.string.path_empty));
+                } else if (mCurrentPath.endsWith("/")) {
+                    showMsg(getString(R.string.dir_root_note));
+                } else {
+                    int i = mCurrentPath.lastIndexOf("/");
+                    if (i != 0) {
+                        mCurrentPath = mCurrentPath.substring(0, i);
+                    } else if (mCurrentPath.length() > 1) {
+                        mCurrentPath = "/";
+                    }
+                    refresh();
+                }
+            }
+        });
+        adapter.setHeaderView(headerView);
     }
 
     private void startConnectService() {
@@ -149,18 +177,60 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_refresh) {
-            if (null != binder) {
-                refresh();
-            }
+        switch (item.getItemId()) {
+            case R.id.menu_download:
+                downloadSelectedFile();
+                break;
+            case R.id.menu_refresh:
+                if (null != binder) {
+                    refresh();
+                }
+                break;
         }
         return true;
+    }
+
+    private ArrayList<RsFile> selectedList;
+
+    private void downloadSelectedFile() {
+        if (null == selectedList) {
+            selectedList = new ArrayList<>();
+        }
+        selectedList.clear();
+        for (int i = 0; i < filesList.size(); i++) {
+            RsFile file = filesList.get(i);
+            if (file.getSelected()) {
+                selectedList.add(file);
+            }
+        }
+        if (selectedList.size() == 0) {
+            showMsg(getString(R.string.selected_note));
+        } else {
+            int count = selectedList.size();
+            String str1 = getString(R.string.download_msg1);
+            String str2 = getString(R.string.download_msg2);
+            String msg1 = String.format(str1, String.valueOf(count));
+            String msg2 = String.format(str2, server.getSavePath());
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.note);
+            builder.setMessage(msg1 + " " + msg2);
+            builder.setPositiveButton(R.string.submit, null);
+            builder.setNegativeButton(R.string.cancel, null);
+            AlertDialog dialog = builder.create();
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+        }
     }
 
     @Override
     public void onItemClick(View v, Object data, int position) {
         if (-1 != position) {
             RsFile ftpFile = filesList.get(position);
+            boolean w = ftpFile.canWrite();
+            boolean r = ftpFile.canRead();
+            boolean e = ftpFile.canExecute();
+            log("permission: w=" + w + " r=" + r + " e=" + e);
             if (ftpFile.isDir()) {
                 String name = ftpFile.getName();
                 if (mCurrentPath.equals("/")) {
@@ -170,12 +240,19 @@ public class ServerItemActivity extends BaseActivity implements OnItemClickListe
                 }
                 updateCurrentPath(mCurrentPath);
                 refresh();
+            } else if (ftpFile.isFile()) {
+                if (ftpFile instanceof RsFTPFile) {
+                    RsFTPFile rsFTPFile = (RsFTPFile) ftpFile;
+                    rsFTPFile.setSelected(!rsFTPFile.getSelected());
+                    adapter.notifyDataSetChanged();
+                }
             }
         }
     }
 
     @Override
     public boolean onItemLongClick(View v, Object data, int position) {
+
         return false;
     }
 

@@ -80,6 +80,8 @@ class RunnableListFiles extends WeakRunnable<Context> {
         log("encoding: " + encoding);
         client = new FTPClient();
         client.setDefaultTimeout(15000);
+        client.setConnectTimeout(15000);
+        client.setListHiddenFiles(true);
         if (null != encoding && encoding.equals("UTF8")) {
             client.setAutodetectUTF8(true);
         }
@@ -110,12 +112,13 @@ class RunnableListFiles extends WeakRunnable<Context> {
             }
         }
 
+        String directory = null;
         try {
             log("list files path: " + path);
             if (!(path == null || TextUtils.isEmpty(path))) {
                 client.changeWorkingDirectory(path);
             }
-            String directory = client.printWorkingDirectory();
+            directory = client.printWorkingDirectory();
             log("current path: " + directory);
             if (getFlag()) {
                 System.sendServerCurrentPathBroadcast(context, directory);
@@ -124,6 +127,7 @@ class RunnableListFiles extends WeakRunnable<Context> {
             client = null;
             e.printStackTrace();
         }
+
         FTPFile[] array = null;
         try {
             if (status && null != client) {
@@ -140,6 +144,7 @@ class RunnableListFiles extends WeakRunnable<Context> {
         if (getFlag()) {
             ServerItemActivity.sendListFilesResult(context, list);
         }
+
         try {
             if (null != client) {
                 client.abort();

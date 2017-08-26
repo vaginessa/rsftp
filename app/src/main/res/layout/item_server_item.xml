@@ -14,13 +14,26 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp">
 
-        <ImageView
-            android:id="@+id/item_server_type_iv"
+        <FrameLayout
             android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/file_pdf"
-            tools:ignore="ContentDescription"
-            />
+            android:layout_height="32dp">
+
+            <ImageView
+                android:id="@+id/item_server_type_iv"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/file_pdf"
+                tools:ignore="ContentDescription"
+                />
+
+            <ImageView
+                android:id="@+id/item_server_selected_iv"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/selected"
+                tools:ignore="ContentDescription"
+                />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/item_server_type_tv"

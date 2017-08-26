@@ -220,7 +220,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="item_server_item_time_demo">17/08/25 21:00</string>
     <string name="refresh">refresh</string>
     <string name="server_item_count">file count\n%s</string>
-    <string name="server_item_path">path: %S</string>
+    <string name="server_item_path">path: %s</string>
     <string name="server_item_size">folder size\n%s</string>
     <string name="error">error</string>
 
@@ -250,6 +250,9 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="server_info_save_successful">server info save successful.</string>
     <string name="server_info_save_failure">server info save failure.</string>
     <string name="server_encoding">encoding:</string>
+    <string name="download">download</string>
 
-
+    <string name="selected_note">Please select at least one item</string>
+    <string name="download_msg1">%s file(s) will be downloaded from FTP Server</string>
+    <string name="download_msg2">into local directory \"%s\" , please confirm whether to execute?</string>
 </resources>

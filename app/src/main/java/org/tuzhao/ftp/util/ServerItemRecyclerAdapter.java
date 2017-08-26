@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.tuzhao.ftp.R;
+import org.tuzhao.ftp.entity.RsFTPFile;
 import org.tuzhao.ftp.entity.RsFile;
 import org.tuzhao.ftp.fragment.SimpleRecyclerViewHolder;
 
@@ -107,6 +108,7 @@ public class ServerItemRecyclerAdapter extends RecyclerView.Adapter implements V
         viewHolder.mServerTypeIv.setImageResource(FileType.getFileDesImg(file));
         viewHolder.mServerTypeTv.setText(name);
         viewHolder.mServerTimeTv.setText(getDate(timeInMillis));
+        viewHolder.mSelectedIv.setVisibility(isSelected(file) ? View.VISIBLE : View.INVISIBLE);
         if (file.isDir()) {
             viewHolder.mServerSizeTv.setVisibility(View.GONE);
         } else {
@@ -114,6 +116,15 @@ public class ServerItemRecyclerAdapter extends RecyclerView.Adapter implements V
             viewHolder.mServerSizeTv.setText(getSize(size));
             viewHolder.mServerSizeTv.setVisibility(View.VISIBLE);
         }
+    }
+
+    private boolean isSelected(RsFile rsFile) {
+        boolean flag = false;
+        if (null != rsFile && rsFile instanceof RsFTPFile) {
+            RsFTPFile file = (RsFTPFile) rsFile;
+            flag = file.getSelected();
+        }
+        return flag;
     }
 
     @Override
@@ -174,6 +185,7 @@ public class ServerItemRecyclerAdapter extends RecyclerView.Adapter implements V
 
         View item;
         ImageView mServerTypeIv;
+        ImageView mSelectedIv;
         TextView mServerTypeTv;
         TextView mServerSizeTv;
         TextView mServerTimeTv;
@@ -181,6 +193,7 @@ public class ServerItemRecyclerAdapter extends RecyclerView.Adapter implements V
         ServerItemViewHolder(View itemView) {
             super(itemView);
             this.item = itemView;
+            mSelectedIv = item.findViewById(R.id.item_server_selected_iv);
             mServerTypeIv = item.findViewById(R.id.item_server_type_iv);
             mServerTypeTv = item.findViewById(R.id.item_server_type_tv);
             mServerSizeTv = item.findViewById(R.id.item_server_size_tv);

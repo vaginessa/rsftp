@@ -16,5 +16,14 @@ public interface RsFile {
 
     boolean isFile();
 
+    boolean canExecute();
+
+    boolean canRead();
+
+    boolean canWrite();
+
+    void setSelected(boolean flag);
+
+    boolean getSelected();
 
 }

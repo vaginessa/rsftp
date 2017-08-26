@@ -38,4 +38,29 @@ public class RsLocalFile implements RsFile {
     public boolean isFile() {
         return file.isFile();
     }
+
+    @Override
+    public boolean canExecute() {
+        return this.file.canExecute();
+    }
+
+    @Override
+    public boolean canRead() {
+        return this.file.canRead();
+    }
+
+    @Override
+    public boolean canWrite() {
+        return this.file.canWrite();
+    }
+
+    @Override
+    public void setSelected(boolean flag) {
+
+    }
+
+    @Override
+    public boolean getSelected() {
+        return false;
+    }
 }

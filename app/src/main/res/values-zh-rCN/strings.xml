@@ -174,4 +174,5 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
     <string name="server_info_save_failure">FTP服务器信息保存失败。</string>
     <string name="server_info_save_successful">FTP服务器信息保存成功。</string>
     <string name="server_encoding">编码：</string>
+    <string name="selected_note">请至少选中一项</string>
 </resources>
