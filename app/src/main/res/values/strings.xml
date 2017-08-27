@@ -255,4 +255,9 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="selected_note">Please select at least one item</string>
     <string name="download_msg1">%s file(s) will be downloaded from FTP Server</string>
     <string name="download_msg2">into local directory \"%s\" , please confirm whether to execute?</string>
+    <string name="download_total">Total download file count: %s</string>
+    <string name="download_successful">Download complete file count: %s</string>
+    <string name="download_failure">Download failure file count: %s</string>
+    <string name="download_in">File in downloading: %s</string>
+    <string name="download_title">Download</string>
 </resources>

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -28,6 +29,7 @@ import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.entity.RsFTPFile;
 import org.tuzhao.ftp.entity.RsFile;
 import org.tuzhao.ftp.entity.ServerEntity;
+import org.tuzhao.ftp.fragment.DownloadDialogFragment;
 import org.tuzhao.ftp.service.ServerConnectService;
 import org.tuzhao.ftp.util.FTPFileComparator;
 import org.tuzhao.ftp.util.OnItemClickListener;
@@ -215,12 +217,23 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.note);
             builder.setMessage(msg1 + " " + msg2);
-            builder.setPositiveButton(R.string.submit, null);
+            builder.setPositiveButton(R.string.submit, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int position) {
+                    if (null != binder) {
+                        DownloadDialogFragment.show(getActivity(), selectedList.size(), selectedList.get(0).getName());
+                        binder.download(selectedList, mCurrentPath);
+                    }
+                }
+            });
             builder.setNegativeButton(R.string.cancel, null);
             AlertDialog dialog = builder.create();
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         }
+    }
+
+    private void showProgressDialog() {
     }
 
     @Override

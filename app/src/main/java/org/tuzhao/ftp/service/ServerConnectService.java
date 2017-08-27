@@ -6,8 +6,10 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import org.tuzhao.ftp.entity.RsFile;
 import org.tuzhao.ftp.entity.ServerEntity;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -65,10 +67,23 @@ public class ServerConnectService extends Service {
             getService().clearServer();
             getService().cancelListTask();
         }
+
+        /**
+         * down the files form ftp server
+         * @param list ArrayList
+         */
+        public void download(ArrayList<RsFile> list, String path) {
+            getService().downloadFile(list, path);
+        }
     }
 
     private ServerConnectService getService() {
         return this;
+    }
+
+    public void downloadFile(ArrayList<RsFile> list, String path) {
+        RunnableDownloadFiles runnableDownloadFiles = new RunnableDownloadFiles(getService(), server, list, path);
+        executor.execute(runnableDownloadFiles);
     }
 
     private void clearServer() {
