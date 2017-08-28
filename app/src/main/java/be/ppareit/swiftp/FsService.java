@@ -98,6 +98,7 @@ public class FsService extends Service implements Runnable {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "onStartCommand");
         shouldExit = false;
 
         if (System.isAndroidO()) {
@@ -123,7 +124,7 @@ public class FsService extends Service implements Runnable {
         return START_STICKY;
     }
 
-    public static boolean isRunning() {
+    public synchronized static boolean isRunning() {
         // return true if and only if a server Thread is running
         if (serverThread == null) {
             Log.d(TAG, "Server is not running (null serverThread)");

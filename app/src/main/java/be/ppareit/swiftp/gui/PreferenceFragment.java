@@ -29,7 +29,9 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -40,7 +42,9 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.TwoStatePreference;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +55,8 @@ import net.vrallev.android.cat.Cat;
 
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.activity.PermissionActivity;
+import org.tuzhao.ftp.util.PermissionFragmentUtil;
+import org.tuzhao.ftp.util.System;
 import org.tuzhao.ftp.util.Umeng;
 
 import java.io.File;
@@ -66,12 +72,16 @@ import be.ppareit.swiftp.FsSettings;
  * This is the main activity for swiftp, it enables the user to start the server service
  * and allows the users to change the settings.
  */
-public class PreferenceFragment extends android.preference.PreferenceFragment implements OnSharedPreferenceChangeListener {
+public class PreferenceFragment extends android.preference.PreferenceFragment implements
+    OnSharedPreferenceChangeListener {
 
+    private static final String TAG = "PreferenceFragment";
     private static final int MSG_FAIL_START = 0x10;
 
-    private EditTextPreference mPassWordPref;
     private Handler mHandler;
+    private PermissionFragmentUtil permissionUtil;
+
+    private EditTextPreference mPassWordPref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -266,7 +276,130 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
             startActivity(new Intent(getActivity(), AboutActivity.class));
             return true;
         });
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            permissionCheck();
+        } else {
+            autoStartFTPServer();
+        }
+    }
+
+    private void permissionCheck() {
+        if (null == permissionUtil)
+            permissionUtil = new PermissionFragmentUtil(getActivity(), this);
+        permissionUtil.init();
+        permissionUtil.request();
+    }
+
+    private void autoStartFTPServer() {
+        log("autoStartFTPServer");
+        System.threadInfo();
+        if (FsService.isRunning()) {
+            log("We are connecting to a new wifi network on a running server, ignore");
+            return;
+        }
+        WifiManager wifiManager = (WifiManager)
+                                      getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        if (wifiInfo == null) {
+            log("Null wifi info received, bailing");
+            return;
+        }
+        log("We are connected to " + wifiInfo.getSSID());
+        if (FsSettings.getAutoConnectList().contains(wifiInfo.getSSID())) {
+            Intent start = new Intent(FsService.ACTION_START_FTPSERVER);
+            start.setPackage(getActivity().getPackageName());
+            getActivity().sendBroadcast(start);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        String[] deniedStrings = permissionUtil.onRequestPermissionsResult(requestCode,
+            permissions, grantResults);
+        dealPermissionCheckResult(deniedStrings);
+    }
+
+    private void dealPermissionCheckResult(final String[] deniedStrings) {
+        if (deniedStrings.length > 0) {
+            final Context context = getActivity();
+            StringBuilder builder = new StringBuilder();
+            if (System.isZh(getActivity())) {
+                builder.append("这里仍然有");
+                builder.append(deniedStrings.length);
+                builder.append("条权限被拒绝");
+            } else {
+                builder.append("there");
+                if (deniedStrings.length > 1) {
+                    builder.append(" are ");
+                } else {
+                    builder.append(" is ");
+                }
+                builder.append("still ");
+                builder.append(deniedStrings.length);
+                if (deniedStrings.length > 1) {
+                    builder.append(" permissions ");
+                } else {
+                    builder.append(" permission ");
+                }
+                builder.append("denied");
+            }
+            String msg = String.format(context.getString(R.string.permission_msg), builder.toString());
+            showPermissionNoteDialog(msg);
+        } else {
+            log("all permission granted");
+            autoStartFTPServer();
+        }
+    }
+
+    private AlertDialog dialog;
+
+    private void showPermissionNoteDialog(String msg) {
+        if (null != dialog && dialog.isShowing()) {
+            dialog.dismiss();
+            dialog = null;
+        }
+        dialog = new AlertDialog.Builder(getActivity())
+                     .setTitle(R.string.permission_note)
+                     .setMessage(msg)
+                     .setCancelable(false)
+                     .setPositiveButton(R.string.permission_bt_set, (dialog, i) -> {
+                         dialog.dismiss();
+                         appSetting();
+                     })
+                     .setNeutralButton(R.string.permission_bt_detail, (dialog, i) -> {
+                         dialog.dismiss();
+                         Intent intent = new Intent(getActivity(), PermissionActivity.class);
+                         getActivity().startActivity(intent);
+                     })
+                     .setNegativeButton(R.string.permission_bt_exit, (dialog, i) -> {
+                         dialog.dismiss();
+                         MainActivity.appExit(getActivity());
+                     })
+                     .create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
+
+    private void appSetting() {
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+        intent.setData(Uri.fromParts("package", getActivity().getPackageName(), null));
+        if (System.isIntentAvailable(getActivity(), intent)) {
+            startActivity(intent);
+        } else {
+            showMsg(getString(R.string.open_error_setting));
+        }
+    }
+
+    private void showMsg(String msg) {
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
     }
 
     private void createHandler() {
@@ -388,7 +521,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
      * running_state, if the server is running and will also display at what url the
      * server is running.
      */
-    BroadcastReceiver mFsActionsReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver mFsActionsReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Cat.v("action received: " + intent.getAction());
@@ -437,4 +570,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         MobclickAgent.onEvent(getActivity(), id);
     }
 
+    public void log(String msg) {
+        Log.d(TAG, msg);
+    }
 }

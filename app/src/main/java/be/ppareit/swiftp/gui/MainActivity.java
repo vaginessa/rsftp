@@ -21,16 +21,13 @@ package be.ppareit.swiftp.gui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,8 +37,6 @@ import com.umeng.analytics.MobclickAgent;
 import org.tuzhao.ftp.BuildConfig;
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.activity.BaseActivity;
-import org.tuzhao.ftp.activity.PermissionActivity;
-import org.tuzhao.ftp.util.PermissionUtil;
 import org.tuzhao.ftp.util.System;
 import org.tuzhao.ftp.util.WeakRunnable;
 
@@ -55,9 +50,6 @@ import be.ppareit.swiftp.WifiStateChangeReceiver;
  */
 public class MainActivity extends BaseActivity {
 
-    private boolean isNeedCheckAgain;
-
-    private PermissionUtil permissionUtil;
     private WifiStateChangeReceiver receiver;
 
     @Override
@@ -70,8 +62,6 @@ public class MainActivity extends BaseActivity {
             .replace(android.R.id.content, new PreferenceFragment())
             .commit();
 
-        permissionCheck();
-
         receiver = new WifiStateChangeReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
@@ -79,27 +69,10 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        log("onStart()");
-        if (isNeedCheckAgain) {
-            permissionCheck();
-        }
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (null != receiver)
             getApplicationContext().unregisterReceiver(receiver);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        String[] deniedStrings = permissionUtil.onRequestPermissionsResult(requestCode,
-            permissions, grantResults);
-        showPermissionDialog(deniedStrings);
     }
 
     @Override
@@ -141,90 +114,19 @@ public class MainActivity extends BaseActivity {
         AlertDialog ad = new AlertDialog.Builder(getActivity())
                              .setTitle(R.string.exit_title)
                              .setMessage(R.string.exit_msg)
-                             .setPositiveButton(R.string.submit, (dialogInterface, i) -> appExit())
+                             .setPositiveButton(R.string.submit, (dialogInterface, i) -> appExit(getActivity()))
                              .setNegativeButton(R.string.cancel, null)
                              .create();
         ad.show();
     }
 
-    private void permissionCheck() {
-        permissionUtil = new PermissionUtil(this);
-        permissionUtil.init();
-        permissionUtil.request();
-    }
-
-    private void showPermissionDialog(final String[] deniedStrings) {
-        if (deniedStrings.length > 0) {
-            final Context context = getActivity();
-            StringBuilder builder = new StringBuilder();
-            if (System.isZh(this)) {
-                builder.append("这里仍然有");
-                builder.append(deniedStrings.length);
-                builder.append("条权限被拒绝");
-            } else {
-                builder.append("there");
-                if (deniedStrings.length > 1) {
-                    builder.append(" are ");
-                } else {
-                    builder.append(" is ");
-                }
-                builder.append("still ");
-                builder.append(deniedStrings.length);
-                if (deniedStrings.length > 1) {
-                    builder.append(" permissions ");
-                } else {
-                    builder.append(" permission ");
-                }
-                builder.append("denied");
-            }
-            String msg = String.format(context.getString(R.string.permission_msg), builder.toString());
-
-            AlertDialog ad = new AlertDialog.Builder(context)
-                                 .setTitle(R.string.permission_note)
-                                 .setMessage(msg)
-                                 .setCancelable(false)
-                                 .setPositiveButton(R.string.permission_bt_set, (dialog, i) -> {
-                                     isNeedCheckAgain = true;
-                                     dialog.dismiss();
-                                     appSetting();
-                                 })
-                                 .setNeutralButton(R.string.permission_bt_detail, (dialog, i) -> {
-                                     isNeedCheckAgain = true;
-                                     dialog.dismiss();
-                                     Intent intent = new Intent(getActivity(), PermissionActivity.class);
-                                     getActivity().startActivity(intent);
-                                 })
-                                 .setNegativeButton(R.string.permission_bt_exit, (dialog, i) -> {
-                                     isNeedCheckAgain = false;
-                                     dialog.dismiss();
-                                     appExit();
-                                 })
-                                 .create();
-            ad.show();
-        } else {
-            isNeedCheckAgain = false;
-        }
-    }
-
-    private void appExit() {
-        MobclickAgent.onKillProcess(this);
+    public static void appExit(Activity context) {
+        MobclickAgent.onKillProcess(context);
         Intent intent = new Intent(FsService.ACTION_STOP_FTPSERVER);
-        intent.setPackage(getActivity().getPackageName());
-        getActivity().sendBroadcast(intent);
-        getActivity().finish();
-        new Handler().postDelayed(new ExitRunnable(getActivity()), 1000);
-    }
-
-    private void appSetting() {
-        Intent intent = new Intent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-        intent.setData(Uri.fromParts("package", getPackageName(), null));
-        if (System.isIntentAvailable(this, intent)) {
-            startActivity(intent);
-        } else {
-            showMsg(getString(R.string.open_error_setting));
-        }
+        intent.setPackage(context.getPackageName());
+        context.sendBroadcast(intent);
+        context.finish();
+        new Handler().postDelayed(new ExitRunnable(context), 1000);
     }
 
     private static class ExitRunnable extends WeakRunnable<Activity> {

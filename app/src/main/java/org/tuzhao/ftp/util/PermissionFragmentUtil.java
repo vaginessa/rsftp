@@ -1,10 +1,11 @@
 package org.tuzhao.ftp.util;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
+import android.support.v13.app.FragmentCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
@@ -12,18 +13,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
+ * only request permission of android.app.fragment
  * zhaotu
  * 17-8-4
  */
-public final class PermissionUtil {
+public final class PermissionFragmentUtil {
 
-    private static final String TAG = "PermissionUtil";
-    private final static int PERMISSIONS_REQUEST_CODE = 12;
+    private static final String TAG = "PermissionFragmentUtil";
+    private final static int PERMISSIONS_REQUEST_CODE = 13;
     private final ArrayList<String> list = new ArrayList<>();
     private final Activity context;
+    private final Fragment fragment;
 
-    public PermissionUtil(Activity context) {
+    public PermissionFragmentUtil(Activity context, Fragment fragment) {
         this.context = context;
+        this.fragment = fragment;
     }
 
     public void init() {
@@ -57,7 +61,7 @@ public final class PermissionUtil {
                     String permission = list.get(i);
                     strings[i] = permission;
                 }
-                ActivityCompat.requestPermissions(context, strings, PERMISSIONS_REQUEST_CODE);
+                FragmentCompat.requestPermissions(fragment, strings, PERMISSIONS_REQUEST_CODE);
                 list.clear();
             }
         }
