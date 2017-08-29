@@ -515,9 +515,11 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
                                 + FsSettings.getPortNumber() + "/";
             String summary = res.getString(R.string.running_summary_started, iptext);
             runningPref.setSummary(summary);
+            runningPref.setTitle(R.string.running_label);
         } else {
             runningPref.setChecked(false);
             runningPref.setSummary(R.string.running_summary_stopped);
+            runningPref.setTitle(R.string.running_stop_label);
         }
     }
 

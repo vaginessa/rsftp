@@ -21,8 +21,9 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
 <resources>
     <string name="swiftp_name">实简FTP</string>
     <string name="running_label">正在运行</string>
-    <string name="running_summary_stopped">开始 FTP server</string>
-    <string name="running_summary_started">FTP server 运行于 %s 端口</string>
+    <string name="running_stop_label">服务尚未启动</string>
+    <string name="running_summary_stopped">点击开始运行FTP服务</string>
+    <string name="running_summary_started">服务运行于 %s 端口</string>
     <string name="running_summary_failed">FTP server 启动失败，您尚未连接到 Wi-Fi 或以太网络？</string>
     <string name="market_version_label">市场版本</string>
     <string name="market_version_summary">欢迎使用 FTP Server Demo 版本。
@@ -56,7 +57,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
 备屏幕熄灭或者手机休眠时传输速度缓慢或完全停止的问题，若
 您出现了此问题，请选中此复选框并重启程序
 后重试。您的设备将在服务运行时保持唤醒。建议你在使用的时候本应用一直保持在打开状态，
-这样可以避免手机内存机制将应用强制推出乃至杀掉应用进程。\n\n
+这样可以避免手机内存机制将应用强制退出乃至杀掉应用进程。\n\n
 \
 由于电源以及安全性方面原因，我们建议您在使用后即使关闭服务。\n\n\
 \
@@ -69,7 +70,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="nsd_servername_postfix">FTP Server</string>
 
     <string name="notification_server_starting">启动于 %s 端口</string>
-    <string name="notification_title">FTP Server 正在运行</string>
+    <string name="notification_title">实简FTP正在运行</string>
     <string name="notification_text">服务运行于 %s 端口</string>
 
     <string name="running_summary_failed_to_get_ip_address">FTP server 启动失败，无法获取到当前手机IP地址。</string>
@@ -88,7 +89,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="dark_theme">黑暗主题</string>
     <string name="light_theme">亮白主题</string>
     <string name="mixed_theme">黑白混合主题</string>
-    <string name="about_description_text">实简FTP允许你运行一个FTP服务端在你的android设备上。\n本应用由个人开发者进行开发和维护,所以手中的测试机型有限.如果在运行的过程中有任何错误还请你谅解。
+    <string name="about_description_text">实简FTP允许你运行一个FTP服务端在你的android设备上。\n本应用由个人开发者进行开发和维护,所以手中的测试机型有限.如果在运行的过程中有任何错误还请你谅解。\n\n问题反馈QQ群:1362290
     </string>
     <string name="feedback">发送反馈</string>
     <string name="about">关于</string>
@@ -101,7 +102,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="cancel">取消</string>
     <string name="open_error_mail">打开邮箱应用失败！</string>
     <string name="open_error_setting">打开设置界面失败！</string>
-    <string name="welcome_bottom">\@tuzhao.org</string>
+    <string name="welcome_bottom">tuzhao.org</string>
     <string name="permission_msg">当前应用所有声明的权限需要被允许，%s。如果你不允许所有权限的使用将会导致本应用不能正常运行。</string>
     <string name="permission_note">权限提示</string>
     <string name="permission_bt_set">设置</string>
@@ -130,7 +131,7 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
     <string name="permission_bt_detail">权限说明</string>
     <string name="permission_label">权限说明</string>
     <string name="about_contributor_list">
-        tuzhao\nQQ:406943270\nQQ群:1362290\nMail:tuzhaocn@gmail.com\nhttp://weibo.com/406943270\n\nAnn.(logo design)\nQQ:260512173
+        tuzhao\nQQ:406943270\nMail:tuzhaocn@gmail.com\nhttp://weibo.com/406943270\n\nAnn.(logo design)\nQQ:260512173
     </string>
     <string name="dialog_fail_start_msg">启动FTP服务失败！你是否链接上WIFI或者有线网络？当前不支持使用手机数据流量，因为电脑和手机必须处在同一局域网内才能互相访问。\n\n
     如果你确定你已经链接上了Wifi或者有线网络，你可以联系我并且告诉我详细的情况，你可以在关于界面找到我的联系方式。

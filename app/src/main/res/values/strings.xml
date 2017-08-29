@@ -21,12 +21,12 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
 
 <resources>
 
-    <string name="swiftp_name">RsFTP</string>
+    <string name="swiftp_name">rsftp</string>
     <string name="swiftp_name_free">FTP Server (Free)</string>
     <string name="swiftp_name_demo">FTP Server (Demo)</string>
-    <string name="running_label">FTP Server</string>
+    <string name="running_label">Server started</string>
     <string name="running_summary_stopped">Toggle the state of the ftp server</string>
-    <string name="running_summary_started">at %s</string>
+    <string name="running_summary_started">running at %s</string>
     <string name="running_summary_failed">
         Failed to start the FTP server, not connected to the local network (wifi or ethernet)?
     </string>
@@ -140,12 +140,12 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     </string>
     <string name="about_description_title">Description</string>
     <string name="about_description_text">
-        RsFTP (实简FTP) allows you to run an ftp server on your android device.\nThis project id developed and maintained by myself,so we are limited test models in hand.Please understand that maybe there are some problems in operation.
+        RsFTP (实简FTP) allows you to run an ftp server on your android device.\nThis project id developed and maintained by myself,so we are limited test models in hand.Please understand that maybe there are some problems in operation.\n\nProblem Feedback QQ Group:1362290
     </string>
     <string name="about_libraries_title">Libraries</string>
     <string name="about_contributor_title">Contributors</string>
     <string name="about_contributor_list">
-        tuzhao\nQQ:406943270\nQQ Group:1362290\nMail:tuzhaocn@gmail.com\nhttp://weibo.com/406943270\n\nAnn.(logo design)\nQQ:260512173
+        tuzhao\nQQ:406943270\nMail:tuzhaocn@gmail.com\nhttp://weibo.com/406943270\n\nAnn.(logo design)\nQQ:260512173
     </string>
 
     <string name="app_theme">Theme</string>
@@ -155,7 +155,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="app_logo">app logo</string>
 
     <string name="welcome_note">do the Real Simple best FTP Server</string>
-    <string name="welcome_bottom">\@tuzhao.org</string>
+    <string name="welcome_bottom">tuzhao.org</string>
 
     <string name="exit_title">FTP Server Note</string>
     <string name="exit_msg">Are you sure want to exit this app?\nIt will be kill FTP Server if you click submit button.</string>
@@ -201,5 +201,6 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="wifi_setting">Wifi Setting</string>
     <string name="wifi_open_error">open wifi setting failure</string>
     <string name="running">Running</string>
+    <string name="running_stop_label">Server has not been started</string>
 
 </resources>
