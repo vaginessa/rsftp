@@ -85,6 +85,19 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_feedback) {
+            showFeedbackNoteDialog();
+        } else if (item.getItemId() == R.id.action_about) {
+            startActivity(new Intent(this, AboutActivity.class));
+        }
+        return true;
+    }
+
+    private void showFeedbackNoteDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.note);
+        builder.setMessage(R.string.feedback_msg);
+        builder.setPositiveButton(R.string.submit, (dialogInterface, i) -> {
+            dialogInterface.dismiss();
             String to = "tuzhaocn@gmail.com";
             String subject = "FTP Server feedback";
             String message = "Device: " + Build.MODEL + "\n" +
@@ -98,15 +111,14 @@ public class MainActivity extends BaseActivity {
             email.putExtra(Intent.EXTRA_SUBJECT, subject);
             email.putExtra(Intent.EXTRA_TEXT, message);
             email.setType("message/rfc822");
-            if (System.isIntentAvailable(this, email)) {
+            if (System.isIntentAvailable(getActivity(), email)) {
                 startActivity(email);
             } else {
                 showMsg(getString(R.string.open_error_mail));
             }
-        } else if (item.getItemId() == R.id.action_about) {
-            startActivity(new Intent(this, AboutActivity.class));
-        }
-        return true;
+        });
+        builder.setNegativeButton(R.string.cancel, null);
+        builder.create().show();
     }
 
     @Override

@@ -96,7 +96,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="autoconnect_summary">当选中的wifi网络连接时自动运行服务</string>
 
     <string name="welcome_note">争做最简单最好用的FTP手机服务端</string>
-    <string name="exit_title">FTP Server提示</string>
+    <string name="exit_title">实简FTP 提示</string>
     <string name="exit_msg">是否要退出当前应用？\n点击确定将会结束FTP服务。</string>
     <string name="submit">确定</string>
     <string name="cancel">取消</string>
@@ -139,5 +139,7 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
     <string name="wifi_open_error">打开wifi设置界面失败</string>
     <string name="wifi_setting">WIFI设置</string>
     <string name="running">正在运行</string>
+    <string name="note">提示</string>
+    <string name="feedback_msg">你在使用过程中遇到什么问题了吗？\n推荐你使用QQ群：1362290进行问题反馈，这样可以更加快捷和直接与我交流。如果你仍然希望使用邮件反馈，那么请点击确定。</string>
 
 </resources>

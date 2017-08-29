@@ -202,5 +202,8 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="wifi_open_error">open wifi setting failure</string>
     <string name="running">Running</string>
     <string name="running_stop_label">Server has not been started</string>
+    <string name="note">Note</string>
+    <string name="feedback_msg">Did you have any problems with your using app?\nWe recommend you use QQ group:1362290 for feedback, so that you can communicate with me more quickly and directly. If you still want to use email feedback, please click submit.</string>
+
 
 </resources>
