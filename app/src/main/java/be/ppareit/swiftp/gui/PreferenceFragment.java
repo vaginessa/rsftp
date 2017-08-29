@@ -283,9 +283,8 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         super.onStart();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             permissionCheck();
-        } else {
-            autoStartFTPServer();
         }
+        autoStartFTPServer();
     }
 
     private void permissionCheck() {
@@ -298,6 +297,12 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
     private void autoStartFTPServer() {
         log("autoStartFTPServer");
         System.threadInfo();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (permissionUtil.getDeniedPermissionList().size() > 0) {
+                log("you have denied permission(s),auto start stop ");
+                return;
+            }
+        }
         if (FsService.isRunning()) {
             log("We are connecting to a new wifi network on a running server, ignore");
             return;

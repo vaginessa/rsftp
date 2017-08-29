@@ -32,23 +32,8 @@ public final class PermissionFragmentUtil {
 
     public void init() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PackageManager pm = context.getPackageManager();
-            try {
-                PackageInfo pi = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_PERMISSIONS);
-                String[] permissions = pi.requestedPermissions;
-                if (permissions != null) {
-                    for (String item : permissions) {
-                        String flag = "request";
-                        if (ContextCompat.checkSelfPermission(context, item) != PackageManager.PERMISSION_GRANTED) {
-                            flag = "denied";
-                            list.add(item);
-                        }
-                        log(flag + " permission: " + item);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            list.clear();
+            list.addAll(getDeniedPermissionList());
         }
     }
 
@@ -65,6 +50,30 @@ public final class PermissionFragmentUtil {
                 list.clear();
             }
         }
+    }
+
+    public ArrayList<String> getDeniedPermissionList() {
+        ArrayList<String> strings = new ArrayList<>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PackageManager pm = context.getPackageManager();
+            try {
+                PackageInfo pi = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_PERMISSIONS);
+                String[] permissions = pi.requestedPermissions;
+                if (permissions != null) {
+                    for (String item : permissions) {
+                        String flag = "request";
+                        if (ContextCompat.checkSelfPermission(context, item) != PackageManager.PERMISSION_GRANTED) {
+                            flag = "denied";
+                            strings.add(item);
+                        }
+                        log(flag + " permission: " + item);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return strings;
     }
 
     public String[] onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
