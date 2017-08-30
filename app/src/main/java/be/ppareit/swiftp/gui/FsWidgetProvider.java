@@ -19,21 +19,22 @@
 package be.ppareit.swiftp.gui;
 
 import android.app.PendingIntent;
-import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.IBinder;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 import net.vrallev.android.cat.Cat;
 
 import org.tuzhao.ftp.R;
+import org.tuzhao.ftp.util.WeakRunnable;
 
 import java.net.InetAddress;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import be.ppareit.swiftp.FsService;
 
@@ -46,6 +47,8 @@ public class FsWidgetProvider extends AppWidgetProvider {
 
     private static final String TAG = FsWidgetProvider.class.getSimpleName();
 
+    private final ExecutorService pool = Executors.newCachedThreadPool();
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.v(TAG, "Received broadcast: " + intent.getAction());
@@ -53,8 +56,7 @@ public class FsWidgetProvider extends AppWidgetProvider {
         final String action = intent.getAction();
         if (action.equals(FsService.ACTION_STARTED)
                 || action.equals(FsService.ACTION_STOPPED)) {
-            Intent updateIntent = new Intent(context, UpdateService.class);
-            context.startService(updateIntent);
+            pool.execute(new UpdateWidgetRunnable(context));
         }
         super.onReceive(context, intent);
     }
@@ -63,15 +65,17 @@ public class FsWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager,
                          int[] appWidgetIds) {
         Log.d(TAG, "updated called");
-        // let the updating happen by a service
-        Intent intent = new Intent(context, UpdateService.class);
-        context.startService(intent);
+        pool.execute(new UpdateWidgetRunnable(context));
     }
 
-    public static class UpdateService extends Service {
-        // all real work is done in a service to avoid ANR messages
+    private static class UpdateWidgetRunnable extends WeakRunnable<Context> {
+
+        UpdateWidgetRunnable(Context context) {
+            super(context);
+        }
+
         @Override
-        public int onStartCommand(Intent intent, int flags, int startId) {
+        public void weakRun(Context context) {
             Log.d(TAG, "UpdateService start command");
             // depending on whether or not the server is running, choose correct properties
             final String action;
@@ -86,32 +90,28 @@ public class FsWidgetProvider extends AppWidgetProvider {
                     Cat.w("Unable to retrieve the local ip address");
                     text = "ERROR";
                 } else {
-                    text = address.getHostAddress();
+                    text = context.getString(R.string.running);
                 }
             } else {
                 action = FsService.ACTION_START_FTPSERVER;
                 drawable = R.drawable.widget_off;
-                text = getString(R.string.swiftp_name);
+                text = context.getString(R.string.swiftp_name);
             }
             Intent startIntent = new Intent(action);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
-                    startIntent, 0);
-            RemoteViews views = new RemoteViews(getPackageName(), R.layout.widget_layout);
+            startIntent.setPackage(context.getPackageName());
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
+                startIntent, 0);
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_layout);
             // setup the info on the widget
             views.setOnClickPendingIntent(R.id.widget_button, pendingIntent);
             views.setImageViewResource(R.id.widget_button, drawable);
             views.setTextViewText(R.id.widget_text, text);
             // new info is on widget, update it
-            AppWidgetManager manager = AppWidgetManager.getInstance(this);
-            ComponentName widget = new ComponentName(this, FsWidgetProvider.class);
+            AppWidgetManager manager = AppWidgetManager.getInstance(context);
+            ComponentName widget = new ComponentName(context, FsWidgetProvider.class);
             manager.updateAppWidget(widget, views);
             // service has done it's work, android may kill it
-            return START_NOT_STICKY;
-        }
-
-        @Override
-        public IBinder onBind(Intent intent) {
-            return null;
         }
     }
+
 }

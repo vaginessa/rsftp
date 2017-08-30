@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top|center"
+        android:orientation="vertical"
+        android:paddingBottom="40dp"
+        android:paddingTop="40dp">
+
+        <ImageView
+            android:id="@+id/pay_wechat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/pay_wechat"
+            android:src="@drawable/pay_wechat"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="26dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/pay_wechat"/>
+
+        <ImageView
+            android:id="@+id/pay_alibaba"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/pay_wechat"
+            android:src="@drawable/pay_alibaba"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/pay_alibaba"/>
+
+        <Button
+            android:id="@+id/pay_save_bt"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/pay_save"
+            android:textAllCaps="false"/>
+
+    </LinearLayout>
+</ScrollView>

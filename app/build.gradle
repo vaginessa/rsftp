@@ -12,8 +12,8 @@ android {
         applicationId "org.tuzhao.ftp"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 10002
-        versionName "1.0.15"
+        versionCode 10003
+        versionName "1.1.00"
         // dex突破65535的限制
         multiDexEnabled true
         // 默认渠道
@@ -48,6 +48,10 @@ android {
         tencent {
             manifestPlaceholders = [CHANNEL_VALUE: "tencent"]
         }
+
+        alibaba {
+            manifestPlaceholders = [CHANNEL_VALUE: "alibaba"]
+        }
     }
 
     buildTypes {
@@ -75,7 +79,7 @@ android {
 
     }
 
-    applicationVariants.all { variant ->
+    android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
             def outputFile = output.outputFile
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
@@ -111,6 +115,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     provided 'org.projectlombok:lombok:1.16.6'
     compile 'com.umeng.analytics:analytics:latest.integration'
+    compile 'com.android.support:support-v13:26.0.0-alpha1'
 }
 
 android {
@@ -129,5 +134,5 @@ android {
 }
 
 static def releaseTime() {
-    return new Date().format("yyyy-MM-dd-HH-mm", TimeZone.getTimeZone("GMT+08:00"));
+    return new Date().format("yy-MM-dd", TimeZone.getTimeZone("GMT+08:00"));
 }

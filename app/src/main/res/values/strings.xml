@@ -21,12 +21,12 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
 
 <resources>
 
-    <string name="swiftp_name">RsFTP</string>
+    <string name="swiftp_name">rsftp</string>
     <string name="swiftp_name_free">FTP Server (Free)</string>
     <string name="swiftp_name_demo">FTP Server (Demo)</string>
-    <string name="running_label">FTP Server</string>
+    <string name="running_label">Server started</string>
     <string name="running_summary_stopped">Toggle the state of the ftp server</string>
-    <string name="running_summary_started">at %s</string>
+    <string name="running_summary_started">running at %s</string>
     <string name="running_summary_failed">
         Failed to start the FTP server, not connected to the local network (wifi or ethernet)?
     </string>
@@ -34,12 +34,8 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
         Failed to start the FTP server, unable to get IP address
     </string>
 
-    <string name="market_version_label">Market version</string>
-    <string name="market_version_summary">
-        This is the FTP Server Demo version.
-        Support development by getting the FTP Server from the android market.
-        Click here to go to the market.
-    </string>
+    <string name="donation_label">Donation</string>
+    <string name="donation_summary">Let me makes the software more better</string>
     <string name="settings_label">Settings</string>
     <string name="user_label">User</string>
     <string name="login_settings_label">Login settings</string>
@@ -140,12 +136,12 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     </string>
     <string name="about_description_title">Description</string>
     <string name="about_description_text">
-        RsFTP allows you to run an ftp server on your android device.\nThis project id developed and maintained by myself,so we are limited test models in hand.Please understand that maybe there are some problems in operation.
+        RsFTP allows you to run an ftp server on your android device.\nThis project id developed and maintained by myself,so we are limited test models in hand.Please understand that maybe there are some problems in operation.\n\nProblem Feedback QQ Group:1362290
     </string>
     <string name="about_libraries_title">Libraries</string>
     <string name="about_contributor_title">Contributors</string>
     <string name="about_contributor_list">
-        tuzhao\nQQ:406943270\nQQ Group:1362290\nMail:tuzhaocn@gmail.com\nhttp://weibo.com/406943270\n\nAnn.(logo design)\nQQ:260512173
+        tuzhao\nQQ:406943270\nhttp://weibo.com/406943270\n\nAnn.(logo design)\nQQ:260512173
     </string>
 
     <string name="app_theme">Theme</string>
@@ -155,7 +151,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="app_logo">app logo</string>
 
     <string name="welcome_note">do the Real Simple best FTP Server</string>
-    <string name="welcome_bottom">\@tuzhao.org</string>
+    <string name="welcome_bottom">tuzhao.org</string>
 
     <string name="exit_title">FTP Server Note</string>
     <string name="exit_msg">Are you sure want to exit this app?\nIt will be kill FTP Server if you click submit button.</string>
@@ -200,5 +196,16 @@ If you have any ideas or suggestions that you can send email to me.\n\n
 
     <string name="wifi_setting">Wifi Setting</string>
     <string name="wifi_open_error">open wifi setting failure</string>
+    <string name="running">Running</string>
+    <string name="running_stop_label">Server has not been started</string>
+    <string name="note">Note</string>
+    <string name="feedback_msg">Did you have any problems with your using app?\nWe recommend you use QQ group:1362290 for feedback, so that you can communicate with me more quickly and directly. If you still want to use email feedback, please click submit.</string>
+    <string name="lang_zhong">LangZhong</string>
+    <string name="pay_wechat">WeChat Pay</string>
+    <string name="pay_alibaba">Alibaba Pay</string>
+    <string name="pay_save">Save All Image</string>
+    <string name="pay_save_successful">Qr code save successful!\n path:%s</string>
+    <string name="pay_save_failure">Qr code save failure,please try again later.</string>
+
 
 </resources>

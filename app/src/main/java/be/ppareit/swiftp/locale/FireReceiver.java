@@ -47,9 +47,13 @@ public class FireReceiver extends AbstractPluginSettingReceiver {
     protected void firePluginSetting(@NonNull Context context, @NonNull Bundle bundle) {
         boolean running = getBundleRunningState(bundle);
         if (running && !FsService.isRunning()) {
-            context.sendBroadcast(new Intent(FsService.ACTION_START_FTPSERVER));
+            Intent intent = new Intent(FsService.ACTION_START_FTPSERVER);
+            intent.setPackage(context.getPackageName());
+            context.sendBroadcast(intent);
         } else if (!running && FsService.isRunning()) {
-            context.sendBroadcast(new Intent(FsService.ACTION_STOP_FTPSERVER));
+            Intent intent = new Intent(FsService.ACTION_STOP_FTPSERVER);
+            intent.setPackage(context.getPackageName());
+            context.sendBroadcast(intent);
         }
     }
 }

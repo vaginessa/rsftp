@@ -21,11 +21,14 @@ package be.ppareit.swiftp.gui;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 
@@ -34,13 +37,16 @@ import net.vrallev.android.cat.Cat;
 import org.tuzhao.ftp.R;
 
 import java.net.InetAddress;
+import java.util.List;
 
 import be.ppareit.swiftp.FsService;
 import be.ppareit.swiftp.FsSettings;
 
 public class FsNotification extends BroadcastReceiver {
 
-    private final int NOTIFICATION_ID = 7890;
+    private static final String CHANNEL_ID = "ftp_channel_01";
+
+    private static final int NOTIFICATION_ID = 7890;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -55,9 +61,62 @@ public class FsNotification extends BroadcastReceiver {
         }
     }
 
+    public static void startingNotification(Context context) {
+        Cat.d("startingNotification start");
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
+            if (!isChannelCreated(context)) {
+                createChannel(context);
+            }
+        }
+        String ns = Context.NOTIFICATION_SERVICE;
+        NotificationManager nm = (NotificationManager) context.getSystemService(ns);
+        // Instantiate a Notification
+        int icon = R.mipmap.notification;
+        long when = System.currentTimeMillis();
+        CharSequence contentTitle = "FTP Server";
+        CharSequence contentText = "server is starting";
+        CharSequence tickerText = "wait";
+
+        Notification.Builder nb = new Notification.Builder(context)
+                                      .setContentTitle(contentTitle)
+                                      .setContentText(contentText)
+                                      .setContentIntent(null)
+                                      .setSmallIcon(icon)
+                                      .setTicker(tickerText)
+                                      .setWhen(when)
+                                      .setOngoing(true);
+
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
+            nb.setChannelId(CHANNEL_ID);
+        }
+
+        Notification notification;
+
+        // go from high to low android version adding extra options
+        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+            nb.setVisibility(Notification.VISIBILITY_PUBLIC);
+            nb.setCategory(Notification.CATEGORY_SERVICE);
+            nb.setPriority(Notification.PRIORITY_MAX);
+        }
+        if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
+            nb.setShowWhen(false);
+            notification = nb.build();
+        } else {
+            notification = nb.getNotification();
+        }
+
+        FsService.setForeground(NOTIFICATION_ID, notification);
+        Cat.d("startingNotification end");
+    }
+
     @SuppressLint("NewApi")
     private void setupNotification(Context context) {
         Cat.d("Setting up the notification");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (!isChannelCreated(context)) {
+                createChannel(context);
+            }
+        }
         // Get NotificationManager reference
         String ns = Context.NOTIFICATION_SERVICE;
         NotificationManager nm = (NotificationManager) context.getSystemService(ns);
@@ -87,6 +146,7 @@ public class FsNotification extends BroadcastReceiver {
         int stopIcon = android.R.drawable.ic_menu_close_clear_cancel;
         CharSequence stopText = context.getString(R.string.notification_stop_text);
         Intent stopIntent = new Intent(FsService.ACTION_STOP_FTPSERVER);
+        stopIntent.setPackage(context.getPackageName());
         PendingIntent stopPendingIntent = PendingIntent.getBroadcast(context, 0,
                 stopIntent, PendingIntent.FLAG_ONE_SHOT);
 
@@ -104,6 +164,10 @@ public class FsNotification extends BroadcastReceiver {
                 .setTicker(tickerText)
                 .setWhen(when)
                 .setOngoing(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            nb.setChannelId(CHANNEL_ID);
+        }
 
         Notification notification;
 
@@ -135,5 +199,42 @@ public class FsNotification extends BroadcastReceiver {
         NotificationManager nm = (NotificationManager) context.getSystemService(ns);
         nm.cancelAll();
         Cat.d("Cleared notification");
+    }
+
+    private static void createChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            String name = "FTP";
+            String description = "ftp open state channel";
+            int importance = NotificationManager.IMPORTANCE_MAX;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            channel.enableLights(true);
+            channel.enableVibration(true);
+            channel.setLightColor(Color.GREEN);
+            channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            manager.createNotificationChannel(channel);
+            channel.setShowBadge(true);
+            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            Cat.d("create channel end");
+        }
+    }
+
+    private static boolean isChannelCreated(Context context) {
+        boolean flag = false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            List<NotificationChannel> channelList = manager.getNotificationChannels();
+            Cat.d("channel list size: " + channelList.size());
+            for (int i = 0; i < channelList.size(); i++) {
+                NotificationChannel channel = channelList.get(i);
+                String id = channel.getId();
+                if (id.equals(CHANNEL_ID)) {
+                    flag = true;
+                    break;
+                }
+            }
+        }
+        return flag;
     }
 }

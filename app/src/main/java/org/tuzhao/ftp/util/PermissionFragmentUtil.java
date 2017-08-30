@@ -1,10 +1,11 @@
 package org.tuzhao.ftp.util;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
+import android.support.v13.app.FragmentCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
@@ -12,39 +13,27 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
+ * only request permission of android.app.fragment
  * zhaotu
  * 17-8-4
  */
-public final class PermissionUtil {
+public final class PermissionFragmentUtil {
 
-    private static final String TAG = "PermissionUtil";
-    private final static int PERMISSIONS_REQUEST_CODE = 12;
+    private static final String TAG = "PermissionFragmentUtil";
+    private final static int PERMISSIONS_REQUEST_CODE = 13;
     private final ArrayList<String> list = new ArrayList<>();
     private final Activity context;
+    private final Fragment fragment;
 
-    public PermissionUtil(Activity context) {
+    public PermissionFragmentUtil(Activity context, Fragment fragment) {
         this.context = context;
+        this.fragment = fragment;
     }
 
     public void init() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PackageManager pm = context.getPackageManager();
-            try {
-                PackageInfo pi = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_PERMISSIONS);
-                String[] permissions = pi.requestedPermissions;
-                if (permissions != null) {
-                    for (String item : permissions) {
-                        String flag = "request";
-                        if (ContextCompat.checkSelfPermission(context, item) != PackageManager.PERMISSION_GRANTED) {
-                            flag = "denied";
-                            list.add(item);
-                        }
-                        log(flag + " permission: " + item);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            list.clear();
+            list.addAll(getDeniedPermissionList());
         }
     }
 
@@ -57,10 +46,34 @@ public final class PermissionUtil {
                     String permission = list.get(i);
                     strings[i] = permission;
                 }
-                ActivityCompat.requestPermissions(context, strings, PERMISSIONS_REQUEST_CODE);
+                FragmentCompat.requestPermissions(fragment, strings, PERMISSIONS_REQUEST_CODE);
                 list.clear();
             }
         }
+    }
+
+    public ArrayList<String> getDeniedPermissionList() {
+        ArrayList<String> strings = new ArrayList<>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PackageManager pm = context.getPackageManager();
+            try {
+                PackageInfo pi = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_PERMISSIONS);
+                String[] permissions = pi.requestedPermissions;
+                if (permissions != null) {
+                    for (String item : permissions) {
+                        String flag = "request";
+                        if (ContextCompat.checkSelfPermission(context, item) != PackageManager.PERMISSION_GRANTED) {
+                            flag = "denied";
+                            strings.add(item);
+                        }
+                        log(flag + " permission: " + item);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return strings;
     }
 
     public String[] onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
