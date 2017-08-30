@@ -145,7 +145,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="about_libraries_title">Libraries</string>
     <string name="about_contributor_title">Contributors</string>
     <string name="about_contributor_list">
-        tuzhao\nQQ:406943270\nMail:tuzhaocn@gmail.com\nhttp://weibo.com/406943270\n\nAnn.(logo design)\nQQ:260512173
+        tuzhao\nQQ:406943270\nhttp://weibo.com/406943270\n\nAnn.(logo design)\nQQ:260512173
     </string>
 
     <string name="app_theme">Theme</string>
@@ -204,6 +204,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="running_stop_label">Server has not been started</string>
     <string name="note">Note</string>
     <string name="feedback_msg">Did you have any problems with your using app?\nWe recommend you use QQ group:1362290 for feedback, so that you can communicate with me more quickly and directly. If you still want to use email feedback, please click submit.</string>
+    <string name="lang_zhong">LangZhong</string>
 
 
 </resources>
