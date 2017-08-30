@@ -53,6 +53,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.vrallev.android.cat.Cat;
 
+import org.tuzhao.ftp.Fragment.DialogDonationFragment;
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.activity.PermissionActivity;
 import org.tuzhao.ftp.util.PermissionFragmentUtil;
@@ -106,24 +107,22 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         });
 
         PreferenceScreen prefScreen = findPref("preference_screen");
-        Preference marketVersionPref = findPref("market_version");
+        Preference marketVersionPref = findPref("donation");
         marketVersionPref.setOnPreferenceClickListener(preference -> {
-            // start the market at our application
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setData(Uri.parse("market://details?id=be.ppareit.swiftp"));
-            try {
-                // this can fail if there is no market installed
-                startActivity(intent);
-            } catch (Exception e) {
-                Cat.e("Failed to launch the market.");
-                e.printStackTrace();
-            }
-            return false;
+//            // start the market at our application
+//            Intent intent = new Intent(Intent.ACTION_VIEW);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.setData(Uri.parse("market://details?id=be.ppareit.swiftp"));
+//            try {
+//                // this can fail if there is no market installed
+//                startActivity(intent);
+//            } catch (Exception e) {
+//                Cat.e("Failed to launch the market.");
+//                e.printStackTrace();
+//            }
+            DialogDonationFragment.show(getActivity());
+            return true;
         });
-        if (!App.isFreeVersion()) {
-            prefScreen.removePreference(marketVersionPref);
-        }
 
         updateLoginInfo();
 
@@ -276,6 +275,8 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
             startActivity(new Intent(getActivity(), AboutActivity.class));
             return true;
         });
+
+        autoStartFTPServer();
     }
 
     @Override
@@ -284,7 +285,6 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             permissionCheck();
         }
-        autoStartFTPServer();
     }
 
     private void permissionCheck() {

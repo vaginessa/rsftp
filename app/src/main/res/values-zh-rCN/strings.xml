@@ -25,10 +25,8 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="running_summary_stopped">点击开始运行FTP服务</string>
     <string name="running_summary_started">服务运行于 %s 端口</string>
     <string name="running_summary_failed">FTP server 启动失败，您尚未连接到 Wi-Fi 或以太网络？</string>
-    <string name="market_version_label">市场版本</string>
-    <string name="market_version_summary">欢迎使用 FTP Server Demo 版本。
-        您可以通过在 Google Play 中购买 FTP Server 以支持开发者。
-		点击此处跳转至 Google Play 市场。</string>
+    <string name="donation_label">捐赠</string>
+    <string name="donation_summary">让我把软件做得更好</string>
     <string name="settings_label">设置</string>
     <string name="username_label">用户名</string>
     <string name="password_label">密码</string>
@@ -142,5 +140,10 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
     <string name="note">提示</string>
     <string name="feedback_msg">你在使用过程中遇到什么问题了吗？\n推荐你使用QQ群：1362290进行问题反馈，这样可以更加快捷和直接与我交流。如果你仍然希望使用邮件反馈，那么请点击确定。</string>
     <string name="lang_zhong">阆中</string>
+    <string name="pay_alibaba">支付宝（收款码）</string>
+    <string name="pay_wechat">微信（收款码）</string>
+    <string name="pay_save">保存二维码</string>
+    <string name="pay_save_failure">二维码保存失败，请稍后再试。</string>
+    <string name="pay_save_successful">二维码保存成功。\n路径：%s</string>
 
 </resources>

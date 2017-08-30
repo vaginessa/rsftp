@@ -34,12 +34,8 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
         Failed to start the FTP server, unable to get IP address
     </string>
 
-    <string name="market_version_label">Market version</string>
-    <string name="market_version_summary">
-        This is the FTP Server Demo version.
-        Support development by getting the FTP Server from the android market.
-        Click here to go to the market.
-    </string>
+    <string name="donation_label">Donation</string>
+    <string name="donation_summary">Let me makes the software more better</string>
     <string name="settings_label">Settings</string>
     <string name="user_label">User</string>
     <string name="login_settings_label">Login settings</string>
@@ -205,6 +201,11 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="note">Note</string>
     <string name="feedback_msg">Did you have any problems with your using app?\nWe recommend you use QQ group:1362290 for feedback, so that you can communicate with me more quickly and directly. If you still want to use email feedback, please click submit.</string>
     <string name="lang_zhong">LangZhong</string>
+    <string name="pay_wechat">WeChat Pay</string>
+    <string name="pay_alibaba">Alibaba Pay</string>
+    <string name="pay_save">Save All Image</string>
+    <string name="pay_save_successful">Qr code save successful!\n path:%s</string>
+    <string name="pay_save_failure">Qr code save failure,please try again later.</string>
 
 
 </resources>
