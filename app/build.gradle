@@ -48,6 +48,10 @@ android {
         tencent {
             manifestPlaceholders = [CHANNEL_VALUE: "tencent"]
         }
+
+        alibaba {
+            manifestPlaceholders = [CHANNEL_VALUE: "alibaba"]
+        }
     }
 
     buildTypes {
