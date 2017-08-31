@@ -12,8 +12,8 @@ android {
         applicationId "org.tuzhao.ftp"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 10003
-        versionName "1.1.00"
+        versionCode 10004
+        versionName "1.1.05"
         // dex突破65535的限制
         multiDexEnabled true
         // 默认渠道
@@ -56,14 +56,14 @@ android {
 
     buildTypes {
         release {
-            shrinkResources true
+            shrinkResources false
             minifyEnabled false
             lintOptions {
                 disable 'MissingTranslation'
             }
-            debuggable true
-            jniDebuggable true
-            renderscriptDebuggable true
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
