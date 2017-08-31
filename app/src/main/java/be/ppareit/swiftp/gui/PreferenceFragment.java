@@ -62,6 +62,7 @@ import org.tuzhao.ftp.util.Umeng;
 
 import java.io.File;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.List;
 
 import be.ppareit.android.DynamicMultiSelectListPreference;
@@ -288,17 +289,22 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
     }
 
     private void permissionCheck() {
+        getPermissionUtil().init();
+        getPermissionUtil().request();
+    }
+
+    private PermissionFragmentUtil getPermissionUtil() {
         if (null == permissionUtil)
             permissionUtil = new PermissionFragmentUtil(getActivity(), this);
-        permissionUtil.init();
-        permissionUtil.request();
+        return permissionUtil;
     }
 
     private void autoStartFTPServer() {
         log("autoStartFTPServer");
         System.threadInfo();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (permissionUtil.getDeniedPermissionList().size() > 0) {
+            final ArrayList<String> deniedList = getPermissionUtil().getDeniedPermissionList();
+            if (null != deniedList && deniedList.size() > 0) {
                 log("you have denied permission(s),auto start stop ");
                 return;
             }

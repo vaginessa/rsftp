@@ -57,7 +57,7 @@ android {
     buildTypes {
         release {
             shrinkResources true
-            minifyEnabled true
+            minifyEnabled false
             lintOptions {
                 disable 'MissingTranslation'
             }
@@ -72,8 +72,8 @@ android {
             debuggable true
             jniDebuggable true
             renderscriptDebuggable true
-            minifyEnabled true
-            zipAlignEnabled false
+            minifyEnabled false
+            zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
