@@ -1,4 +1,4 @@
-package org.tuzhao.ftp.Fragment;
+package org.tuzhao.ftp.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,6 +12,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -22,6 +23,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import org.tuzhao.ftp.R;
+import org.tuzhao.ftp.util.BaseOnClickListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,7 +32,7 @@ import java.io.FileOutputStream;
  * author: tuzhao
  * 2017-08-30 21:02
  */
-public class DialogDonationFragment extends DialogFragment implements View.OnClickListener {
+public class DialogDonationFragment extends BaseDialogFragment {
 
     private static final String FRAGMENT_TAG = "DialogDonationFragment";
 
@@ -60,30 +62,66 @@ public class DialogDonationFragment extends DialogFragment implements View.OnCli
         dialog.setCanceledOnTouchOutside(false);
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.donation, null, false);
         Button mSaveBt = view.findViewById(R.id.pay_save_bt);
-        mSaveBt.setOnClickListener(this);
+        mSaveBt.setOnClickListener(new SaveImgClickListener());
         dialog.setView(view);
         return dialog;
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.pay_save_bt:
-                if (saveImage()) {
-                    String des = getString(R.string.pay_save_successful);
-                    showMsg(String.format(des, dir));
-                } else {
-                    showMsg(getString(R.string.pay_save_failure));
-                }
-                break;
+    private SaveImgTask task;
+
+    private class SaveImgClickListener extends BaseOnClickListener {
+        @Override
+        public void click(View v) {
+            task = new SaveImgTask();
+            task.execute();
         }
     }
 
-    private void showMsg(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (null != task) {
+            try {
+                task.cancel(true);
+            } catch (Exception e) {
+                //...ignore...
+            }
+        }
+        try {
+            bitmap.recycle();
+        } catch (Exception e) {
+            //...ignore...
+        }
+    }
+
+    private class SaveImgTask extends AsyncTask<String, Object, Boolean> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showLoadingDialog();
+        }
+
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            return saveImage();
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            dismissLoadingDialog();
+            if (result) {
+                String des = getString(R.string.pay_save_successful);
+                showMsg(String.format(des, dir));
+            } else {
+                showMsg(getString(R.string.pay_save_failure));
+            }
+        }
     }
 
     private String dir;
+    private Bitmap bitmap;
 
     private boolean saveImage() {
         boolean flag = false;
@@ -131,9 +169,11 @@ public class DialogDonationFragment extends DialogFragment implements View.OnCli
     }
 
     private void saveImage(String path, int ImageId) throws Exception {
-        final Resources resources = getActivity().getResources();
-        BitmapDrawable drawable = (BitmapDrawable) resources.getDrawable(ImageId);
-        Bitmap bitmap = drawable.getBitmap();
+        if (null == bitmap || bitmap.isRecycled()) {
+            final Resources resources = getActivity().getResources();
+            BitmapDrawable drawable = (BitmapDrawable) resources.getDrawable(ImageId);
+            bitmap = drawable.getBitmap();
+        }
         FileOutputStream out = new FileOutputStream(path);
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
         try {
@@ -141,10 +181,23 @@ public class DialogDonationFragment extends DialogFragment implements View.OnCli
         } catch (Exception e) {
             //...ignore...
         }
-        try {
-            bitmap.recycle();
-        } catch (Exception e) {
-            ///...ignore...
+    }
+
+    private SimpleDialogFragment dialogFragment;
+
+    public void showLoadingDialog() {
+        if (dialogFragment == null)
+            dialogFragment = SimpleDialogFragment.newInstance();
+        if (!dialogFragment.isShowing()) {
+            dialogFragment.show(getFragmentManager(), "loadingDialogFragment");
+        }
+    }
+
+    public void dismissLoadingDialog() {
+        if (null != dialogFragment) {
+            if (dialogFragment.isShowing()) {
+                dialogFragment.dismiss();
+            }
         }
     }
 

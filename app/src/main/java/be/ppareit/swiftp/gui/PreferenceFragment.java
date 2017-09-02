@@ -53,7 +53,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.vrallev.android.cat.Cat;
 
-import org.tuzhao.ftp.Fragment.DialogDonationFragment;
+import org.tuzhao.ftp.fragment.DialogDonationFragment;
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.activity.PermissionActivity;
 import org.tuzhao.ftp.util.PermissionFragmentUtil;
