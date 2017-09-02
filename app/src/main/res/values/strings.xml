@@ -133,7 +133,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="about_license_title">License</string>
     <string name="about_license_name">GNU GPL3</string>
     <string name="about_license_url" translatable="false">
-        https://www.gnu.org/licenses/gpl-3.0.en.html
+        <a href="https://www.gnu.org/licenses/gpl-3.0.en.html">https://www.gnu.org/licenses/gpl-3.0.en.html</a>
     </string>
     <string name="about_description_title">Description</string>
     <string name="about_description_text">

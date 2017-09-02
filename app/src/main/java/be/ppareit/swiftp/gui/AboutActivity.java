@@ -1,16 +1,23 @@
 package be.ppareit.swiftp.gui;
 
 
+import android.content.Intent;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
+import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import org.tuzhao.ftp.BuildConfig;
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.activity.BaseActivity;
+
+import java.util.List;
 
 import be.ppareit.swiftp.FsSettings;
 
@@ -35,6 +42,18 @@ public class AboutActivity extends BaseActivity {
 
         TextView versionInfoText = (TextView) findViewById(R.id.about_version_info);
         versionInfoText.setText(BuildConfig.VERSION_NAME + " - " + BuildConfig.VERSION_CODE + " (" + Build.VERSION.RELEASE + "-" + Build.VERSION.SDK_INT + ")");
+
+        TextView mLinkTv = (TextView) findViewById(R.id.about_link_tv);
+        String url = getString(R.string.about_license_url);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        Uri uri = Uri.parse(url);
+        intent.setData(uri);
+        List<ResolveInfo> info = getActivity().getPackageManager().queryIntentActivities(intent, 0);
+        if (info.size() > 0) {
+            mLinkTv.setMovementMethod(LinkMovementMethod.getInstance());
+        } else {
+            Log.w("AboutActivity", "set auto link mask failure");
+        }
     }
 
     @Override
