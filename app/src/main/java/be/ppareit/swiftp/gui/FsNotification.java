@@ -19,7 +19,6 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
 
 package be.ppareit.swiftp.gui;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -109,10 +108,9 @@ public class FsNotification extends BroadcastReceiver {
         Cat.d("startingNotification end");
     }
 
-    @SuppressLint("NewApi")
     private void setupNotification(Context context) {
         Cat.d("Setting up the notification");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
             if (!isChannelCreated(context)) {
                 createChannel(context);
             }
@@ -165,7 +163,7 @@ public class FsNotification extends BroadcastReceiver {
                 .setWhen(when)
                 .setOngoing(true);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
             nb.setChannelId(CHANNEL_ID);
         }
 
@@ -180,7 +178,10 @@ public class FsNotification extends BroadcastReceiver {
         if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {
             nb.addAction(stopIcon, stopText, stopPendingIntent);
             nb.addAction(preferenceIcon, preferenceText, preferencePendingIntent);
-            nb.setShowWhen(false);
+            //Control whether the timestamp set with setWhen is shown in the content view.
+            if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
+                nb.setShowWhen(false);
+            }
             notification = nb.build();
         } else {
             notification = nb.getNotification();
