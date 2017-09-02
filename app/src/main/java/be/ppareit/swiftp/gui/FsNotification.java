@@ -46,7 +46,7 @@ public class FsNotification extends BroadcastReceiver {
 
     private static final String CHANNEL_ID = "ftp_channel_01";
 
-    private final int NOTIFICATION_ID = 7890;
+    private static final int NOTIFICATION_ID = 7890;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -59,6 +59,54 @@ public class FsNotification extends BroadcastReceiver {
                 clearNotification(context);
                 break;
         }
+    }
+
+    public static void startingNotification(Context context) {
+        Cat.d("startingNotification start");
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
+            if (!isChannelCreated(context)) {
+                createChannel(context);
+            }
+        }
+        String ns = Context.NOTIFICATION_SERVICE;
+        NotificationManager nm = (NotificationManager) context.getSystemService(ns);
+        // Instantiate a Notification
+        int icon = R.mipmap.notification;
+        long when = System.currentTimeMillis();
+        CharSequence contentTitle = "FTP Server";
+        CharSequence contentText = "server is starting";
+        CharSequence tickerText = "wait";
+
+        Notification.Builder nb = new Notification.Builder(context)
+                                      .setContentTitle(contentTitle)
+                                      .setContentText(contentText)
+                                      .setContentIntent(null)
+                                      .setSmallIcon(icon)
+                                      .setTicker(tickerText)
+                                      .setWhen(when)
+                                      .setOngoing(true);
+
+        if (VERSION.SDK_INT >= VERSION_CODES.O) {
+            nb.setChannelId(CHANNEL_ID);
+        }
+
+        Notification notification;
+
+        // go from high to low android version adding extra options
+        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
+            nb.setVisibility(Notification.VISIBILITY_PUBLIC);
+            nb.setCategory(Notification.CATEGORY_SERVICE);
+            nb.setPriority(Notification.PRIORITY_MAX);
+        }
+        if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1) {
+            nb.setShowWhen(false);
+            notification = nb.build();
+        } else {
+            notification = nb.getNotification();
+        }
+
+        FsService.setForeground(NOTIFICATION_ID, notification);
+        Cat.d("startingNotification end");
     }
 
     @SuppressLint("NewApi")
@@ -153,7 +201,7 @@ public class FsNotification extends BroadcastReceiver {
         Cat.d("Cleared notification");
     }
 
-    private void createChannel(Context context) {
+    private static void createChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             String name = "FTP";
@@ -172,7 +220,7 @@ public class FsNotification extends BroadcastReceiver {
         }
     }
 
-    private boolean isChannelCreated(Context context) {
+    private static boolean isChannelCreated(Context context) {
         boolean flag = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

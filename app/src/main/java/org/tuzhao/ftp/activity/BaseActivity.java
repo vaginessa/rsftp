@@ -3,6 +3,8 @@ package org.tuzhao.ftp.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Handler;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -11,6 +13,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.fragment.SimpleDialogFragment;
+import org.tuzhao.ftp.util.ActivityStack;
 
 /**
  * zhaotu
@@ -19,6 +22,12 @@ import org.tuzhao.ftp.fragment.SimpleDialogFragment;
 public class BaseActivity extends AppCompatActivity {
 
     private Handler defaultHandler;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        ActivityStack.getInstance().add(this);
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected void onResume() {

@@ -18,10 +18,11 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
  */
 package be.ppareit.swiftp.locale;
 
-import android.content.pm.PackageManager;
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -39,9 +40,12 @@ import static be.ppareit.swiftp.locale.SettingsBundleHelper.generateBundle;
 import static be.ppareit.swiftp.locale.SettingsBundleHelper.getBundleRunningState;
 
 /**
- * Created by ppareit on 29/04/16.
+ * tuzhao
+ * 17-8-31
  */
 public class EditActivity extends AbstractPluginActivity {
+
+    private static final String TAG = "EditActivity";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,19 +57,26 @@ public class EditActivity extends AbstractPluginActivity {
         CharSequence callingApplicationLabel = null;
         try {
             callingApplicationLabel =
-                    getPackageManager().getApplicationLabel(
-                            getPackageManager().getApplicationInfo(getCallingPackage(),
-                                    0));
-        } catch (final PackageManager.NameNotFoundException e) {
+                getPackageManager().getApplicationLabel(
+                    getPackageManager().getApplicationInfo(getCallingPackage(),
+                        0));
+        } catch (Exception e) {
             Cat.e("Calling package couldn't be found%s", e); //$NON-NLS-1$
         }
         if (null != callingApplicationLabel) {
             setTitle(callingApplicationLabel);
         }
 
-        getActionBar().setSubtitle("Swiftp");
+        try {
+            ActionBar actionBar = getActionBar();
+            if (null != actionBar) {
+                actionBar.setSubtitle("Swiftp");
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "action bar is null", e);
+        }
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -91,15 +102,15 @@ public class EditActivity extends AbstractPluginActivity {
         }
         boolean running = previousBundle.getBoolean(BUNDLE_BOOLEAN_RUNNING);
         RadioButton radioButton =
-                (RadioButton) findViewById(running ? R.id.radio_server_running :
-                                R.id.radio_server_stopped);
+            findViewById(running ? R.id.radio_server_running :
+                             R.id.radio_server_stopped);
         radioButton.setChecked(true);
     }
 
     @Nullable
     @Override
     public Bundle getResultBundle() {
-        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radio_server_state_group);
+        RadioGroup radioGroup = findViewById(R.id.radio_server_state_group);
         int checkedId = radioGroup.getCheckedRadioButtonId();
         boolean running = (checkedId == R.id.radio_server_running);
 

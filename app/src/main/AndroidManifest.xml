@@ -84,9 +84,6 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
             </intent-filter>
         </receiver>
 
-        <service android:name="be.ppareit.swiftp.WifiStateChangeReceiver$StartServerService"/>
-        <service android:name="be.ppareit.swiftp.WifiStateChangeReceiver$StopServerService"/>
-
         <receiver
             android:name="be.ppareit.swiftp.gui.FsWidgetProvider"
             android:exported="false"
@@ -102,8 +99,6 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info"/>
         </receiver>
-
-        <service android:name="be.ppareit.swiftp.gui.FsWidgetProvider$UpdateService"/>
 
         <!-- Tasker/Locale integration -->
         <activity

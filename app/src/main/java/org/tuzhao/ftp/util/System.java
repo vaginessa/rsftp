@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.support.v4.content.LocalBroadcastManager;
+import android.os.Build;
 import android.util.Log;
 
 import org.apache.commons.net.ftp.FTPFile;
@@ -127,6 +128,10 @@ public final class System {
             }
         }
         return files;
+    }
+
+    public static boolean isAndroidO() {
+        return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O);
     }
 
     private static void log(String msg) {

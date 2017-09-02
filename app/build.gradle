@@ -12,8 +12,8 @@ android {
         applicationId "org.tuzhao.ftp"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 10002
-        versionName "1.0.15"
+        versionCode 10004
+        versionName "1.1.05"
         // dex突破65535的限制
         multiDexEnabled true
         // 默认渠道
@@ -48,18 +48,22 @@ android {
         tencent {
             manifestPlaceholders = [CHANNEL_VALUE: "tencent"]
         }
+
+        alibaba {
+            manifestPlaceholders = [CHANNEL_VALUE: "alibaba"]
+        }
     }
 
     buildTypes {
         release {
-            shrinkResources true
-            minifyEnabled true
+            shrinkResources false
+            minifyEnabled false
             lintOptions {
                 disable 'MissingTranslation'
             }
-            debuggable true
-            jniDebuggable true
-            renderscriptDebuggable true
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -69,7 +73,7 @@ android {
             jniDebuggable true
             renderscriptDebuggable true
             minifyEnabled false
-            zipAlignEnabled false
+            zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
@@ -114,6 +118,7 @@ dependencies {
     compile 'junit:junit:4.12'
     compile 'com.android.support:recyclerview-v7:26.0.0-alpha1'
     provided 'org.projectlombok:lombok:1.16.6'
+    compile 'com.android.support:support-v13:26.0.0-alpha1'
 }
 
 android {

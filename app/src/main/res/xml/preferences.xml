@@ -26,11 +26,11 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
         android:defaultValue="false"
         android:key="running_switch"
         android:summary="@string/running_summary_stopped"
-        android:title="@string/running_label"/>
+        android:title="@string/running_stop_label"/>
     <Preference
-        android:key="market_version"
-        android:summary="@string/market_version_summary"
-        android:title="@string/market_version_label"/>
+        android:key="donation"
+        android:summary="@string/donation_summary"
+        android:title="@string/donation_label"/>
 
     <PreferenceCategory
         android:key="settings"
