@@ -7,6 +7,6 @@
     <color name="transparent">@android:color/transparent</color>
 
     <color name="ftp">#5D749E</color>
-
     <color name="gap">#bebebe</color>
+
 </resources>

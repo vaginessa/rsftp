@@ -9,11 +9,14 @@ import android.view.ViewGroup;
 
 import org.tuzhao.ftp.R;
 
+
 /**
- * zhaotu
- * 17-8-7
+ * 显示一个简单进度条的DialogFragment
+ * @author tuzhao
  */
 public class SimpleDialogFragment extends BaseDialogFragment {
+
+    private OnDialogListener listener;
 
     public SimpleDialogFragment() {
         // Required empty public constructor

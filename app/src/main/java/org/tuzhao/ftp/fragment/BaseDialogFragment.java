@@ -1,5 +1,6 @@
 package org.tuzhao.ftp.fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -12,8 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 /**
- * zhaotu
- * 17-8-7
+ * author: tuzhao
+ * editor: tuzhao
+ * 创建时间: 2016年08月02日 11:58
+ * 修改时间: 2016年08月02日 11:58
  */
 public class BaseDialogFragment extends DialogFragment {
 
@@ -58,16 +61,19 @@ public class BaseDialogFragment extends DialogFragment {
         return dialog != null && dialog.isShowing();
     }
 
+    public void showMsg(String msg) {
+        final Activity activity = getActivity();
+        if (null != activity) {
+            Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
+        }
+    }
+
     public void setOnDialogFragmentListener(OnDialogListener listener) {
         this.listener = listener;
     }
 
     public interface OnDialogListener {
         void dismiss();
-    }
-
-    public void showMsg(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
     }
 
 }
