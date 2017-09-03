@@ -3,7 +3,6 @@ package org.tuzhao.ftp.fragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -20,7 +19,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.util.BaseOnClickListener;
@@ -32,9 +30,9 @@ import java.io.FileOutputStream;
  * author: tuzhao
  * 2017-08-30 21:02
  */
-public class DialogDonationFragment extends BaseDialogFragment {
+public class DonationDialogFragment extends BaseDialogFragment {
 
-    private static final String FRAGMENT_TAG = "DialogDonationFragment";
+    private static final String FRAGMENT_TAG = "DonationDialogFragment";
 
     public static void show(Activity context) {
         FragmentManager manager = context.getFragmentManager();
@@ -44,15 +42,15 @@ public class DialogDonationFragment extends BaseDialogFragment {
             transaction.remove(fragmentByTag);
         }
         transaction.addToBackStack(null);
-        DialogDonationFragment fragment = newInstance();
+        DonationDialogFragment fragment = newInstance();
         fragment.show(manager, FRAGMENT_TAG);
     }
 
-    public static DialogDonationFragment newInstance() {
-        return new DialogDonationFragment();
+    public static DonationDialogFragment newInstance() {
+        return new DonationDialogFragment();
     }
 
-    public DialogDonationFragment() {
+    public DonationDialogFragment() {
     }
 
     @Override
@@ -88,7 +86,14 @@ public class DialogDonationFragment extends BaseDialogFragment {
             }
         }
         try {
-            bitmap.recycle();
+            if (null != bitmapWechat)
+                bitmapWechat.recycle();
+        } catch (Exception e) {
+            //...ignore...
+        }
+        try {
+            if (null != bitmapAlipay)
+                bitmapAlipay.recycle();
         } catch (Exception e) {
             //...ignore...
         }
@@ -121,7 +126,8 @@ public class DialogDonationFragment extends BaseDialogFragment {
     }
 
     private String dir;
-    private Bitmap bitmap;
+    private Bitmap bitmapWechat;
+    private Bitmap bitmapAlipay;
 
     private boolean saveImage() {
         boolean flag = false;
@@ -169,17 +175,34 @@ public class DialogDonationFragment extends BaseDialogFragment {
     }
 
     private void saveImage(String path, int ImageId) throws Exception {
-        if (null == bitmap || bitmap.isRecycled()) {
-            final Resources resources = getActivity().getResources();
-            BitmapDrawable drawable = (BitmapDrawable) resources.getDrawable(ImageId);
-            bitmap = drawable.getBitmap();
+        Bitmap bitmap = null;
+        final Resources resources = getActivity().getResources();
+        switch (ImageId) {
+            case R.drawable.pay_alibaba:
+                if (null == bitmapAlipay || bitmapAlipay.isRecycled()) {
+                    BitmapDrawable drawable = (BitmapDrawable) resources.getDrawable(ImageId);
+                    bitmapAlipay = drawable.getBitmap();
+                }
+                bitmap = bitmapAlipay;
+                break;
+            case R.drawable.pay_wechat:
+                if (null == bitmapWechat || bitmapWechat.isRecycled()) {
+                    BitmapDrawable drawable = (BitmapDrawable) resources.getDrawable(ImageId);
+                    bitmapWechat = drawable.getBitmap();
+                }
+                bitmap = bitmapWechat;
+                break;
         }
-        FileOutputStream out = new FileOutputStream(path);
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-        try {
-            out.close();
-        } catch (Exception e) {
-            //...ignore...
+        if (null != bitmap) {
+            FileOutputStream out = new FileOutputStream(path);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            try {
+                out.close();
+            } catch (Exception e) {
+                //...ignore...
+            }
+        } else {
+            throw new RuntimeException("can't save a null bitmap");
         }
     }
 

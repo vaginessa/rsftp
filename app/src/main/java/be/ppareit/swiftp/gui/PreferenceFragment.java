@@ -53,7 +53,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.vrallev.android.cat.Cat;
 
-import org.tuzhao.ftp.fragment.DialogDonationFragment;
+import org.tuzhao.ftp.fragment.DonationDialogFragment;
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.activity.PermissionActivity;
 import org.tuzhao.ftp.util.PermissionFragmentUtil;
@@ -121,7 +121,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
 //                Cat.e("Failed to launch the market.");
 //                e.printStackTrace();
 //            }
-            DialogDonationFragment.show(getActivity());
+            DonationDialogFragment.show(getActivity());
             return true;
         });
 
