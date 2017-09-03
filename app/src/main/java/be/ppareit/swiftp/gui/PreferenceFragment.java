@@ -19,6 +19,7 @@
 
 package be.ppareit.swiftp.gui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -26,6 +27,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.net.wifi.WifiConfiguration;
@@ -110,17 +112,6 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         PreferenceScreen prefScreen = findPref("preference_screen");
         Preference marketVersionPref = findPref("donation");
         marketVersionPref.setOnPreferenceClickListener(preference -> {
-//            // start the market at our application
-//            Intent intent = new Intent(Intent.ACTION_VIEW);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            intent.setData(Uri.parse("market://details?id=be.ppareit.swiftp"));
-//            try {
-//                // this can fail if there is no market installed
-//                startActivity(intent);
-//            } catch (Exception e) {
-//                Cat.e("Failed to launch the market.");
-//                e.printStackTrace();
-//            }
             DonationDialogFragment.show(getActivity());
             return true;
         });
@@ -253,6 +244,26 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         Preference permission = findPref("permission");
         permission.setOnPreferenceClickListener(preference -> {
             startActivity(new Intent(getActivity(), PermissionActivity.class));
+            return true;
+        });
+
+        Preference evaluate = findPref("evaluate");
+        evaluate.setOnPreferenceClickListener(preference -> {
+            try {
+                final Activity context = getActivity();
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setData(Uri.parse("market://details?id=" + context.getPackageName()));
+                List<ResolveInfo> list = context.getPackageManager().queryIntentActivities(intent, 0);
+                if (null != list && list.size() > 0) {
+                    startActivity(intent);
+                } else {
+                    showMsg(getString(R.string.evaluate_note));
+                }
+            } catch (Exception e) {
+                showMsg(getString(R.string.evaluate_failure));
+                e.printStackTrace();
+            }
             return true;
         });
 

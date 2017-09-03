@@ -61,6 +61,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="wakelock_label">Keep device awake (full CPU speed)</string>
     <string name="extra_label">Extra</string>
     <string name="permission_label">Permission Explain</string>
+    <string name="evaluate_label">Evaluate App</string>
     <string name="help_label">Help</string>
     <string name="about_label">About</string>
     <string name="help_dlg_title">FTP Server Help</string>
@@ -206,6 +207,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="pay_save">Save All Image</string>
     <string name="pay_save_successful">Qr code save successful!\n path:%s</string>
     <string name="pay_save_failure">Qr code save failure,please try again later.</string>
-
+    <string name="evaluate_note">Is there a market for current mobile phones?</string>
+    <string name="evaluate_failure">Start the application market failure,please try again later.</string>
 
 </resources>

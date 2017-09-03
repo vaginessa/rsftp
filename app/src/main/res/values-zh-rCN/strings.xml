@@ -145,5 +145,8 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
     <string name="pay_save">保存二维码</string>
     <string name="pay_save_failure">二维码保存失败，请稍后再试。</string>
     <string name="pay_save_successful">二维码保存成功。\n路径：%s</string>
+    <string name="evaluate_label">五星好评</string>
+    <string name="evaluate_note">请确定当前手机是否有安装应用市场？</string>
+    <string name="evaluate_failure">启动应用市场失败，请稍后再试。</string>
 
 </resources>

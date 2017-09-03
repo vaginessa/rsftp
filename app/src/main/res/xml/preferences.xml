@@ -110,6 +110,9 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
             android:key="permission"
             android:title="@string/permission_label"/>
         <Preference
+            android:key="evaluate"
+            android:title="@string/evaluate_label"/>
+        <Preference
             android:key="help"
             android:title="@string/help_label"/>
         <Preference
