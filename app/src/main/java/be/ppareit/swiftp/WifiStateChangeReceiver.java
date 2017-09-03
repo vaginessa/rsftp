@@ -81,7 +81,7 @@ public class WifiStateChangeReceiver extends BroadcastReceiver {
                 return;
             }
             Cat.d("We are connected to " + wifiInfo.getSSID());
-            if (FsSettings.getAutoConnectList().contains(wifiInfo.getSSID())) {
+            if (FsSettings.isAutoConnectWifi(wifiInfo.getSSID())){
                 // sleep a short while so the network has time to truly connect
                 Util.sleepIgnoreInterrupt(1000);
                 Intent wifi = new Intent(FsService.ACTION_START_FTPSERVER);

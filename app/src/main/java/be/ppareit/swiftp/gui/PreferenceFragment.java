@@ -30,7 +30,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -55,9 +54,10 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.vrallev.android.cat.Cat;
 
-import org.tuzhao.ftp.fragment.DonationDialogFragment;
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.activity.PermissionActivity;
+import org.tuzhao.ftp.fragment.DonationDialogFragment;
+import org.tuzhao.ftp.fragment.WifiDialogFragment;
 import org.tuzhao.ftp.util.PermissionFragmentUtil;
 import org.tuzhao.ftp.util.System;
 import org.tuzhao.ftp.util.Umeng;
@@ -67,7 +67,6 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.ppareit.android.DynamicMultiSelectListPreference;
 import be.ppareit.swiftp.App;
 import be.ppareit.swiftp.FsService;
 import be.ppareit.swiftp.FsSettings;
@@ -139,37 +138,11 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
             stopServer();
             return true;
         });
-        DynamicMultiSelectListPreference autoconnectListPref = findPref("autoconnect_preference");
-        if (null != autoconnectListPref)
-            autoconnectListPref.setOnPopulateListener(
-                pref -> {
-                    Cat.d("autoconnect populate listener");
-
-                    WifiManager wifiManager = (WifiManager)
-                                                  getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                    List<WifiConfiguration> configs = wifiManager.getConfiguredNetworks();
-                    if (configs == null) {
-                        Cat.e("Unable to receive wifi configurations, bark at user and bail");
-                        Toast.makeText(getActivity(),
-                            R.string.autoconnect_error_enable_wifi_for_access_points,
-                            Toast.LENGTH_LONG)
-                            .show();
-                        return;
-                    }
-                    CharSequence[] ssids = new CharSequence[configs.size()];
-                    CharSequence[] niceSsids = new CharSequence[configs.size()];
-                    for (int i = 0; i < configs.size(); ++i) {
-                        ssids[i] = configs.get(i).SSID;
-                        String ssid = configs.get(i).SSID;
-                        if (ssid.length() > 2 && ssid.startsWith("\"") && ssid.endsWith("\"")) {
-                            ssid = ssid.substring(1, ssid.length() - 1);
-                        }
-                        Cat.d("ssid: " + ssid);
-                        niceSsids[i] = ssid;
-                    }
-                    pref.setEntries(niceSsids);
-                    pref.setEntryValues(ssids);
-                });
+        Preference connect = findPref("autoconnect_preference");
+        connect.setOnPreferenceClickListener(preference -> {
+            WifiDialogFragment.show(getActivity());
+            return true;
+        });
 
         EditTextPreference portnum_pref = findPref("portNum");
         portnum_pref.setSummary(sp.getString("portNum",
@@ -332,7 +305,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
             return;
         }
         log("We are connected to " + wifiInfo.getSSID());
-        if (FsSettings.getAutoConnectList().contains(wifiInfo.getSSID())) {
+        if (FsSettings.isAutoConnectWifi(wifiInfo.getSSID())) {
             Intent start = new Intent(FsService.ACTION_START_FTPSERVER);
             start.setPackage(getActivity().getPackageName());
             getActivity().sendBroadcast(start);

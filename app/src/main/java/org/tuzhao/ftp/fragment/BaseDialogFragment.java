@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,6 +67,10 @@ public class BaseDialogFragment extends DialogFragment {
         if (null != activity) {
             Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void log(String msg) {
+        Log.d(this.getClass().getSimpleName(), msg);
     }
 
     public void setOnDialogFragmentListener(OnDialogListener listener) {

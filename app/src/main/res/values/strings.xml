@@ -209,5 +209,6 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="pay_save_failure">Qr code save failure,please try again later.</string>
     <string name="evaluate_note">Is there a market for current mobile phones?</string>
     <string name="evaluate_failure">Start the application market failure,please try again later.</string>
+    <string name="auto_connect_note">Please make sure that there have a available wifi point in your current environment at least.</string>
 
 </resources>

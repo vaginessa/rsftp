@@ -27,10 +27,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.tuzhao.ftp.R;
+import org.tuzhao.ftp.util.System;
 
 import java.io.File;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
 
 public class FsSettings {
 
@@ -102,11 +102,15 @@ public class FsSettings {
         return sp.getBoolean("stayAwake", false);
     }
 
-    public static Set<String> getAutoConnectList() {
-        SharedPreferences sp = getSharedPreferences();
-        Set<String> stringSet = sp.getStringSet("autoconnect_preference", new TreeSet<>());
-        Log.v("auto wifi", stringSet.toString());
-        return stringSet;
+    public static boolean isAutoConnectWifi(String ssid) {
+        SharedPreferences share = App.getAppContext().getSharedPreferences(System.SHARED_CONFIG_FILE, Context.MODE_PRIVATE);
+        String str = share.getString(System.SHARED_WIFI_KEY, "");
+        ArrayList<String> save = System.stringToList(str);
+        Log.d("auto wifi", save.toString());
+        if (ssid.length() > 2 && ssid.startsWith("\"") && ssid.endsWith("\"")) {
+            ssid = ssid.substring(1, ssid.length() - 1);
+        }
+        return save.contains(ssid);
     }
 
     public static int getTheme() {
