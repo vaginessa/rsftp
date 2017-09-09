@@ -68,6 +68,7 @@ public final class RsDBHelper {
             int count = cursor.getCount();
             if (count > 0) {
                 do {
+                    int display = cursor.getInt(cursor.getColumnIndex(ServerEntry.COLUMN_NAME_DISPLAY));
                     String encoding = cursor.getString(cursor.getColumnIndex(ServerEntry.COLUMN_NAME_ENCODING));
                     String savePath = cursor.getString(cursor.getColumnIndex(ServerEntry.COLUMN_NAME_SAVE_PATH));
                     String address = cursor.getString(cursor.getColumnIndex(ServerEntry.COLUMN_NAME_ADDRESS));
@@ -76,6 +77,7 @@ public final class RsDBHelper {
                     String password = cursor.getString(cursor.getColumnIndex(ServerEntry.COLUMN_NAME_PWD));
                     int id = cursor.getInt(cursor.getColumnIndex(ServerEntry._ID));
                     ServerEntity entity = new ServerEntity();
+                    entity.setDisplay(display);
                     entity.setEncoding(encoding);
                     entity.setSavePath(savePath);
                     entity.setAddress(address);
@@ -104,6 +106,7 @@ public final class RsDBHelper {
         int update = -1;
         try {
             ContentValues values = new ContentValues();
+            values.put(ServerEntry.COLUMN_NAME_DISPLAY, server.getDisplay());
             values.put(ServerEntry.COLUMN_NAME_ENCODING, server.getEncoding());
             values.put(ServerEntry.COLUMN_NAME_SAVE_PATH, server.getSavePath());
             values.put(ServerEntry.COLUMN_NAME_ADDRESS, server.getAddress());

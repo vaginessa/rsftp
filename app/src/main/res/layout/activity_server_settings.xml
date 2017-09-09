@@ -120,12 +120,28 @@
                 />
 
             <Spinner
-                android:id="@+id/server_settings_spinner"
+                android:id="@+id/server_settings_encoding_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:entries="@array/server_encoding"/>
         </LinearLayout>
+
+        <LinearLayout style="@style/server_settings_ll">
+
+            <TextView
+                style="@style/server_settings_tv"
+                android:text="@string/hidden_files"
+                />
+
+            <Spinner
+                android:id="@+id/server_settings_hide_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:entries="@array/settings_hidden_files"/>
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/server_settings_save_bt"
@@ -135,6 +151,7 @@
             android:text="@string/save"
             android:textAllCaps="false"
             android:textSize="16sp"/>
+
 
     </LinearLayout>
 

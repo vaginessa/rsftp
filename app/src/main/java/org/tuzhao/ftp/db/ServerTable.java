@@ -19,6 +19,7 @@ public final class ServerTable {
         public static final String COLUMN_NAME_PWD = "password";
         public static final String COLUMN_NAME_SAVE_PATH = "save_path";
         public static final String COLUMN_NAME_ENCODING = "encoding";
+        public static final String COLUMN_NAME_DISPLAY = "display_hidden_files";
     }
 
 }

@@ -253,6 +253,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="server_info_save_successful">server info save successful.</string>
     <string name="server_info_save_failure">server info save failure.</string>
     <string name="server_encoding">encoding:</string>
+    <string name="hidden_files">Hidden Files:</string>
     <string name="download">download</string>
 
     <string name="selected_note">Please select at least one item</string>
@@ -269,4 +270,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="status_failure">failure</string>
     <string name="status_downloading">downloading</string>
     <string name="status_unstart">unstart</string>
+
+    <string name="display_yes">Display</string>
+    <string name="display_not">Don\'t display</string>
 </resources>

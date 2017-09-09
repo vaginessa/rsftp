@@ -23,4 +23,9 @@
         <item>@string/status_successful</item>
         <item>@string/status_failure</item>
     </string-array>
+
+    <string-array name="settings_hidden_files">
+        <item>@string/display_not</item>
+        <item>@string/display_yes</item>
+    </string-array>
 </resources>

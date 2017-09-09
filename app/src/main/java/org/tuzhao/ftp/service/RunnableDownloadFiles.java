@@ -105,7 +105,7 @@ class RunnableDownloadFiles extends WeakRunnable<Context> {
                 client = new FTPClient();
                 client.setDefaultTimeout(15000);
                 client.setConnectTimeout(15000);
-                client.setListHiddenFiles(true);
+                client.setListHiddenFiles(server.getDisplay() != 0);
                 if (null != encoding && encoding.equals("UTF8")) {
                     client.setAutodetectUTF8(true);
                 }

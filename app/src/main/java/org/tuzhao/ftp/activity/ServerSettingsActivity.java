@@ -16,9 +16,10 @@ import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.db.RsDBHelper;
 import org.tuzhao.ftp.entity.ServerEntity;
 import org.tuzhao.ftp.fragment.ChooseDirFragment;
+import org.tuzhao.ftp.util.SimpleOnItemSelectedListener;
 
 public class ServerSettingsActivity extends BaseActivity implements View.OnClickListener,
-                                                                        ChooseDirFragment.OnSelectListener, AdapterView.OnItemSelectedListener {
+                                                                        ChooseDirFragment.OnSelectListener {
 
     private static final String EXTRA_SERVER = "extra_server";
 
@@ -38,7 +39,8 @@ public class ServerSettingsActivity extends BaseActivity implements View.OnClick
     private EditText mPortEt;
     private EditText mAccountEt;
     private EditText mPwdEt;
-    private Spinner mSpinner;
+    private Spinner mEncodingSpinner;
+    private Spinner mHiddenSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +67,29 @@ public class ServerSettingsActivity extends BaseActivity implements View.OnClick
         findViewById(R.id.server_settings_save_bt).setOnClickListener(this);
         mOutTv.setOnClickListener(this);
         mInTv.setOnClickListener(this);
-        mSpinner = (Spinner) findViewById(R.id.server_settings_spinner);
-        mSpinner.setOnItemSelectedListener(this);
+        mEncodingSpinner = (Spinner) findViewById(R.id.server_settings_encoding_spinner);
+        mHiddenSpinner = (Spinner) findViewById(R.id.server_settings_hide_spinner);
+        mEncodingSpinner.setOnItemSelectedListener(new SimpleOnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                String[] array = getResources().getStringArray(R.array.server_encoding);
+                if (position <= array.length) {
+                    String encoding = array[position];
+                    log("encoding: " + encoding);
+                    if (null != server) {
+                        server.setEncoding(encoding);
+                    }
+                }
+            }
+        });
+        mHiddenSpinner.setOnItemSelectedListener(new SimpleOnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (null != server) {
+                    server.setDisplay(position);
+                }
+            }
+        });
         updateInterface();
     }
 
@@ -76,7 +99,8 @@ public class ServerSettingsActivity extends BaseActivity implements View.OnClick
         mPortEt.setText(server.getPort());
         mPwdEt.setText(server.getPwd());
         mPathEt.setText(server.getSavePath());
-        mSpinner.setSelection(getEncodingPosition());
+        mEncodingSpinner.setSelection(getEncodingPosition());
+        mHiddenSpinner.setSelection(server.getDisplay());
     }
 
     private int getEncodingPosition() {
@@ -123,6 +147,7 @@ public class ServerSettingsActivity extends BaseActivity implements View.OnClick
             server.setAddress(address);
             server.setPort(port);
             server.setSavePath(path);
+            log("before save server info: " + server);
             int update = new RsDBHelper(getActivity()).updateServer(server);
             int stringId = R.string.server_info_save_failure;
             if (update != -1) {
@@ -154,21 +179,4 @@ public class ServerSettingsActivity extends BaseActivity implements View.OnClick
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-        log("spinner select position: " + position);
-        String[] array = getResources().getStringArray(R.array.server_encoding);
-        if (position <= array.length) {
-            String encoding = array[position];
-            log("encoding: " + encoding);
-            if (null != server) {
-                server.setEncoding(encoding);
-            }
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
 }

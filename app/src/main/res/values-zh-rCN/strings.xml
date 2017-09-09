@@ -182,4 +182,7 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
     <string name="server_info_save_successful">FTP服务器信息保存成功。</string>
     <string name="server_encoding">编码：</string>
     <string name="selected_note">请至少选中一项</string>
+    <string name="hidden_files">隐藏文件：</string>
+    <string name="display_not">不显示</string>
+    <string name="display_yes">显示</string>
 </resources>

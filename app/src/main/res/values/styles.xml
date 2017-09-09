@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Stub themes for future modifications! -->
-    <style name="AppThemeDark" parent="Theme.AppCompat"/>
+    <style name="AppThemeDark" parent="Theme.AppCompat">
+        <item name="spinnerDropDownItemStyle">@style/SpinnerDropItemStyle</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerMenuStyle</item>
+    </style>
 
     <style name="AppThemeLight" parent="Theme.AppCompat.Light"/>
 
@@ -11,6 +14,17 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!--通过这个给我的启发就是还可以去修改其它指定的style中默认的样式-->
+    <!--修改默认spinner下拉列表中字体的大小-->
+    <style name="SpinnerDropItemStyle" parent="@style/Widget.AppCompat.DropDownItem.Spinner">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!--修改默认spinner这个菜单显示的字体的大小-->
+    <style name="SpinnerMenuStyle" parent="@style/Widget.AppCompat.TextView.SpinnerItem">
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="server_add_item_ll">

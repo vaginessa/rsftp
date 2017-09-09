@@ -13,6 +13,7 @@ public final class ServerEntity implements Serializable, Parcelable {
 
     private static final long serialVersionUID = -7060210544600464481L;
 
+    private int display;
     private String encoding;
     private String savePath;
     private String address;
@@ -22,6 +23,7 @@ public final class ServerEntity implements Serializable, Parcelable {
     private int id;
 
     public ServerEntity() {
+        display = 0;
         encoding = "";
         address = "";
         port = "";
@@ -29,6 +31,19 @@ public final class ServerEntity implements Serializable, Parcelable {
         pwd = "";
         id = 0;
         savePath = "";
+    }
+
+    /**
+     * whether to display hidden files<br>
+     * 0 -> don't display<br>
+     * 1 -> display
+     */
+    public int getDisplay() {
+        return display;
+    }
+
+    public void setDisplay(int display) {
+        this.display = display;
     }
 
     public String getAddress() {
@@ -88,6 +103,7 @@ public final class ServerEntity implements Serializable, Parcelable {
     }
 
     public void update(ServerEntity entity) {
+        setDisplay(entity.getDisplay());
         setAddress(entity.getAddress());
         setPort(entity.getPort());
         setAccount(entity.getAccount());
@@ -99,7 +115,8 @@ public final class ServerEntity implements Serializable, Parcelable {
     @Override
     public String toString() {
         return "ServerEntity{" +
-                   "encoding='" + encoding + '\'' +
+                   "display='" + display + '\'' +
+                   ", encoding='" + encoding + '\'' +
                    ", savePath='" + savePath + '\'' +
                    ", address='" + address + '\'' +
                    ", port='" + port + '\'' +
@@ -110,6 +127,7 @@ public final class ServerEntity implements Serializable, Parcelable {
     }
 
     public ServerEntity(Parcel in) {
+        display = in.readInt();
         encoding = in.readString();
         savePath = in.readString();
         address = in.readString();
@@ -138,6 +156,7 @@ public final class ServerEntity implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(display);
         parcel.writeString(encoding);
         parcel.writeString(savePath);
         parcel.writeString(address);
