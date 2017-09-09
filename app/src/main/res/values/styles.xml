@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- Stub themes for future modifications! -->
     <style name="AppThemeDark" parent="Theme.AppCompat">
         <item name="spinnerDropDownItemStyle">@style/SpinnerDropItemStyle</item>
         <item name="android:spinnerItemStyle">@style/SpinnerMenuStyle</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="AppThemeLight" parent="Theme.AppCompat.Light"/>
 
     <style name="AppThemeLight.DarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar"/>
+
+    <style name="ThemeSwipeBack" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
 
     <style name="AppThemeFullScreen" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>

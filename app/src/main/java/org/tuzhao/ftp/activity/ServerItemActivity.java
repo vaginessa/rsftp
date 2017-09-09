@@ -188,6 +188,9 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
                     refresh();
                 }
                 break;
+            case R.id.menu_mobile:
+                StorageItemActivity.start(this, server.getSavePath());
+                break;
         }
         return true;
     }

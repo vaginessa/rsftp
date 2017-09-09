@@ -16,7 +16,7 @@ public class RsFileComparator implements Comparator<RsFile> {
         boolean b2 = file2.isDir();
         if (b1) {
             if (b2) {
-                return 0;
+                return file1.getName().compareTo(file2.getName());
             } else {
                 return -1;
             }
@@ -24,7 +24,7 @@ public class RsFileComparator implements Comparator<RsFile> {
             if (b2) {
                 return 1;
             } else {
-                return 0;
+                return file1.getName().compareTo(file2.getName());
             }
         }
     }

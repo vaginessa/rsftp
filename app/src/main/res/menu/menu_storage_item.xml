@@ -3,15 +3,15 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_mobile"
-        android:icon="@drawable/mobile"
+        android:id="@+id/menu_cloud"
+        android:icon="@drawable/cloud"
         android:title="@string/mobile"
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/menu_download"
-        android:icon="@drawable/download"
-        android:title="@string/download"
+        android:id="@+id/menu_upload"
+        android:icon="@drawable/upload"
+        android:title="@string/upload"
         app:showAsAction="ifRoom"/>
 
     <item

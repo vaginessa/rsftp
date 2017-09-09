@@ -10,4 +10,8 @@
     <color name="ftp">#5D749E</color>
     <color name="gap">#bebebe</color>
 
+    <color name="black_p50">#7f000000</color>
+
+    <color name="action_bar_bg">#212121</color>
+    <color name="default_bg">#303030</color>
 </resources>
