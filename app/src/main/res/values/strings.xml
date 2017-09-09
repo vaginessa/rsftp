@@ -263,4 +263,10 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="download_failure">Download failure file count: %s</string>
     <string name="download_in">File in downloading: %s</string>
     <string name="download_title">Download</string>
+    <string name="item_down_file_name">file name</string>
+
+    <string name="status_successful">successful</string>
+    <string name="status_failure">failure</string>
+    <string name="status_downloading">downloading</string>
+    <string name="status_unstart">unstart</string>
 </resources>

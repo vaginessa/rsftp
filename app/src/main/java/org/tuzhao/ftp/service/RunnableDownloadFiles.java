@@ -7,13 +7,11 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.tuzhao.ftp.entity.RsFile;
 import org.tuzhao.ftp.entity.ServerEntity;
 import org.tuzhao.ftp.fragment.DownloadDialogFragment;
-import org.tuzhao.ftp.util.System;
 import org.tuzhao.ftp.util.WeakRunnable;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -100,104 +98,90 @@ class RunnableDownloadFiles extends WeakRunnable<Context> {
         String name = "";
 
         for (int i = 0; i < countTotal; i++) {
-            client = new FTPClient();
-            client.setDefaultTimeout(15000);
-            client.setConnectTimeout(15000);
-            client.setListHiddenFiles(true);
-            if (null != encoding && encoding.equals("UTF8")) {
-                client.setAutodetectUTF8(true);
-            }
+            RsFile rsFile = list.get(i);
+            name = rsFile.getName();
+            DownloadDialogFragment.sendDownloadItemStatus(context, name, 1);
             try {
-                client.connect(address, port);
-            } catch (IOException e) {
-                e.printStackTrace();
-                if (getFlag()) {
-                    System.sendServerConnectExceptionBroadcast(context, e.getMessage());
+                client = new FTPClient();
+                client.setDefaultTimeout(15000);
+                client.setConnectTimeout(15000);
+                client.setListHiddenFiles(true);
+                if (null != encoding && encoding.equals("UTF8")) {
+                    client.setAutodetectUTF8(true);
                 }
-                return;
-            }
 
-            try {
+                client.connect(address, port);
+
                 status = client.login(account, pwd);
                 client.setFileType(FTP.BINARY_FILE_TYPE);
                 int bufferSize = client.getBufferSize();
                 log("buffer size: " + bufferSize);
-            } catch (IOException e) {
-                e.printStackTrace();
-                if (getFlag()) {
-                    System.sendServerLoginExceptionBroadcast(context, e.getMessage());
-                }
-                return;
-            }
-            log("connect result: " + status);
-            if (!status) {
-                if (getFlag()) {
-                    System.sendServerLoginFailed(context);
-                }
-            }
 
-            boolean result;
+                log("connect result: " + status);
 
-            result = false;
-            try {
-                RsFile rsFile = list.get(i);
-                if (null != rsFile) {
-                    name = rsFile.getName();
-                    String fileServerPath = serverPath + "/" + name;
-                    String fileLocalPath = savePath + "/" + name;
-                    if (localFileSafeCheck(fileLocalPath)) {
-                        byte[] bytes = new byte[512];
-                        int read;
-                        BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(fileLocalPath));
-                        InputStream in = client.retrieveFileStream(fileServerPath);
-                        while ((read = in.read(bytes)) != -1) {
-                            out.write(bytes, 0, read);
-                        }
-                        out.flush();
-                        try {
-                            out.close();
-                        } catch (Exception e) {
-                            //...ignore...
-                        }
-//                        try {
-//                            in.close();
-//                        } catch (Exception e) {
-//                            //...ignore...
-//                        }
-                        result = true;
-                        log("index[" + i + "]download file: " + fileServerPath + " result: true");
+                boolean result;
+
+                result = false;
+                String fileServerPath = serverPath + "/" + name;
+                String fileLocalPath = savePath + "/" + name;
+                if (localFileSafeCheck(fileLocalPath)) {
+                    byte[] bytes = new byte[512];
+                    int read;
+                    BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(fileLocalPath));
+                    InputStream in = client.retrieveFileStream(fileServerPath);
+                    while ((read = in.read(bytes)) != -1) {
+                        out.write(bytes, 0, read);
                     }
+                    out.flush();
+                    try {
+                        out.close();
+                    } catch (Exception e) {
+                        //...ignore...
+                    }
+                    try {
+                        in.close();
+                    } catch (Exception e) {
+                        //...ignore...
+                    }
+                    result = true;
+                    log("index[" + i + "]download file: " + fileServerPath + " result: true");
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (result) {
-                countSuccessful++;
-            } else {
-                countFailure++;
-            }
-            DownloadDialogFragment.sendBroadCast(context, countTotal, countSuccessful, countFailure, name);
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
-            try {
-                if (null != client) {
-                    client.abort();
+                if (result) {
+                    countSuccessful++;
+                } else {
+                    countFailure++;
                 }
-            } catch (Exception e) {
-                //...ignore...
-            }
-            try {
-                if (null != client) {
-                    client.disconnect();
+                DownloadDialogFragment.sendBroadCast(context, countTotal, countSuccessful, countFailure, name);
+
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+
+                try {
+                    if (null != client) {
+                        client.abort();
+                    }
+                } catch (Exception e) {
+                    //...ignore...
+                }
+
+                try {
+                    if (null != client) {
+                        client.disconnect();
+                    }
+                } catch (Exception e) {
+                    //...ignore...
+                }
+
+                client = null;
+                DownloadDialogFragment.sendDownloadItemStatus(context, name, 2);
             } catch (Exception e) {
-                //...ignore...
+                DownloadDialogFragment.sendDownloadItemStatus(context, name, 3);
+                e.printStackTrace();
             }
-            client = null;
         }
 
     }

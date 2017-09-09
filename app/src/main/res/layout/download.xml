@@ -46,7 +46,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:text="@string/download_in"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        android:visibility="gone"/>
 
     <ProgressBar
         android:id="@+id/download_pb"
@@ -67,5 +68,11 @@
         android:textColor="@android:color/white"
         android:textSize="14sp"
         />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/download_rv"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:scrollbars="vertical"/>
 
 </LinearLayout>

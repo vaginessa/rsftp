@@ -16,4 +16,11 @@
         <item>Default</item>
         <item>UTF8</item>
     </string-array>
+
+    <string-array name="download_item_status">
+        <item>@string/status_unstart</item>
+        <item>@string/status_downloading</item>
+        <item>@string/status_successful</item>
+        <item>@string/status_failure</item>
+    </string-array>
 </resources>

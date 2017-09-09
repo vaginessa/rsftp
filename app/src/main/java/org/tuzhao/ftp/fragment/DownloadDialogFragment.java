@@ -13,6 +13,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.tuzhao.ftp.R;
+import org.tuzhao.ftp.util.DownloadItemRecyclerAdapter;
 
 import java.text.MessageFormat;
 
@@ -35,8 +38,11 @@ public class DownloadDialogFragment extends DialogFragment {
     private static final String EXTRA_COUNT_COMPLETE = "extra_complete";
     private static final String EXTRA_COUNT_FAILURE = "extra_failure";
     private static final String EXTRA_COUNT_NAME = "extra_name";
+    private static final String EXTRA_STATUS_NAME = "extra_status_name";
+    private static final String EXTRA_STATUS_INT = "extra_status_int";
 
     private static final String ACTION_PROCESS_DOWNLOAD = "download_process_action";
+    private static final String ACTION_STATUS_DOWNLOAD = "download_status_action";
 
     public static void show(Activity context, int count, String firstFileName) {
         FragmentManager manager = context.getFragmentManager();
@@ -63,6 +69,13 @@ public class DownloadDialogFragment extends DialogFragment {
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
+    public static void sendDownloadItemStatus(Context context, String fileName, int status) {
+        Intent intent = new Intent(ACTION_STATUS_DOWNLOAD);
+        intent.putExtra(EXTRA_STATUS_NAME, fileName);
+        intent.putExtra(EXTRA_STATUS_INT, status);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
     private class DownloadBroadcastReceiver extends BroadcastReceiver {
 
         @Override
@@ -76,6 +89,14 @@ public class DownloadDialogFragment extends DialogFragment {
                 int progress = (int) (((float) (countFailure + countSuccessful)) / countTotal * 100f);
                 log("progress: " + progress);
                 updateInterface(countTotal, countSuccessful, countFailure, progress, currentFile);
+            }
+            if (action.equals(ACTION_STATUS_DOWNLOAD)) {
+                String name = intent.getStringExtra(EXTRA_STATUS_NAME);
+                int status = intent.getIntExtra(EXTRA_STATUS_INT, 3);
+                if (null != adapter) {
+                    adapter.update(name, status);
+                    mRv.smoothScrollToPosition(adapter.getItemCount());
+                }
             }
         }
     }
@@ -93,11 +114,13 @@ public class DownloadDialogFragment extends DialogFragment {
     private TextView mProcessTv;
     private TextView mNumTv;
     private ProgressBar mPb;
+    private RecyclerView mRv;
 
     private int countTotal;
     private String currentFile;
 
     private DownloadBroadcastReceiver receiver;
+    private DownloadItemRecyclerAdapter adapter;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -113,9 +136,14 @@ public class DownloadDialogFragment extends DialogFragment {
         mProcessTv = view.findViewById(R.id.download_process_tv);
         mPb = view.findViewById(R.id.download_pb);
         mNumTv = view.findViewById(R.id.download_num_tv);
+        mRv = view.findViewById(R.id.download_rv);
         dialog.setView(view);
 
         updateInterface(countTotal, 0, 0, 0, currentFile);
+        adapter = new DownloadItemRecyclerAdapter(getActivity());
+        mRv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRv.setAdapter(adapter);
+
         return dialog;
     }
 
@@ -160,6 +188,7 @@ public class DownloadDialogFragment extends DialogFragment {
         receiver = new DownloadBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_PROCESS_DOWNLOAD);
+        filter.addAction(ACTION_STATUS_DOWNLOAD);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, filter);
     }
 
