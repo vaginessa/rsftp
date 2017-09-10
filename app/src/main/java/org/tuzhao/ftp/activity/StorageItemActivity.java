@@ -1,9 +1,15 @@
 package org.tuzhao.ftp.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Parcelable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +24,8 @@ import android.widget.TextView;
 
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.entity.RsFile;
+import org.tuzhao.ftp.entity.ServerEntity;
+import org.tuzhao.ftp.service.StorageUploadService;
 import org.tuzhao.ftp.swipe.SwipeBackActivity;
 import org.tuzhao.ftp.swipe.SwipeBackLayout;
 import org.tuzhao.ftp.util.OnItemClickListener;
@@ -32,10 +40,14 @@ import java.util.Collections;
 public class StorageItemActivity extends SwipeBackActivity implements OnItemClickListener {
 
     private static final String ACCESS_DIR_PATH = "access_dir_path";
+    private static final String SERVER_DIR_PATH = "server_dir_path";
+    private static final String SERVER_INFO = "server_info";
 
-    public static void start(Activity context, String dir) {
+    public static void start(Activity context, ServerEntity entity, String dir, String serverPath) {
         Intent intent = new Intent(context, StorageItemActivity.class);
         intent.putExtra(ACCESS_DIR_PATH, dir);
+        intent.putExtra(SERVER_DIR_PATH, serverPath);
+        intent.putExtra(SERVER_INFO, (Parcelable) entity);
         context.startActivity(intent);
     }
 
@@ -52,6 +64,11 @@ public class StorageItemActivity extends SwipeBackActivity implements OnItemClic
     private ServerItemRecyclerAdapter adapter;
 
     private String mCurrentPath;
+    private String serverPath;
+    private StorageUploadService.StorageUploadBinder binder;
+    private StorageUploadConnection connection;
+
+    private ServerEntity server;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +81,8 @@ public class StorageItemActivity extends SwipeBackActivity implements OnItemClic
         setSupportActionBar(toolbar);
 
         mCurrentPath = getIntent().getStringExtra(ACCESS_DIR_PATH);
+        serverPath = getIntent().getStringExtra(SERVER_DIR_PATH);
+        server = getIntent().getParcelableExtra(SERVER_INFO);
 
         mStateLl = (LinearLayout) findViewById(R.id.server_item_state_ll);
         mCountTv = (TextView) findViewById(R.id.server_item_count_tv);
@@ -73,7 +92,22 @@ public class StorageItemActivity extends SwipeBackActivity implements OnItemClic
         mRv = (RecyclerView) findViewById(R.id.server_item_rv);
         mNoteTv = (TextView) findViewById(R.id.server_item_note_tv);
 
+        startService();
         updateAllToDefault();
+    }
+
+    private void startService() {
+        connection = new StorageUploadConnection();
+        Intent intent = new Intent(this, StorageUploadService.class);
+        startService(intent);
+        bindService(intent, connection, BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (null != connection)
+            unbindService(connection);
     }
 
     @Override
@@ -89,12 +123,71 @@ public class StorageItemActivity extends SwipeBackActivity implements OnItemClic
                 refresh();
                 break;
             case R.id.menu_upload:
+                uploadSelectedFile();
                 break;
             case R.id.menu_cloud:
                 finish();
                 break;
         }
         return true;
+    }
+
+    private ArrayList<RsFile> selectedList;
+
+    private void uploadSelectedFile() {
+        if (null == selectedList) {
+            selectedList = new ArrayList<>();
+        }
+        selectedList.clear();
+        for (int i = 0; i < filesList.size(); i++) {
+            RsFile file = filesList.get(i);
+            if (file.getSelected()) {
+                selectedList.add(file);
+            }
+        }
+        if (selectedList.size() == 0) {
+            showMsg(getString(R.string.selected_note));
+        } else {
+            int count = selectedList.size();
+            String str1 = getString(R.string.upload_msg1);
+            String str2 = getString(R.string.upload_msg2);
+            String msg1 = String.format(str1, String.valueOf(count));
+            String msg2 = String.format(str2, serverPath);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.note);
+            builder.setMessage(msg1 + " " + msg2);
+            builder.setPositiveButton(R.string.submit, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int position) {
+                    if (null != binder) {
+                        binder.upload(server,selectedList, serverPath);
+                    }
+                }
+            });
+            builder.setNegativeButton(R.string.cancel, null);
+            AlertDialog dialog = builder.create();
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+        }
+    }
+
+    private class StorageUploadConnection implements ServiceConnection {
+
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            binder = (StorageUploadService.StorageUploadBinder) iBinder;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            binder = null;
+        }
+
+        @Override
+        public void onBindingDied(ComponentName name) {
+
+        }
     }
 
     @Override
@@ -212,15 +305,18 @@ public class StorageItemActivity extends SwipeBackActivity implements OnItemClic
     @Override
     public void onItemClick(View v, Object data, int position) {
         if (-1 != position) {
-            RsFile ftpFile = filesList.get(position);
-            if (ftpFile.isDir()) {
-                String name = ftpFile.getName();
+            RsFile file = filesList.get(position);
+            if (file.isDir()) {
+                String name = file.getName();
                 if (mCurrentPath.equals("/")) {
                     mCurrentPath = mCurrentPath + name;
                 } else {
                     mCurrentPath = mCurrentPath + "/" + name;
                 }
                 refresh();
+            } else if (file.isFile()) {
+                file.setSelected(!file.getSelected());
+                adapter.notifyDataSetChanged();
             }
         }
     }

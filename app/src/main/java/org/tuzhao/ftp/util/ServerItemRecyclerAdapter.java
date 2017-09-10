@@ -12,6 +12,7 @@ import android.widget.TextView;
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.entity.RsFTPFile;
 import org.tuzhao.ftp.entity.RsFile;
+import org.tuzhao.ftp.entity.RsLocalFile;
 import org.tuzhao.ftp.fragment.SimpleRecyclerViewHolder;
 
 import java.math.RoundingMode;
@@ -120,9 +121,8 @@ public class ServerItemRecyclerAdapter extends RecyclerView.Adapter implements V
 
     private boolean isSelected(RsFile rsFile) {
         boolean flag = false;
-        if (null != rsFile && rsFile instanceof RsFTPFile) {
-            RsFTPFile file = (RsFTPFile) rsFile;
-            flag = file.getSelected();
+        if (null != rsFile && (rsFile instanceof RsFTPFile || rsFile instanceof RsLocalFile)) {
+            flag = rsFile.getSelected();
         }
         return flag;
     }

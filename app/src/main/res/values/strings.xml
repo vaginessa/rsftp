@@ -275,4 +275,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="display_not">Don\'t display</string>
     <string name="mobile">mobile</string>
     <string name="upload">upload</string>
+
+    <string name="upload_msg1">%s file(s) will be upload into FTP Server</string>
+    <string name="upload_msg2">directory \"%s\" , please confirm whether to execute?</string>
 </resources>

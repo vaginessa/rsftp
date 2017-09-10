@@ -9,6 +9,7 @@ import java.io.File;
 public class RsLocalFile implements RsFile {
 
     private File file;
+    private boolean select;
 
     public RsLocalFile(File file) {
         this.file = file;
@@ -56,11 +57,15 @@ public class RsLocalFile implements RsFile {
 
     @Override
     public void setSelected(boolean flag) {
-
+        this.select = flag;
     }
 
     @Override
     public boolean getSelected() {
-        return false;
+        return this.select;
+    }
+
+    public String getAbsolutePath() {
+        return file.getAbsolutePath();
     }
 }

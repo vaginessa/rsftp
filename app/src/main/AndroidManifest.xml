@@ -153,9 +153,14 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
         </activity>
         <activity
             android:name=".activity.StorageItemActivity"
-            android:theme="@style/ThemeSwipeBack"
-            >
+            android:theme="@style/ThemeSwipeBack">
         </activity>
+
+        <service
+            android:name=".service.StorageUploadService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
     </application>
 
 </manifest>

@@ -1,10 +1,8 @@
 package org.tuzhao.ftp.service;
 
-import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 
 import org.tuzhao.ftp.entity.RsFile;
 import org.tuzhao.ftp.entity.ServerEntity;
@@ -13,9 +11,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ServerConnectService extends Service {
-
-    private static final String TAG = "ServerConnectService";
+public class ServerConnectService extends BaseService {
 
     private ExecutorService executor = Executors.newFixedThreadPool(1);
 
@@ -112,10 +108,6 @@ public class ServerConnectService extends Service {
     private void connect() {
         RunnableConnect runnable = new RunnableConnect(getService(), server);
         executor.execute(runnable);
-    }
-
-    private static void log(String msg) {
-        Log.d(TAG, msg);
     }
 
 }
