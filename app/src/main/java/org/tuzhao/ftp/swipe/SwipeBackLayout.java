@@ -18,10 +18,12 @@ package org.tuzhao.ftp.swipe;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -145,10 +147,16 @@ public class SwipeBackLayout extends ViewGroup {
 
     public SwipeBackLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float screenWidth = metrics.widthPixels;
+        gap = 0.07f * screenWidth;
+        Log.d(TAG, "screen width: " + screenWidth + " gap: " + gap);
 
         viewDragHelper = ViewDragHelper.create(this, 1.0f, new ViewDragHelperCallBack());
-        chkDragable();
     }
+
+    float gap;
 
     float lastY = 0;
     float newY = 0;
@@ -158,38 +166,31 @@ public class SwipeBackLayout extends ViewGroup {
     float newX = 0;
     float offsetX = 0;
 
-    private void chkDragable() {
-        setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+    private void chkDraggable(MotionEvent motionEvent) {
+        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            lastY = motionEvent.getRawY();
+            lastX = motionEvent.getRawX();
 
-                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    lastY = motionEvent.getRawY();
-                    lastX = motionEvent.getRawX();
-                } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-                    newY = motionEvent.getRawY();
-                    lastX = motionEvent.getRawX();
+        } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+            newY = motionEvent.getRawY();
+            lastX = motionEvent.getRawX();
 
-                    offsetY = Math.abs(newY - lastY);
-                    lastY = newY;
+            offsetY = Math.abs(newY - lastY);
+            lastY = newY;
 
-                    offsetX = Math.abs(newX - lastX);
-                    lastX = newX;
+            offsetX = Math.abs(newX - lastX);
+            lastX = newX;
 
-                    switch (dragEdge) {
-                        case TOP:
-                        case BOTTOM:
-                            setEnablePullToBack(offsetY > offsetX);
-                        case LEFT:
-                        case RIGHT:
-                            setEnablePullToBack(offsetY < offsetX);
-                            break;
-                    }
-                }
-
-                return false;
+            switch (dragEdge) {
+                case TOP:
+                case BOTTOM:
+                    setEnablePullToBack(offsetY > offsetX);
+                case LEFT:
+                case RIGHT:
+                    setEnablePullToBack((offsetY < offsetX) && (offsetX <= gap));
+                    break;
             }
-        });
+        }
     }
 
     public void setScrollChild(View view) {
@@ -303,6 +304,7 @@ public class SwipeBackLayout extends ViewGroup {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        chkDraggable(ev);
         boolean handled = false;
         ensureTarget();
         if (isEnabled()) {
