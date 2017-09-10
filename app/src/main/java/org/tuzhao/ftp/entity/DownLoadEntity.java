@@ -11,10 +11,10 @@ public class DownLoadEntity implements Parcelable {
 
     private String fileName;
     /**
-     * 0 -> 尚未开始下载
-     * 1 ->下载中
-     * 2 -> 下载成功
-     * 3 -> 下载失败
+     * 0 -> 尚未开始下载  /   尚未开始上传
+     * 1 ->下载中  /  上传中
+     * 2 -> 下载成功  /  上传成功
+     * 3 -> 下载失败  /  上传失败
      */
     private int status;
 

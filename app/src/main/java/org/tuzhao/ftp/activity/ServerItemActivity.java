@@ -31,6 +31,7 @@ import org.tuzhao.ftp.entity.RsFile;
 import org.tuzhao.ftp.entity.ServerEntity;
 import org.tuzhao.ftp.fragment.DownloadDialogFragment;
 import org.tuzhao.ftp.service.ServerConnectService;
+import org.tuzhao.ftp.service.StorageUploadService;
 import org.tuzhao.ftp.util.FTPFileComparator;
 import org.tuzhao.ftp.util.OnItemClickListener;
 import org.tuzhao.ftp.util.OnItemLongClickListener;
@@ -168,6 +169,8 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
         if (null != scrollRunnable) {
             scrollRunnable.destroy();
         }
+        stopService(new Intent(this, ServerConnectService.class));
+        stopService(new Intent(this, StorageUploadService.class));
     }
 
     @Override
@@ -211,7 +214,7 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
         if (selectedList.size() == 0) {
             showMsg(getString(R.string.selected_note));
         } else {
-            int count = selectedList.size();
+            final int count = selectedList.size();
             String str1 = getString(R.string.download_msg1);
             String str2 = getString(R.string.download_msg2);
             String msg1 = String.format(str1, String.valueOf(count));
@@ -224,7 +227,7 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
                 @Override
                 public void onClick(DialogInterface dialogInterface, int position) {
                     if (null != binder) {
-                        DownloadDialogFragment.show(getActivity(), selectedList.size(), selectedList.get(0).getName());
+                        DownloadDialogFragment.show(getActivity(), count);
                         binder.download(selectedList, mCurrentPath);
                     }
                 }

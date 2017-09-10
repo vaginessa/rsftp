@@ -27,12 +27,6 @@ public class ServerConnectService extends BaseService {
         return new ServerConnectBinder();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        log("onDestroy");
-    }
-
     public class ServerConnectBinder extends Binder {
 
         public void connect() {

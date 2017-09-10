@@ -25,6 +25,7 @@ import android.widget.TextView;
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.entity.RsFile;
 import org.tuzhao.ftp.entity.ServerEntity;
+import org.tuzhao.ftp.fragment.UploadDialogFragment;
 import org.tuzhao.ftp.service.StorageUploadService;
 import org.tuzhao.ftp.swipe.SwipeBackActivity;
 import org.tuzhao.ftp.swipe.SwipeBackLayout;
@@ -148,7 +149,7 @@ public class StorageItemActivity extends SwipeBackActivity implements OnItemClic
         if (selectedList.size() == 0) {
             showMsg(getString(R.string.selected_note));
         } else {
-            int count = selectedList.size();
+            final int count = selectedList.size();
             String str1 = getString(R.string.upload_msg1);
             String str2 = getString(R.string.upload_msg2);
             String msg1 = String.format(str1, String.valueOf(count));
@@ -160,8 +161,9 @@ public class StorageItemActivity extends SwipeBackActivity implements OnItemClic
             builder.setPositiveButton(R.string.submit, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int position) {
+                    UploadDialogFragment.show(getActivity(), count);
                     if (null != binder) {
-                        binder.upload(server,selectedList, serverPath);
+                        binder.upload(server, selectedList, serverPath);
                     }
                 }
             });

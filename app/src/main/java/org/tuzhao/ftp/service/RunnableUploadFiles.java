@@ -6,13 +6,14 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.tuzhao.ftp.entity.RsFile;
 import org.tuzhao.ftp.entity.RsLocalFile;
 import org.tuzhao.ftp.entity.ServerEntity;
+import org.tuzhao.ftp.entity.Status;
+import org.tuzhao.ftp.fragment.UploadDialogFragment;
 import org.tuzhao.ftp.util.WeakRunnable;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -28,8 +29,6 @@ class RunnableUploadFiles extends WeakRunnable<Context> {
     private FTPClient client;
     private ArrayList<RsFile> list;
     private String serverPath;
-
-    private SimpleDateFormat format;
 
     RunnableUploadFiles(Context context, ServerEntity server, ArrayList<RsFile> list, String serverPath) {
         super(context);
@@ -92,8 +91,10 @@ class RunnableUploadFiles extends WeakRunnable<Context> {
         final int countTotal = list.size();
 
         for (int i = 0; i < countTotal; i++) {
-            RsFile rsFile = list.get(i);
+            final RsFile rsFile = list.get(i);
+            final String name = rsFile.getName();
             try {
+                UploadDialogFragment.sendStatusBroadCast(context, name, Status.DOING);
                 client = new FTPClient();
                 client.setDefaultTimeout(15000);
                 client.setConnectTimeout(15000);
@@ -116,7 +117,7 @@ class RunnableUploadFiles extends WeakRunnable<Context> {
                     byte[] bytes = new byte[512];
                     int read;
                     BufferedInputStream in = new BufferedInputStream(new FileInputStream(path));
-                    OutputStream out = client.storeFileStream(rsFile.getName());
+                    OutputStream out = client.storeFileStream(name);
                     while ((read = in.read(bytes)) != -1) {
                         out.write(bytes, 0, read);
                     }
@@ -157,7 +158,9 @@ class RunnableUploadFiles extends WeakRunnable<Context> {
                 }
 
                 client = null;
+                UploadDialogFragment.sendStatusBroadCast(context, name, Status.SUCC);
             } catch (Exception e) {
+                UploadDialogFragment.sendStatusBroadCast(context, name, Status.FAIL);
                 e.printStackTrace();
             }
         }

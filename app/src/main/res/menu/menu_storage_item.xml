@@ -5,7 +5,7 @@
     <item
         android:id="@+id/menu_cloud"
         android:icon="@drawable/cloud"
-        android:title="@string/mobile"
+        android:title="@string/server"
         app:showAsAction="ifRoom"/>
 
     <item

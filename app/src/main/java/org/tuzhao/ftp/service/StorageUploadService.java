@@ -24,6 +24,12 @@ public class StorageUploadService extends BaseService {
     }
 
     public class StorageUploadBinder extends Binder {
+        /**
+         * upload local storage files into specify ftp server dir
+         * @param server       ftp server instance
+         * @param selectedList the selected local files
+         * @param serverPath   specify ftp server upload dir
+         */
         public void upload(ServerEntity server, ArrayList<RsFile> selectedList, String serverPath) {
             getService().upload(server, selectedList, serverPath);
         }
@@ -33,8 +39,15 @@ public class StorageUploadService extends BaseService {
         return this;
     }
 
+    private RunnableUploadFiles runnable;
+
     private void upload(ServerEntity server, ArrayList<RsFile> selectedList, String serverPath) {
-        executor.execute(new RunnableUploadFiles(getService(), server, selectedList, serverPath));
+        if (null != runnable) {
+            runnable.taskClose();
+            runnable = null;
+        }
+        runnable = new RunnableUploadFiles(getService(), server, selectedList, serverPath);
+        executor.execute(runnable);
     }
 
 }

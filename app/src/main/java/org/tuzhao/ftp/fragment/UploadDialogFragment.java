@@ -23,25 +23,25 @@ import android.widget.TextView;
 
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.entity.Status;
-import org.tuzhao.ftp.util.DownloadItemRecyclerAdapter;
+import org.tuzhao.ftp.util.UploadItemRecyclerAdapter;
 
 import java.text.MessageFormat;
 
 /**
  * author: tuzhao
- * 2017-08-21 20:02
+ * 2017-09-10 21:50
  */
-public class DownloadDialogFragment extends DialogFragment {
+public class UploadDialogFragment extends DialogFragment {
 
-    private static final String FRAGMENT_TAG = "DownloadDialogFragment";
+    private static final String FRAGMENT_TAG = "UploadDialogFragment";
 
     private static final String EXTRA_COUNT_TOTAL = "extra_total";
-    private static final String EXTRA_DOWNLOAD_STATUS = "extra_download_status";
-    private static final String EXTRA_DOWNLOAD_FILE = "extra_download_file";
+    private static final String EXTRA_UPLOAD_STATUS = "upload_status";
+    private static final String EXTRA_UPLOAD_FILE = "upload_file";
 
-    private static final String ACTION_STATUS_DOWNLOAD = "download_status_action";
+    private static final String ACTION_STATUS_UPLOAD = "upload_status_action";
 
-    public static void show(Activity context, int count) {
+    public static void show(Activity context, int totalCount) {
         FragmentManager manager = context.getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         Fragment fragmentByTag = manager.findFragmentByTag(FRAGMENT_TAG);
@@ -49,21 +49,21 @@ public class DownloadDialogFragment extends DialogFragment {
             transaction.remove(fragmentByTag);
         }
         transaction.addToBackStack(null);
-        DownloadDialogFragment fragment = newInstance();
+        UploadDialogFragment fragment = newInstance();
         Bundle bundle = new Bundle();
-        bundle.putInt(EXTRA_COUNT_TOTAL, count);
+        bundle.putInt(EXTRA_COUNT_TOTAL, totalCount);
         fragment.setArguments(bundle);
         fragment.show(manager, FRAGMENT_TAG);
     }
 
-    public static void sendStatusBroadCast(Context context, String fileName, int status) {
-        Intent intent = new Intent(ACTION_STATUS_DOWNLOAD);
-        intent.putExtra(EXTRA_DOWNLOAD_FILE, fileName);
-        intent.putExtra(EXTRA_DOWNLOAD_STATUS, status);
+    public static void sendStatusBroadCast(Context context, String name, int status) {
+        Intent intent = new Intent(ACTION_STATUS_UPLOAD);
+        intent.putExtra(EXTRA_UPLOAD_STATUS, status);
+        intent.putExtra(EXTRA_UPLOAD_FILE, name);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
-    private class DownloadBroadcastReceiver extends BroadcastReceiver {
+    private class UploadBroadcastReceiver extends BroadcastReceiver {
 
         private int statusSuccessful;
         private int statusFailure;
@@ -71,9 +71,9 @@ public class DownloadDialogFragment extends DialogFragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-            if (action.equals(ACTION_STATUS_DOWNLOAD)) {
-                String file = intent.getStringExtra(EXTRA_DOWNLOAD_FILE);
-                int status = intent.getIntExtra(EXTRA_DOWNLOAD_STATUS, 0);
+            if (action.equals(ACTION_STATUS_UPLOAD)) {
+                String file = intent.getStringExtra(EXTRA_UPLOAD_FILE);
+                int status = intent.getIntExtra(EXTRA_UPLOAD_STATUS, 0);
                 if (status == Status.SUCC) {
                     statusSuccessful++;
                 }
@@ -92,11 +92,11 @@ public class DownloadDialogFragment extends DialogFragment {
 
     }
 
-    public DownloadDialogFragment() {
+    public UploadDialogFragment() {
     }
 
-    public static DownloadDialogFragment newInstance() {
-        return new DownloadDialogFragment();
+    public static UploadDialogFragment newInstance() {
+        return new UploadDialogFragment();
     }
 
     private TextView mTotalTv;
@@ -108,8 +108,8 @@ public class DownloadDialogFragment extends DialogFragment {
 
     private int countTotal;
 
-    private DownloadBroadcastReceiver receiver;
-    private DownloadItemRecyclerAdapter adapter;
+    private UploadBroadcastReceiver receiver;
+    private UploadItemRecyclerAdapter adapter;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -117,18 +117,18 @@ public class DownloadDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         AlertDialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.download, null, false);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.upload, null, false);
 
-        mTotalTv = view.findViewById(R.id.download_total_tv);
-        mSuccessfulTv = view.findViewById(R.id.download_successful_tv);
-        mFailureTv = view.findViewById(R.id.download_failure_tv);
-        mPb = view.findViewById(R.id.download_pb);
-        mNumTv = view.findViewById(R.id.download_num_tv);
-        mRv = view.findViewById(R.id.download_rv);
+        mTotalTv = view.findViewById(R.id.upload_total_tv);
+        mSuccessfulTv = view.findViewById(R.id.upload_successful_tv);
+        mFailureTv = view.findViewById(R.id.upload_failure_tv);
+        mPb = view.findViewById(R.id.upload_pb);
+        mNumTv = view.findViewById(R.id.upload_num_tv);
+        mRv = view.findViewById(R.id.upload_rv);
         dialog.setView(view);
 
         updateInterface(0, 0, 0);
-        adapter = new DownloadItemRecyclerAdapter(getActivity());
+        adapter = new UploadItemRecyclerAdapter(getActivity());
         mRv.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRv.setAdapter(adapter);
 
@@ -168,9 +168,9 @@ public class DownloadDialogFragment extends DialogFragment {
         if (null != bundle) {
             countTotal = bundle.getInt(EXTRA_COUNT_TOTAL, 0);
         }
-        receiver = new DownloadBroadcastReceiver();
+        receiver = new UploadBroadcastReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_STATUS_DOWNLOAD);
+        filter.addAction(ACTION_STATUS_UPLOAD);
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, filter);
     }
 

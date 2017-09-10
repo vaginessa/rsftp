@@ -12,36 +12,36 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/download_title"
+        android:text="@string/upload_title"
         android:textColor="@android:color/white"
         android:textSize="18sp"/>
 
     <TextView
-        android:id="@+id/download_total_tv"
+        android:id="@+id/upload_total_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="@string/download_total"
+        android:text="@string/upload_total"
         android:textSize="14sp"/>
 
     <TextView
-        android:id="@+id/download_successful_tv"
+        android:id="@+id/upload_successful_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
-        android:text="@string/download_successful"
+        android:text="@string/upload_successful"
         android:textSize="14sp"/>
 
     <TextView
-        android:id="@+id/download_failure_tv"
+        android:id="@+id/upload_failure_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
-        android:text="@string/download_failure"
+        android:text="@string/upload_failure"
         android:textSize="14sp"/>
 
     <ProgressBar
-        android:id="@+id/download_pb"
+        android:id="@+id/upload_pb"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
         android:max="100"/>
 
     <TextView
-        android:id="@+id/download_num_tv"
+        android:id="@+id/upload_num_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="right"
@@ -60,7 +60,7 @@
         android:textSize="14sp"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/download_rv"
+        android:id="@+id/upload_rv"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:scrollbars="vertical"/>

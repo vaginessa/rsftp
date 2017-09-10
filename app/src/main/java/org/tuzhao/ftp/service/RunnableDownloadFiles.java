@@ -6,6 +6,7 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.tuzhao.ftp.entity.RsFile;
 import org.tuzhao.ftp.entity.ServerEntity;
+import org.tuzhao.ftp.entity.Status;
 import org.tuzhao.ftp.fragment.DownloadDialogFragment;
 import org.tuzhao.ftp.util.WeakRunnable;
 
@@ -93,14 +94,11 @@ class RunnableDownloadFiles extends WeakRunnable<Context> {
 
         final String savePath = server.getSavePath();
         final int countTotal = list.size();
-        int countSuccessful = 0;
-        int countFailure = 0;
-        String name = "";
 
         for (int i = 0; i < countTotal; i++) {
             RsFile rsFile = list.get(i);
-            name = rsFile.getName();
-            DownloadDialogFragment.sendDownloadItemStatus(context, name, 1);
+            String name = rsFile.getName();
+            DownloadDialogFragment.sendStatusBroadCast(context, name, Status.DOING);
             try {
                 client = new FTPClient();
                 client.setDefaultTimeout(15000);
@@ -147,13 +145,6 @@ class RunnableDownloadFiles extends WeakRunnable<Context> {
                     log("index[" + i + "]download file: " + fileServerPath + " result: true");
                 }
 
-                if (result) {
-                    countSuccessful++;
-                } else {
-                    countFailure++;
-                }
-                DownloadDialogFragment.sendBroadCast(context, countTotal, countSuccessful, countFailure, name);
-
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
@@ -177,9 +168,9 @@ class RunnableDownloadFiles extends WeakRunnable<Context> {
                 }
 
                 client = null;
-                DownloadDialogFragment.sendDownloadItemStatus(context, name, 2);
+                DownloadDialogFragment.sendStatusBroadCast(context, name, Status.SUCC);
             } catch (Exception e) {
-                DownloadDialogFragment.sendDownloadItemStatus(context, name, 3);
+                DownloadDialogFragment.sendStatusBroadCast(context, name, Status.FAIL);
                 e.printStackTrace();
             }
         }

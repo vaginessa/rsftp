@@ -24,7 +24,11 @@ public class DownloadItemRecyclerAdapter extends RecyclerView.Adapter {
 
     public DownloadItemRecyclerAdapter(Activity context) {
         this.context = context;
-        array = context.getResources().getStringArray(R.array.download_item_status);
+        array = getStatusDesArray(context);
+    }
+
+    protected String[] getStatusDesArray(Activity context) {
+        return context.getResources().getStringArray(R.array.download_item_status);
     }
 
     @Override

@@ -269,6 +269,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="status_successful">successful</string>
     <string name="status_failure">failure</string>
     <string name="status_downloading">downloading</string>
+    <string name="status_uploading">uploading</string>
     <string name="status_unstart">unstart</string>
 
     <string name="display_yes">Display</string>
@@ -278,4 +279,11 @@ If you have any ideas or suggestions that you can send email to me.\n\n
 
     <string name="upload_msg1">%s file(s) will be upload into FTP Server</string>
     <string name="upload_msg2">directory \"%s\" , please confirm whether to execute?</string>
+
+    <string name="upload_title">Upload</string>
+    <string name="upload_total">Total upload file count: %s</string>
+    <string name="upload_successful">Upload complete file count: %s</string>
+    <string name="upload_failure">Upload failure file count: %s</string>
+    <string name="zero_percent">0%</string>
+    <string name="server">server</string>
 </resources>
