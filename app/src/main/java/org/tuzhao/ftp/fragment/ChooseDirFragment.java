@@ -24,7 +24,7 @@ import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.entity.RsFile;
 import org.tuzhao.ftp.util.RsFileComparator;
 import org.tuzhao.ftp.util.OnItemClickListener;
-import org.tuzhao.ftp.util.ServerItemRecyclerAdapter;
+import org.tuzhao.ftp.adapter.ServerItemRecyclerAdapter;
 import org.tuzhao.ftp.util.System;
 
 import java.io.File;

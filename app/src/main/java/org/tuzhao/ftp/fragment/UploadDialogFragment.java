@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.entity.Status;
-import org.tuzhao.ftp.util.UploadItemRecyclerAdapter;
+import org.tuzhao.ftp.adapter.UploadItemRecyclerAdapter;
 
 import java.text.MessageFormat;
 

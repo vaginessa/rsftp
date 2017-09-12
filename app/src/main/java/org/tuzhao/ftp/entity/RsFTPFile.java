@@ -6,7 +6,7 @@ import org.apache.commons.net.ftp.FTPFile;
  * author: tuzhao
  * 2017-08-21 20:39
  */
-public final class RsFTPFile implements RsFile {
+public final class RsFTPFile implements RsFile<FTPFile> {
 
     private FTPFile file;
     private boolean selected;
@@ -64,6 +64,11 @@ public final class RsFTPFile implements RsFile {
     @Override
     public boolean getSelected() {
         return selected;
+    }
+
+    @Override
+    public FTPFile getRealFile() {
+        return this.file;
     }
 
 }

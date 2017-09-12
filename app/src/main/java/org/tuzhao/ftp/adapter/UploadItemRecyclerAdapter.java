@@ -1,4 +1,4 @@
-package org.tuzhao.ftp.util;
+package org.tuzhao.ftp.adapter;
 
 import android.app.Activity;
 

@@ -6,7 +6,7 @@ import java.io.File;
  * author: tuzhao
  * 2017-08-21 20:39
  */
-public class RsLocalFile implements RsFile {
+public class RsLocalFile implements RsFile<File> {
 
     private File file;
     private boolean select;
@@ -63,6 +63,11 @@ public class RsLocalFile implements RsFile {
     @Override
     public boolean getSelected() {
         return this.select;
+    }
+
+    @Override
+    public File getRealFile() {
+        return this.file;
     }
 
     public String getAbsolutePath() {

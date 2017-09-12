@@ -4,7 +4,7 @@ package org.tuzhao.ftp.entity;
  * author: tuzhao
  * 2017-08-21 20:38
  */
-public interface RsFile {
+public interface RsFile<T> {
 
     String getName();
 
@@ -25,5 +25,7 @@ public interface RsFile {
     void setSelected(boolean flag);
 
     boolean getSelected();
+
+    T getRealFile();
 
 }

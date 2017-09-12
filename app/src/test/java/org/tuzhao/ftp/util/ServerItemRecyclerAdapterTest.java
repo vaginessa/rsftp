@@ -2,6 +2,8 @@ package org.tuzhao.ftp.util;
 
 import junit.framework.TestCase;
 
+import org.tuzhao.ftp.adapter.ServerItemRecyclerAdapter;
+
 import java.lang.*;
 import java.lang.System;
 

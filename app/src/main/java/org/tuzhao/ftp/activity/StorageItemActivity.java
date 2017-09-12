@@ -31,7 +31,7 @@ import org.tuzhao.ftp.swipe.SwipeBackActivity;
 import org.tuzhao.ftp.swipe.SwipeBackLayout;
 import org.tuzhao.ftp.util.OnItemClickListener;
 import org.tuzhao.ftp.util.RsFileComparator;
-import org.tuzhao.ftp.util.ServerItemRecyclerAdapter;
+import org.tuzhao.ftp.adapter.ServerItemRecyclerAdapter;
 import org.tuzhao.ftp.util.System;
 
 import java.io.File;
@@ -128,6 +128,33 @@ public class StorageItemActivity extends SwipeBackActivity implements OnItemClic
                 break;
             case R.id.menu_cloud:
                 finish();
+                break;
+            case R.id.menu_select_all:
+                if (null != filesList && null != adapter) {
+                    for (int i = 0; i < filesList.size(); i++) {
+                        RsFile file = filesList.get(i);
+                        file.setSelected(file.isFile());
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+                break;
+            case R.id.menu_select_invert:
+                if (null != filesList && null != adapter) {
+                    for (int i = 0; i < filesList.size(); i++) {
+                        RsFile file = filesList.get(i);
+                        file.setSelected(file.isFile() && !file.getSelected());
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+                break;
+            case R.id.menu_clear_select:
+                if (null != filesList && null != adapter) {
+                    for (int i = 0; i < filesList.size(); i++) {
+                        RsFile file = filesList.get(i);
+                        file.setSelected(false);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
                 break;
         }
         return true;

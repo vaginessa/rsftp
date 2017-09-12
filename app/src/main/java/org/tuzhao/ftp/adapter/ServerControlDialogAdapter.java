@@ -1,4 +1,4 @@
-package org.tuzhao.ftp.util;
+package org.tuzhao.ftp.adapter;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -20,7 +20,11 @@ public class ServerControlDialogAdapter extends BaseAdapter {
 
     public ServerControlDialogAdapter(Activity context) {
         this.context = context;
-        menu = context.getResources().getStringArray(R.array.server_control_menu);
+        menu = getMenu(context);
+    }
+
+    public String[] getMenu(Activity context) {
+        return context.getResources().getStringArray(R.array.server_control_menu);
     }
 
     @Override

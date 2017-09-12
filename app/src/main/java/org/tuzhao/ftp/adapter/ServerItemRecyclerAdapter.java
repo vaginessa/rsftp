@@ -1,4 +1,4 @@
-package org.tuzhao.ftp.util;
+package org.tuzhao.ftp.adapter;
 
 import android.app.Activity;
 import android.support.v4.util.SparseArrayCompat;
@@ -14,6 +14,9 @@ import org.tuzhao.ftp.entity.RsFTPFile;
 import org.tuzhao.ftp.entity.RsFile;
 import org.tuzhao.ftp.entity.RsLocalFile;
 import org.tuzhao.ftp.fragment.SimpleRecyclerViewHolder;
+import org.tuzhao.ftp.util.FileType;
+import org.tuzhao.ftp.util.OnItemClickListener;
+import org.tuzhao.ftp.util.OnItemLongClickListener;
 
 import java.math.RoundingMode;
 import java.text.NumberFormat;

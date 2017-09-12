@@ -1,4 +1,4 @@
-package org.tuzhao.ftp.util;
+package org.tuzhao.ftp.adapter;
 
 import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.entity.ServerEntity;
+import org.tuzhao.ftp.util.OnItemClickListener;
+import org.tuzhao.ftp.util.OnItemLongClickListener;
 
 import java.util.List;
 

@@ -30,12 +30,14 @@ import org.tuzhao.ftp.entity.RsFTPFile;
 import org.tuzhao.ftp.entity.RsFile;
 import org.tuzhao.ftp.entity.ServerEntity;
 import org.tuzhao.ftp.fragment.DownloadDialogFragment;
+import org.tuzhao.ftp.fragment.FileControlFragment;
 import org.tuzhao.ftp.service.ServerConnectService;
 import org.tuzhao.ftp.service.StorageUploadService;
 import org.tuzhao.ftp.util.FTPFileComparator;
+import org.tuzhao.ftp.util.FileType;
 import org.tuzhao.ftp.util.OnItemClickListener;
 import org.tuzhao.ftp.util.OnItemLongClickListener;
-import org.tuzhao.ftp.util.ServerItemRecyclerAdapter;
+import org.tuzhao.ftp.adapter.ServerItemRecyclerAdapter;
 import org.tuzhao.ftp.util.System;
 import org.tuzhao.ftp.util.WeakRunnable;
 
@@ -44,7 +46,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public final class ServerItemActivity extends BaseActivity implements OnItemClickListener,
-                                                                          OnItemLongClickListener {
+                                                                          OnItemLongClickListener, FileControlFragment.OnMenuClickListener {
 
     private static final String ACTION_SERVER_LIST_FILES = "action_server_list_files";
 
@@ -194,6 +196,33 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
             case R.id.menu_mobile:
                 StorageItemActivity.start(this, server, server.getSavePath(), mCurrentPath);
                 break;
+            case R.id.menu_select_all:
+                if (null != filesList && null != adapter) {
+                    for (int i = 0; i < filesList.size(); i++) {
+                        RsFile file = filesList.get(i);
+                        file.setSelected(file.isFile());
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+                break;
+            case R.id.menu_select_invert:
+                if (null != filesList && null != adapter) {
+                    for (int i = 0; i < filesList.size(); i++) {
+                        RsFile file = filesList.get(i);
+                        file.setSelected(file.isFile() && !file.getSelected());
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+                break;
+            case R.id.menu_clear_select:
+                if (null != filesList && null != adapter) {
+                    for (int i = 0; i < filesList.size(); i++) {
+                        RsFile file = filesList.get(i);
+                        file.setSelected(false);
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+                break;
         }
         return true;
     }
@@ -271,8 +300,23 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
 
     @Override
     public boolean onItemLongClick(View v, Object data, int position) {
+        log("onItemLongClick: " + position);
+        RsFile rsFile = filesList.get(position);
+        RsFTPFile file = (RsFTPFile) rsFile;
+        FTPFile ftpFile = file.getRealFile();
+        boolean b = ftpFile.hasPermission(FTPFile.GROUP_ACCESS, FTPFile.READ_PERMISSION);
+        log(rsFile.getName() + " " + b);
+        ftpFile.setPermission(FTPFile.GROUP_ACCESS, FTPFile.READ_PERMISSION, false);
 
-        return false;
+        String name = rsFile.getName();
+        int icon = FileType.getFileDesImg(rsFile);
+        FileControlFragment.show(this, name, icon, position, this);
+        return true;
+    }
+
+    @Override
+    public void onMenu(int menu, int position) {
+        log("menu: " + menu + " position: " + position);
     }
 
     private class ServerConnectConnection implements ServiceConnection {

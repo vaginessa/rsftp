@@ -11,24 +11,27 @@ import android.os.Bundle;
 import android.util.Log;
 
 import org.tuzhao.ftp.R;
-import org.tuzhao.ftp.entity.ServerEntity;
-import org.tuzhao.ftp.adapter.ServerControlDialogAdapter;
+import org.tuzhao.ftp.adapter.FileControlDialogAdapter;
 
 /**
  * author: tuzhao
- * 2017-08-12 22:51
+ * 2017-09-12 21:30
  */
-public final class ServerControlFragment extends DialogFragment {
+public final class FileControlFragment extends DialogFragment {
 
-    private static final String FRAGMENT_TAG = "ServerControlFragment";
-    private static final String TAG = "ServerControlFragment";
-    private static final String EXTRA_DATA = "extra_data";
+    private static final String FRAGMENT_TAG = "FileControlFragment";
+    private static final String TAG = "FileControlFragment";
+    private static final String EXTRA_DATA_POSITION = "extra_data_position";
+    private static final String EXTRA_DATA_NAME = "extra_data_name";
+    private static final String EXTRA_DATA_ICON = "extra_data_icon";
 
     private OnMenuClickListener listener;
+    private String name;
+    private int position;
+    private int icon;
 
-    private ServerEntity entity;
-
-    public static void show(Activity context, ServerEntity entity, OnMenuClickListener listener) {
+    public static void show(Activity context, String name, int icon, int position,
+                            OnMenuClickListener listener) {
         FragmentManager manager = context.getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         Fragment fragmentByTag = manager.findFragmentByTag(FRAGMENT_TAG);
@@ -36,39 +39,42 @@ public final class ServerControlFragment extends DialogFragment {
             transaction.remove(fragmentByTag);
         }
         transaction.addToBackStack(null);
-        ServerControlFragment fragment = newInstance();
+        FileControlFragment fragment = newInstance();
         fragment.setOnMenuClickListener(listener);
         Bundle bundle = new Bundle();
-        bundle.putParcelable(EXTRA_DATA, entity);
+        bundle.putInt(EXTRA_DATA_POSITION, position);
+        bundle.putInt(EXTRA_DATA_ICON, icon);
+        bundle.putString(EXTRA_DATA_NAME, name);
         fragment.setArguments(bundle);
         fragment.show(manager, FRAGMENT_TAG);
     }
 
-    public ServerControlFragment() {
+    public FileControlFragment() {
     }
 
-    private static ServerControlFragment newInstance() {
-        return new ServerControlFragment();
+    private static FileControlFragment newInstance() {
+        return new FileControlFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
-        entity = bundle.getParcelable(EXTRA_DATA);
+        this.position = bundle.getInt(EXTRA_DATA_POSITION, -1);
+        this.icon = bundle.getInt(EXTRA_DATA_ICON, R.drawable.file_unknown);
+        this.name = bundle.getString(EXTRA_DATA_NAME, "");
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setIcon(R.drawable.setting);
-        builder.setTitle(entity.getAddress());
-        ServerControlDialogAdapter adapter = new ServerControlDialogAdapter(getActivity());
+        builder.setIcon(this.icon);
+        builder.setTitle(name);
+        FileControlDialogAdapter adapter = new FileControlDialogAdapter(getActivity());
         builder.setAdapter(adapter, (dialogInterface, i) -> {
-            log("position: " + i);
             dialogInterface.dismiss();
             if (null != listener)
-                listener.onMenu(entity, i);
+                listener.onMenu(i, this.position);
         });
         return builder.create();
     }
@@ -82,7 +88,7 @@ public final class ServerControlFragment extends DialogFragment {
     }
 
     public interface OnMenuClickListener {
-        void onMenu(ServerEntity server, int postion);
+        void onMenu(int menu, int position);
     }
 
 
