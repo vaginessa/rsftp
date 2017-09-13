@@ -12,6 +12,7 @@ import android.util.Log;
 
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.adapter.FileControlDialogAdapter;
+import org.tuzhao.ftp.entity.RsMenu;
 
 /**
  * author: tuzhao
@@ -67,14 +68,31 @@ public final class FileControlFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        log("activity: " + getActivity().getClass().getName());
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setIcon(this.icon);
         builder.setTitle(name);
         FileControlDialogAdapter adapter = new FileControlDialogAdapter(getActivity());
         builder.setAdapter(adapter, (dialogInterface, i) -> {
             dialogInterface.dismiss();
-            if (null != listener)
-                listener.onMenu(i, this.position);
+            if (null != listener) {
+                RsMenu item = RsMenu.Open;
+                switch (i) {
+                    case 0:
+                        item = RsMenu.Details;
+                        break;
+                    case 1:
+                        item = RsMenu.Rename;
+                        break;
+                    case 2:
+                        item = RsMenu.Delete;
+                        break;
+                    case 3:
+                        item = RsMenu.Open;
+                        break;
+                }
+                listener.onMenu(item, this.position);
+            }
         });
         return builder.create();
     }
@@ -88,7 +106,7 @@ public final class FileControlFragment extends DialogFragment {
     }
 
     public interface OnMenuClickListener {
-        void onMenu(int menu, int position);
+        void onMenu(RsMenu menu, int position);
     }
 
 

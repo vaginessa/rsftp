@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 
 public class ServerConnectService extends BaseService {
 
-    private ExecutorService executor = Executors.newFixedThreadPool(1);
+    private ExecutorService executor = Executors.newFixedThreadPool(2);
 
     private ServerEntity server;
     private RunnableListFiles runnableListFiles;
@@ -65,10 +65,19 @@ public class ServerConnectService extends BaseService {
         public void download(ArrayList<RsFile> list, String path) {
             getService().downloadFile(list, path);
         }
+
+        public void delete(ArrayList<RsFile> list, String path) {
+            getService().delete(list, path);
+        }
     }
 
     private ServerConnectService getService() {
         return this;
+    }
+
+    public void delete(ArrayList<RsFile> list, String path) {
+        RunnableDeleteFiles runnable = new RunnableDeleteFiles(getService(), server, list, path);
+        executor.execute(runnable);
     }
 
     public void downloadFile(ArrayList<RsFile> list, String path) {

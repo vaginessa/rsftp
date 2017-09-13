@@ -36,6 +36,13 @@
         <item>@string/status_failure</item>
     </string-array>
 
+    <string-array name="delete_item_status">
+        <item>@string/status_unstart</item>
+        <item>@string/status_deleting</item>
+        <item>@string/status_successful</item>
+        <item>@string/status_failure</item>
+    </string-array>
+
     <string-array name="server_control_menu">
         <item>Edit</item>
         <item>Advanced Settings</item>

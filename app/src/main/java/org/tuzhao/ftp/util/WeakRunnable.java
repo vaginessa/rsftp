@@ -17,7 +17,7 @@ public abstract class WeakRunnable<T> implements Runnable {
     }
 
     @Override
-    public void run() {
+    public final void run() {
         T t = wr.get();
         if (t != null) {
             weakRun(t);

@@ -24,6 +24,7 @@ import java.util.Locale;
  */
 public final class System {
 
+    public static final String ACTION_SERVER_CURRENT_UPDATE = "action_server_current_update";
     public static final String ACTION_SERVER_CURRENT_PATH = "action_server_current_path";
     public static final String ACTION_SERVER_EXCEPTION_CONNECT = "action_server_connect_exception";
     public static final String ACTION_SERVER_EXCEPTION_LOGIN = "action_server_login_exception";

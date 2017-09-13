@@ -264,6 +264,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="status_failure">failure</string>
     <string name="status_downloading">downloading</string>
     <string name="status_uploading">uploading</string>
+    <string name="status_deleting">deleting</string>
     <string name="status_unstart">unstart</string>
 
     <string name="display_yes">Display</string>
@@ -283,4 +284,10 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="select_all">select all</string>
     <string name="select_invert">select invert</string>
     <string name="select_clear">clear select</string>
+
+    <string name="delete_title">Delete</string>
+    <string name="delete_total">Total delete file count: %s</string>
+    <string name="delete_successful">Delete complete file count: %s</string>
+    <string name="delete_failure">Delete failure file count: %s</string>
+    <string name="delete">delete</string>
 </resources>

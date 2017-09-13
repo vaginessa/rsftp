@@ -28,7 +28,9 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.entity.RsFTPFile;
 import org.tuzhao.ftp.entity.RsFile;
+import org.tuzhao.ftp.entity.RsMenu;
 import org.tuzhao.ftp.entity.ServerEntity;
+import org.tuzhao.ftp.fragment.DeleteDialogFragment;
 import org.tuzhao.ftp.fragment.DownloadDialogFragment;
 import org.tuzhao.ftp.fragment.FileControlFragment;
 import org.tuzhao.ftp.service.ServerConnectService;
@@ -105,6 +107,7 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
         filter.addAction(System.ACTION_SERVER_EXCEPTION_CONNECT);
         filter.addAction(System.ACTION_SERVER_EXCEPTION_LOGIN);
         filter.addAction(System.ACTION_SERVER_FAILED_LOGIN);
+        filter.addAction(System.ACTION_SERVER_CURRENT_UPDATE);
         receiver = new ServerBroadcastReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
 
@@ -223,6 +226,11 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
                     adapter.notifyDataSetChanged();
                 }
                 break;
+            case R.id.menu_delete:
+                if (null != filesList && null != adapter) {
+                    deleteSelectedFile();
+                }
+                break;
         }
         return true;
     }
@@ -265,6 +273,26 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
             AlertDialog dialog = builder.create();
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
+        }
+    }
+
+    private void deleteSelectedFile() {
+        if (null == selectedList) {
+            selectedList = new ArrayList<>();
+        }
+        selectedList.clear();
+        for (int i = 0; i < filesList.size(); i++) {
+            RsFile file = filesList.get(i);
+            if (file.getSelected()) {
+                selectedList.add(file);
+            }
+        }
+        if (selectedList.size() == 0) {
+            showMsg(getString(R.string.selected_note));
+        } else {
+            DeleteDialogFragment.show(getActivity(), selectedList.size());
+            if (null != binder)
+                binder.delete(selectedList, mCurrentPath);
         }
     }
 
@@ -315,8 +343,22 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
     }
 
     @Override
-    public void onMenu(int menu, int position) {
-        log("menu: " + menu + " position: " + position);
+    public void onMenu(RsMenu menu, int position) {
+        log("rsMenu: " + menu + " position: " + position);
+        if (menu == RsMenu.Details) {
+
+        } else if (menu == RsMenu.Rename) {
+
+        } else if (menu == RsMenu.Delete) {
+            if (null != binder) {
+                DeleteDialogFragment.show(getActivity(), 1);
+                ArrayList<RsFile> list = new ArrayList<>();
+                list.add(filesList.get(position));
+                binder.delete(list, mCurrentPath);
+            }
+        } else if (menu == RsMenu.Open) {
+
+        }
     }
 
     private class ServerConnectConnection implements ServiceConnection {
@@ -385,6 +427,14 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
                 String msg = getString(R.string.failed_login);
                 showNoteDialog(msg);
                 dismissLoadingDialog();
+            } else if (action.equals(System.ACTION_SERVER_CURRENT_UPDATE)) {
+                updateAllToDefault();
+                if (null != filesList)
+                    filesList.clear();
+                if (null != adapter)
+                    adapter.notifyDataSetChanged();
+                if (null != binder)
+                    binder.listFiles(mCurrentPath);
             }
         }
     }
@@ -413,9 +463,12 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
     private void refresh() {
         showLoadingDialog();
         updateAllToDefault();
-        filesList.clear();
-        adapter.notifyDataSetChanged();
-        binder.listFiles(mCurrentPath);
+        if (null != filesList)
+            filesList.clear();
+        if (null != adapter)
+            adapter.notifyDataSetChanged();
+        if (null != binder)
+            binder.listFiles(mCurrentPath);
     }
 
     private void updateAllToDefault() {
