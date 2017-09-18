@@ -1,9 +1,6 @@
 package org.tuzhao.ftp.fragment;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -13,29 +10,20 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import org.tuzhao.ftp.R;
-import org.tuzhao.ftp.entity.Status;
+import org.tuzhao.ftp.adapter.DownloadItemRecyclerAdapter;
 import org.tuzhao.ftp.adapter.UploadItemRecyclerAdapter;
-
-import java.text.MessageFormat;
+import org.tuzhao.ftp.entity.Status;
 
 /**
  * author: tuzhao
  * 2017-09-10 21:50
  */
-public class UploadDialogFragment extends DialogFragment {
+public class UploadDialogFragment extends ServerDialogFragment {
 
     private static final String FRAGMENT_TAG = "UploadDialogFragment";
 
-    private static final String EXTRA_COUNT_TOTAL = "extra_total";
     private static final String EXTRA_UPLOAD_STATUS = "upload_status";
     private static final String EXTRA_UPLOAD_FILE = "upload_file";
 
@@ -80,13 +68,9 @@ public class UploadDialogFragment extends DialogFragment {
                 if (status == Status.FAIL) {
                     statusFailure++;
                 }
-                int progress = (int) (((float) (statusSuccessful + statusFailure)) / countTotal * 100f);
+                int progress = (int) (((float) (statusSuccessful + statusFailure)) / getCountTotal() * 100f);
                 log("progress: " + progress);
-                updateInterface(statusSuccessful, statusFailure, progress);
-                if (null != adapter) {
-                    adapter.update(file, status);
-                    mRv.smoothScrollToPosition(adapter.getItemCount());
-                }
+                updateInterface(file, status, statusSuccessful, statusFailure, progress);
             }
         }
 
@@ -99,94 +83,41 @@ public class UploadDialogFragment extends DialogFragment {
         return new UploadDialogFragment();
     }
 
-    private TextView mTotalTv;
-    private TextView mSuccessfulTv;
-    private TextView mFailureTv;
-    private TextView mNumTv;
-    private ProgressBar mPb;
-    private RecyclerView mRv;
-
-    private int countTotal;
-
-    private UploadBroadcastReceiver receiver;
-    private UploadItemRecyclerAdapter adapter;
-
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        log("onCreateDialog");
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        AlertDialog dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(false);
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.upload, null, false);
-
-        mTotalTv = view.findViewById(R.id.upload_total_tv);
-        mSuccessfulTv = view.findViewById(R.id.upload_successful_tv);
-        mFailureTv = view.findViewById(R.id.upload_failure_tv);
-        mPb = view.findViewById(R.id.upload_pb);
-        mNumTv = view.findViewById(R.id.upload_num_tv);
-        mRv = view.findViewById(R.id.upload_rv);
-        dialog.setView(view);
-
-        updateInterface(0, 0, 0);
-        adapter = new UploadItemRecyclerAdapter(getActivity());
-        mRv.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRv.setAdapter(adapter);
-
-        return dialog;
-    }
-
-    private String desTotal, desSuccessful, desFailure;
-
-    private void updateInterface(int complete, int failure, int progress) {
-        if (null == desTotal) desTotal = getString(R.string.download_total);
-        if (null == desSuccessful) desSuccessful = getString(R.string.download_successful);
-        if (null == desFailure) desFailure = getString(R.string.download_failure);
-        if (null != mTotalTv) {
-            mTotalTv.setText(String.format(desTotal, String.valueOf(countTotal)));
-        }
-        if (null != mSuccessfulTv) {
-            mSuccessfulTv.setText(String.format(desSuccessful, String.valueOf(complete)));
-        }
-        if (null != mFailureTv) {
-            mFailureTv.setText(String.format(desFailure, String.valueOf(failure)));
-        }
-        if (null != mPb)
-            mPb.setProgress(progress);
-        if (null != mNumTv)
-            mNumTv.setText(MessageFormat.format("{0}%", String.valueOf(progress)));
-    }
-
-    private static void log(String msg) {
-        Log.d(FRAGMENT_TAG, msg);
+    protected DownloadItemRecyclerAdapter setAdapter() {
+        return new UploadItemRecyclerAdapter(getActivity());
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        log("onCreate");
-        Bundle bundle = getArguments();
-        if (null != bundle) {
-            countTotal = bundle.getInt(EXTRA_COUNT_TOTAL, 0);
-        }
-        receiver = new UploadBroadcastReceiver();
+    protected String setDesTitle() {
+        return getString(R.string.upload_title);
+    }
+
+    @Override
+    protected String setDesTotal() {
+        return getString(R.string.upload_total);
+    }
+
+    @Override
+    protected String setDesSuccessful() {
+        return getString(R.string.upload_successful);
+    }
+
+    @Override
+    protected String setDesFailure() {
+        return getString(R.string.upload_failure);
+    }
+
+    @Override
+    protected BroadcastReceiver setBroadcastReceiver() {
+        return new UploadBroadcastReceiver();
+    }
+
+    @Override
+    protected IntentFilter setIntentFilter() {
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_STATUS_UPLOAD);
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver, filter);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        log("onStart");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        log("onDestroy");
-        if (null != receiver) {
-            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
-        }
+        return filter;
     }
 
 }

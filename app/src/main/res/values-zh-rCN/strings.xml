@@ -190,4 +190,5 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
     <string name="select_clear">清除选择</string>
     <string name="delete">删除</string>
     <string name="download">下载</string>
+    <string name="delete_title">删除</string>
 </resources>
