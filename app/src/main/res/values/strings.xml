@@ -59,6 +59,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="chroot_label">Stay in folder</string>
     <string name="accept_wifi_label">Accept connection from wifi</string>
     <string name="wakelock_label">Keep device awake (full CPU speed)</string>
+    <string name="no_display_label">No Interface Start</string>
     <string name="extra_label">Extra</string>
     <string name="permission_label">Permission Explain</string>
     <string name="evaluate_label">Evaluate App</string>
@@ -210,5 +211,6 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="evaluate_note">Is there a market for current mobile phones?</string>
     <string name="evaluate_failure">Start the application market failure,please try again later.</string>
     <string name="auto_connect_note">Please make sure that there have a available wifi point in your current environment at least.</string>
+    <string name="auto_note">FTP Server is running…</string>
 
 </resources>

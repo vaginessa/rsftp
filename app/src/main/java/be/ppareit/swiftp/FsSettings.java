@@ -102,6 +102,11 @@ public class FsSettings {
         return sp.getBoolean("stayAwake", false);
     }
 
+    public static boolean isNoDisplayStart(){
+        final SharedPreferences sp = getSharedPreferences();
+        return sp.getBoolean("noDisplay", false);
+    }
+
     public static boolean isAutoConnectWifi(String ssid) {
         SharedPreferences share = App.getAppContext().getSharedPreferences(System.SHARED_CONFIG_FILE, Context.MODE_PRIVATE);
         String str = share.getString(System.SHARED_WIFI_KEY, "");

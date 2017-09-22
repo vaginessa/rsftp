@@ -149,5 +149,7 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
     <string name="evaluate_note">请确定当前手机是否有安装应用市场？</string>
     <string name="evaluate_failure">启动应用市场失败，请稍后再试。</string>
     <string name="auto_connect_note">请确保你当前环境中至少有一个可用的wifi热点。</string>
+    <string name="no_display_label">无界面启动</string>
+    <string name="auto_note">实简FTP服务端运行中…</string>
 
 </resources>

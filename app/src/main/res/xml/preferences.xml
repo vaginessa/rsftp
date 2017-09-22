@@ -96,6 +96,11 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
                 android:defaultValue="@string/wakelock_default"
                 android:key="stayAwake"
                 android:title="@string/wakelock_label"/>
+
+            <CheckBoxPreference
+                android:defaultValue="@string/no_display_default"
+                android:key="noDisplay"
+                android:title="@string/no_display_label"/>
         </PreferenceScreen>
 
     </PreferenceCategory>

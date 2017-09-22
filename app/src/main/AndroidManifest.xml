@@ -34,7 +34,8 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
         android:name="be.ppareit.swiftp.App"
         android:allowBackup="true"
         android:icon="@mipmap/launcher"
-        android:label="@string/swiftp_name">
+        android:label="@string/swiftp_name"
+        android:theme="@style/ThemeTrans">
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="597e8a9dcae7e72512000f68"/>
@@ -123,12 +124,9 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name=".activity.WelcomeActivity"
-            android:theme="@style/AppThemeFullScreen">
+        <activity android:name=".activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
