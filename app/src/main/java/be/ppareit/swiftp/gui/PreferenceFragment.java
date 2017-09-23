@@ -168,6 +168,33 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
             return true;
         });
 
+        final EditTextPreference waitTimePref = findPref("waitTime");
+        String timeSave = sp.getString("waitTime", resources.getString(R.string.disconnect_wifi_wait_default));
+        waitTimePref.setSummary(String.valueOf(FsSettings.getDisconnectTime(timeSave)));
+        waitTimePref.setOnPreferenceChangeListener((preference, value) -> {
+            final String input = String.valueOf(value);
+            if (preference.getSummary().equals(input)) {
+                return false;
+            }
+            int time;
+            try {
+                time = Integer.parseInt(input);
+            } catch (Exception e) {
+                showMsg(getString(R.string.disconnect_wifi_input_error));
+                return false;
+            }
+            if (time < 0 || time > 60) {
+                showMsg(getString(R.string.disconnect_wifi_input_error));
+                return false;
+            }
+            preference.setSummary(String.valueOf(time));
+            return true;
+        });
+        waitTimePref.setOnPreferenceClickListener(preference -> {
+            waitTimePref.getEditText().setText(waitTimePref.getSummary().toString());
+            return false;
+        });
+
         Preference chroot_pref = findPref("chrootDir");
         chroot_pref.setSummary(FsSettings.getChrootDirAsString());
         chroot_pref.setOnPreferenceClickListener(preference -> {

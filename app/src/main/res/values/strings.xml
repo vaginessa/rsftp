@@ -56,6 +56,8 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="advanced_settings_label">Advanced settings</string>
     <string name="port_number_label">Port Number</string>
     <string name="port_validation_error">The port number must be in the range 1 to 65535.</string>
+    <string name="disconnect_wifi_wait_time_label">Wifi disconnect wait time(seconds)</string>
+    <string name="disconnect_wifi_input_error">The number must be in the range 0 to 60.</string>
     <string name="chroot_label">Stay in folder</string>
     <string name="accept_wifi_label">Accept connection from wifi</string>
     <string name="wakelock_label">Keep device awake (full CPU speed)</string>

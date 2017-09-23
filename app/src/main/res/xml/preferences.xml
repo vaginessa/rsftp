@@ -86,8 +86,16 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
             android:title="@string/advanced_settings_label">
             <EditTextPreference
                 android:defaultValue="@string/portnumber_default"
+                android:inputType="number"
                 android:key="portNum"
                 android:title="@string/port_number_label"/>
+
+            <EditTextPreference
+                android:defaultValue="@string/disconnect_wifi_wait_default"
+                android:inputType="number"
+                android:key="waitTime"
+                android:title="@string/disconnect_wifi_wait_time_label"/>
+
             <Preference
                 android:key="chrootDir"
                 android:title="@string/chroot_label"/>

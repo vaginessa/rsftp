@@ -82,7 +82,7 @@ public class FsSettings {
     public static boolean setChrootDir(String dir) {
         File chrootTest = new File(dir);
         if (!chrootTest.isDirectory() || !chrootTest.canRead())
-                return false;
+            return false;
         final SharedPreferences sp = getSharedPreferences();
         sp.edit().putString("chrootDir", dir).apply();
         return true;
@@ -97,14 +97,30 @@ public class FsSettings {
         return port;
     }
 
-    public static boolean shouldTakeFullWakeLock() {
+    static boolean shouldTakeFullWakeLock() {
         final SharedPreferences sp = getSharedPreferences();
         return sp.getBoolean("stayAwake", false);
     }
 
-    public static boolean isNoDisplayStart(){
+    public static boolean isNoDisplayStart() {
         final SharedPreferences sp = getSharedPreferences();
         return sp.getBoolean("noDisplay", false);
+    }
+
+    static int getDisconnectWaitTime() {
+        final SharedPreferences sp = getSharedPreferences();
+        return getDisconnectTime(sp.getString("waitTime", "1"));
+    }
+
+    public static int getDisconnectTime(String num) {
+        int time;
+        try {
+            time = Integer.parseInt(num);
+        } catch (Exception e) {
+            e.printStackTrace();
+            time = 1;
+        }
+        return time;
     }
 
     public static boolean isAutoConnectWifi(String ssid) {
@@ -121,7 +137,7 @@ public class FsSettings {
     public static int getTheme() {
         SharedPreferences sp = getSharedPreferences();
 
-        switch(sp.getString("theme", "0")) {
+        switch (sp.getString("theme", "0")) {
             case "0":
                 return R.style.AppThemeDark;
             case "1":

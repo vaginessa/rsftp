@@ -55,6 +55,7 @@ public class RequestStartStopReceiver extends BroadcastReceiver {
             } else if (intent.getAction().equals(FsService.ACTION_STOP_FTPSERVER)) {
                 Intent serverService = new Intent(context, FsService.class);
                 context.stopService(serverService);
+                Log.d(TAG, "stop FTP server service");
             }
         } catch (Exception e) {
             Log.e(TAG, "Failed to start/stop on intent " + e.getMessage());
@@ -70,10 +71,10 @@ public class RequestStartStopReceiver extends BroadcastReceiver {
         if (!storageState.equals(Environment.MEDIA_MOUNTED)) {
             Log.v(TAG, "Warning due to storage state " + storageState);
             Toast toast = Toast.makeText(App.getAppContext(),
-                    R.string.storage_warning, Toast.LENGTH_LONG);
+                R.string.storage_warning, Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
         }
     }
-	
+
 }
