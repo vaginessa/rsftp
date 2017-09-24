@@ -56,12 +56,16 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
     <string name="advanced_settings_label">Advanced settings</string>
     <string name="port_number_label">Port Number</string>
     <string name="port_validation_error">The port number must be in the range 1 to 65535.</string>
+    <string name="disconnect_wifi_wait_time_label">Wifi disconnect wait time(seconds)</string>
+    <string name="disconnect_wifi_input_error">The number must be in the range 0 to 60.</string>
     <string name="chroot_label">Stay in folder</string>
     <string name="accept_wifi_label">Accept connection from wifi</string>
     <string name="wakelock_label">Keep device awake (full CPU speed)</string>
+    <string name="no_display_label">No Interface Start</string>
     <string name="extra_label">Extra</string>
     <string name="experiment_label">Experiment</string>
     <string name="permission_label">Permission Explain</string>
+    <string name="evaluate_label">Evaluate App</string>
     <string name="help_label">Help</string>
     <string name="about_label">About</string>
     <string name="help_dlg_title">FTP Server Help</string>
@@ -102,7 +106,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="feedback">Send feedback</string>
     <string name="about">About</string>
 
-    <string name="autoconnect_label">Autoconnect settings</string>
+    <string name="autoconnect_label">AutoConnect settings</string>
     <string name="autoconnect_summary">Select the wifi networks on which to autoconnect</string>
     <string name="autoconnect_error_enable_wifi_for_access_points">
         Enable wifi to get list of access points
@@ -217,6 +221,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="pay_save">Save All Image</string>
     <string name="pay_save_successful">Qr code save successful!\n path:%s</string>
     <string name="pay_save_failure">Qr code save failure,please try again later.</string>
+
     <string name="address_note_one">address can\'t empty</string>
     <string name="address_filter">0123456789abcdefghijklmnopqrstuvwxyz.-</string>
     <string name="item_server_item_size_demo">15.2 KB</string>
@@ -290,4 +295,11 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="delete_successful">Delete complete file count: %s</string>
     <string name="delete_failure">Delete failure file count: %s</string>
     <string name="delete">delete</string>
+
+    <string name="evaluate_note">Is there a market for current mobile phones?</string>
+    <string name="evaluate_failure">Start the application market failure,please try again later.</string>
+    <string name="auto_connect_note">Please make sure that there have a available wifi point in your current environment at least.</string>
+    <string name="auto_note">FTP Server is running…</string>
+    <string name="no_display_msg">Please make sure that you have selected wifi in AutoConnect Settings,otherwise this feature will not work!\n\nThe next boot application will start with no interface display,  you can click on the notification to enter the application main interface.</string>
+
 </resources>

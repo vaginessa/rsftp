@@ -46,18 +46,30 @@ public class WifiStateChangeReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Cat.d("action: " + intent.getAction());
         NetworkInfo info = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
         if (info == null) {
             Cat.e("Null network info received, bailing");
             return;
         }
         if (info.isConnected()) {
-            Cat.d("We are connecting to a wifi network");
-            pool.execute(new StartServerRunnable(context));
+            if (WifiStateUtil.isCanRunStart()) {
+                WifiStateUtil.setCanRunStart(false);
+                Cat.d("We are connecting to a wifi network");
+                pool.execute(new StartServerRunnable(context));
+            } else {
+                Cat.w("Runnable START is running,ignore this request...");
+            }
         } else {
-            final PendingResult async = goAsync();
-            Cat.d("We are disconnected from wifi network");
-            pool.execute(new StopServerRunnable(context, async));
+            if (WifiStateUtil.isCanRunStop()) {
+                WifiStateUtil.setCanRunStop(false);
+                final PendingResult async = goAsync();
+                final int time = FsSettings.getDisconnectWaitTime();
+                Cat.d("We are disconnected from wifi network, wait time: " + time + " second(s)");
+                pool.execute(new StopServerRunnable(context, async, time));
+            } else {
+                Cat.w("Runnable STOP is running,ignore this request...");
+            }
         }
     }
 
@@ -72,22 +84,34 @@ public class WifiStateChangeReceiver extends BroadcastReceiver {
             System.threadInfo();
             if (FsService.isRunning()) {
                 Cat.v("We are connecting to a new wifi network on a running server, ignore");
+                setCanRun();
                 return;
             }
             WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            if (null == wifiManager) {
+                Cat.e("WifiManager is null,what happened?");
+                setCanRun();
+                return;
+            }
             WifiInfo wifiInfo = wifiManager.getConnectionInfo();
             if (wifiInfo == null) {
                 Cat.e("Null wifi info received, bailing");
+                setCanRun();
                 return;
             }
             Cat.d("We are connected to " + wifiInfo.getSSID());
-            if (FsSettings.getAutoConnectList().contains(wifiInfo.getSSID())) {
+            if (FsSettings.isAutoConnectWifi(wifiInfo.getSSID())) {
                 // sleep a short while so the network has time to truly connect
                 Util.sleepIgnoreInterrupt(1000);
                 Intent wifi = new Intent(FsService.ACTION_START_FTPSERVER);
                 wifi.setPackage(context.getPackageName());
                 context.sendBroadcast(wifi);
             }
+            setCanRun();
+        }
+
+        private void setCanRun() {
+            WifiStateUtil.setCanRunStart(true);
         }
     }
 
@@ -95,11 +119,13 @@ public class WifiStateChangeReceiver extends BroadcastReceiver {
 
         private final String TAG = "StopServerRunnable";
 
-        private final PendingResult async;
+        private PendingResult async;
+        private int time;
 
-        StopServerRunnable(Context context, PendingResult async) {
+        StopServerRunnable(Context context, PendingResult async, int time) {
             super(context);
             this.async = async;
+            this.time = time;
         }
 
         @Override
@@ -107,19 +133,36 @@ public class WifiStateChangeReceiver extends BroadcastReceiver {
             System.threadInfo();
             if (!FsService.isRunning()) {
                 finish();
+                setCanRun();
                 return;
             }
 
-            Util.sleepIgnoreInterrupt(15000);
+            if (this.time > 0) {
+                Util.sleepIgnoreInterrupt(time * 1000);
+            }
             if (!FsService.isRunning()) {
                 finish();
+                setCanRun();
                 return;
             }
 
             ConnectivityManager conManager = (ConnectivityManager) context.getSystemService(Service.CONNECTIVITY_SERVICE);
+            if (null == conManager) {
+                finish();
+                setCanRun();
+                return;
+            }
+
             NetworkInfo netInfo = conManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if (null == netInfo) {
+                finish();
+                setCanRun();
+                return;
+            }
+
             if (netInfo.isConnectedOrConnecting()) {
                 finish();
+                setCanRun();
                 return;
             }
 
@@ -128,16 +171,22 @@ public class WifiStateChangeReceiver extends BroadcastReceiver {
             wifi.setPackage(context.getPackageName());
             context.sendBroadcast(wifi);
             finish();
+            setCanRun();
         }
 
         private void finish() {
             try {
                 if (null != async)
                     async.finish();
+                this.async = null;
                 Log.v(TAG, "goAsync finish");
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        private void setCanRun() {
+            WifiStateUtil.setCanRunStop(true);
         }
     }
 

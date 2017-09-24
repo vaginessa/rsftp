@@ -19,10 +19,13 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
 package be.ppareit.swiftp;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.wifi.WifiManager;
 
 import net.vrallev.android.cat.Cat;
 
@@ -36,6 +39,15 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        registerWifiStateReceiver();
+    }
+
+    private void registerWifiStateReceiver() {
+        BroadcastReceiver receiver = new WifiStateChangeReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        getApplicationContext().registerReceiver(receiver, filter);
+        Cat.d("register wifi state receiver");
     }
 
     /**

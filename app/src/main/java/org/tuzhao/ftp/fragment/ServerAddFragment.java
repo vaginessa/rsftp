@@ -56,16 +56,12 @@ public class ServerAddFragment extends BaseDialogFragment implements View.OnClic
     public ServerAddFragment() {
     }
 
-    private static void log(String msg) {
-        Log.d(TAG, msg);
-    }
-
     public static void show(Activity context, ServerEntity obj, int TYPE, OnCompleteListener listener) {
-        log("show type: " + TYPE + " obj is: " + obj);
+        Log.d(TAG, "show type: " + TYPE + " obj is: " + obj);
         FragmentManager manager = context.getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         Fragment fragmentByTag = manager.findFragmentByTag(FRAGMENT_TAG);
-        log("fragment by tag is " + (fragmentByTag == null ? "null" : "not null"));
+        Log.d(TAG, "fragment by tag is " + (fragmentByTag == null ? "null" : "not null"));
         if (null != fragmentByTag) {
             transaction.remove(fragmentByTag);
         }

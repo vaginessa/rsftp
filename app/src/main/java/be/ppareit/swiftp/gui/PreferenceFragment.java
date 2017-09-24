@@ -19,6 +19,7 @@
 
 package be.ppareit.swiftp.gui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -26,9 +27,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -53,20 +54,21 @@ import com.umeng.analytics.MobclickAgent;
 
 import net.vrallev.android.cat.Cat;
 
-import org.tuzhao.ftp.fragment.DonationDialogFragment;
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.activity.PermissionActivity;
 import org.tuzhao.ftp.activity.ServerListActivity;
+import org.tuzhao.ftp.fragment.DonationDialogFragment;
+import org.tuzhao.ftp.fragment.WifiDialogFragment;
 import org.tuzhao.ftp.util.PermissionFragmentUtil;
 import org.tuzhao.ftp.util.System;
 import org.tuzhao.ftp.util.Umeng;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import be.ppareit.android.DynamicMultiSelectListPreference;
 import be.ppareit.swiftp.App;
 import be.ppareit.swiftp.FsService;
 import be.ppareit.swiftp.FsSettings;
@@ -111,17 +113,6 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         PreferenceScreen prefScreen = findPref("preference_screen");
         Preference marketVersionPref = findPref("donation");
         marketVersionPref.setOnPreferenceClickListener(preference -> {
-//            // start the market at our application
-//            Intent intent = new Intent(Intent.ACTION_VIEW);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            intent.setData(Uri.parse("market://details?id=be.ppareit.swiftp"));
-//            try {
-//                // this can fail if there is no market installed
-//                startActivity(intent);
-//            } catch (Exception e) {
-//                Cat.e("Failed to launch the market.");
-//                e.printStackTrace();
-//            }
             DonationDialogFragment.show(getActivity());
             return true;
         });
@@ -149,37 +140,11 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
             stopServer();
             return true;
         });
-        DynamicMultiSelectListPreference autoconnectListPref = findPref("autoconnect_preference");
-        if (null != autoconnectListPref)
-            autoconnectListPref.setOnPopulateListener(
-                pref -> {
-                    Cat.d("autoconnect populate listener");
-
-                    WifiManager wifiManager = (WifiManager)
-                                                  getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                    List<WifiConfiguration> configs = wifiManager.getConfiguredNetworks();
-                    if (configs == null) {
-                        Cat.e("Unable to receive wifi configurations, bark at user and bail");
-                        Toast.makeText(getActivity(),
-                            R.string.autoconnect_error_enable_wifi_for_access_points,
-                            Toast.LENGTH_LONG)
-                            .show();
-                        return;
-                    }
-                    CharSequence[] ssids = new CharSequence[configs.size()];
-                    CharSequence[] niceSsids = new CharSequence[configs.size()];
-                    for (int i = 0; i < configs.size(); ++i) {
-                        ssids[i] = configs.get(i).SSID;
-                        String ssid = configs.get(i).SSID;
-                        if (ssid.length() > 2 && ssid.startsWith("\"") && ssid.endsWith("\"")) {
-                            ssid = ssid.substring(1, ssid.length() - 1);
-                        }
-                        Cat.d("ssid: " + ssid);
-                        niceSsids[i] = ssid;
-                    }
-                    pref.setEntries(niceSsids);
-                    pref.setEntryValues(ssids);
-                });
+        Preference connect = findPref("autoconnect_preference");
+        connect.setOnPreferenceClickListener(preference -> {
+            WifiDialogFragment.show(getActivity());
+            return true;
+        });
 
         EditTextPreference portnum_pref = findPref("portNum");
         portnum_pref.setSummary(sp.getString("portNum",
@@ -203,6 +168,33 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
             uEvent(Umeng.EVENT_05);
             stopServer();
             return true;
+        });
+
+        final EditTextPreference waitTimePref = findPref("waitTime");
+        String timeSave = sp.getString("waitTime", resources.getString(R.string.disconnect_wifi_wait_default));
+        waitTimePref.setSummary(String.valueOf(FsSettings.getDisconnectTime(timeSave)));
+        waitTimePref.setOnPreferenceChangeListener((preference, value) -> {
+            final String input = String.valueOf(value);
+            if (preference.getSummary().equals(input)) {
+                return false;
+            }
+            int time;
+            try {
+                time = Integer.parseInt(input);
+            } catch (Exception e) {
+                showMsg(getString(R.string.disconnect_wifi_input_error));
+                return false;
+            }
+            if (time < 0 || time > 60) {
+                showMsg(getString(R.string.disconnect_wifi_input_error));
+                return false;
+            }
+            preference.setSummary(String.valueOf(time));
+            return true;
+        });
+        waitTimePref.setOnPreferenceClickListener(preference -> {
+            waitTimePref.getEditText().setText(waitTimePref.getSummary().toString());
+            return false;
         });
 
         Preference chroot_pref = findPref("chrootDir");
@@ -242,6 +234,19 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
             return true;
         });
 
+        final CheckBoxPreference mPrefNoDisplay = findPref("noDisplay");
+        mPrefNoDisplay.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                String value = String.valueOf(o);
+                log("no display change: " + value);
+                if (value.equals("true")) {
+                    showNoDisplayNoteDialog();
+                }
+                return true;
+            }
+        });
+
         ListPreference theme = findPref("theme");
         theme.setSummary(theme.getEntry());
         theme.setOnPreferenceChangeListener((preference, newValue) -> {
@@ -254,6 +259,26 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         Preference permission = findPref("permission");
         permission.setOnPreferenceClickListener(preference -> {
             startActivity(new Intent(getActivity(), PermissionActivity.class));
+            return true;
+        });
+
+        Preference evaluate = findPref("evaluate");
+        evaluate.setOnPreferenceClickListener(preference -> {
+            try {
+                final Activity context = getActivity();
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setData(Uri.parse("market://details?id=" + context.getPackageName()));
+                List<ResolveInfo> list = context.getPackageManager().queryIntentActivities(intent, 0);
+                if (null != list && list.size() > 0) {
+                    startActivity(intent);
+                } else {
+                    showMsg(getString(R.string.evaluate_note));
+                }
+            } catch (Exception e) {
+                showMsg(getString(R.string.evaluate_failure));
+                e.printStackTrace();
+            }
             return true;
         });
 
@@ -331,7 +356,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
             return;
         }
         log("We are connected to " + wifiInfo.getSSID());
-        if (FsSettings.getAutoConnectList().contains(wifiInfo.getSSID())) {
+        if (FsSettings.isAutoConnectWifi(wifiInfo.getSSID())) {
             Intent start = new Intent(FsService.ACTION_START_FTPSERVER);
             start.setPackage(getActivity().getPackageName());
             getActivity().sendBroadcast(start);
@@ -405,6 +430,26 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
                      .create();
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
+    }
+
+    private WeakReference<AlertDialog> weakDialogNoDisplay;
+
+    private void showNoDisplayNoteDialog() {
+        AlertDialog dialogNoDisplay = null;
+        if (null != weakDialogNoDisplay) {
+            dialogNoDisplay = weakDialogNoDisplay.get();
+        }
+        if (null == dialogNoDisplay) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.note);
+            builder.setMessage(R.string.no_display_msg);
+            builder.setPositiveButton(R.string.submit, null);
+            dialogNoDisplay = builder.create();
+            dialogNoDisplay.setCanceledOnTouchOutside(false);
+            weakDialogNoDisplay = new WeakReference<>(dialogNoDisplay);
+        }
+        if (!dialogNoDisplay.isShowing())
+            dialogNoDisplay.show();
     }
 
     private void appSetting() {

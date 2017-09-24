@@ -224,7 +224,7 @@ public class DonationDialogFragment extends BaseDialogFragment {
         }
     }
 
-    private void log(String msg) {
+    public void log(String msg) {
         Log.d(FRAGMENT_TAG, msg);
     }
 }

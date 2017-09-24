@@ -69,10 +69,7 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
             </PreferenceCategory>
         </PreferenceScreen>
 
-        <be.ppareit.android.DynamicMultiSelectListPreference
-            android:defaultValue="@array/empty_array"
-            android:entries="@array/empty_array"
-            android:entryValues="@array/empty_array"
+        <Preference
             android:key="autoconnect_preference"
             android:summary="@string/autoconnect_summary"
             android:title="@string/autoconnect_label"/>
@@ -89,8 +86,16 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
             android:title="@string/advanced_settings_label">
             <EditTextPreference
                 android:defaultValue="@string/portnumber_default"
+                android:inputType="number"
                 android:key="portNum"
                 android:title="@string/port_number_label"/>
+
+            <EditTextPreference
+                android:defaultValue="@string/disconnect_wifi_wait_default"
+                android:inputType="number"
+                android:key="waitTime"
+                android:title="@string/disconnect_wifi_wait_time_label"/>
+
             <Preference
                 android:key="chrootDir"
                 android:title="@string/chroot_label"/>
@@ -99,6 +104,11 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
                 android:defaultValue="@string/wakelock_default"
                 android:key="stayAwake"
                 android:title="@string/wakelock_label"/>
+
+            <CheckBoxPreference
+                android:defaultValue="@string/no_display_default"
+                android:key="noDisplay"
+                android:title="@string/no_display_label"/>
         </PreferenceScreen>
 
     </PreferenceCategory>
@@ -112,6 +122,9 @@ along with SwiFTP.  If not, see <http://www.gnu.org/licenses/>.
         <Preference
             android:key="permission"
             android:title="@string/permission_label"/>
+        <Preference
+            android:key="evaluate"
+            android:title="@string/evaluate_label"/>
         <Preference
             android:key="help"
             android:title="@string/help_label"/>

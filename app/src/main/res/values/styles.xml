@@ -18,11 +18,14 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="AppThemeFullScreen" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="ThemeTrans" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
+
+    <style name="NoDisplay" parent="android:Theme.NoDisplay"/>
+
+    <style name="AppThemeFullScreen" parent="android:Theme.Black.NoTitleBar.Fullscreen"/>
 
     <!--通过这个给我的启发就是还可以去修改其它指定的style中默认的样式-->
     <!--修改默认spinner下拉列表中字体的大小-->

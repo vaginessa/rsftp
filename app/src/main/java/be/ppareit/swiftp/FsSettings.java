@@ -27,10 +27,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.tuzhao.ftp.R;
+import org.tuzhao.ftp.util.System;
 
 import java.io.File;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
 
 public class FsSettings {
 
@@ -82,7 +82,7 @@ public class FsSettings {
     public static boolean setChrootDir(String dir) {
         File chrootTest = new File(dir);
         if (!chrootTest.isDirectory() || !chrootTest.canRead())
-                return false;
+            return false;
         final SharedPreferences sp = getSharedPreferences();
         sp.edit().putString("chrootDir", dir).apply();
         return true;
@@ -97,22 +97,47 @@ public class FsSettings {
         return port;
     }
 
-    public static boolean shouldTakeFullWakeLock() {
+    static boolean shouldTakeFullWakeLock() {
         final SharedPreferences sp = getSharedPreferences();
         return sp.getBoolean("stayAwake", false);
     }
 
-    public static Set<String> getAutoConnectList() {
-        SharedPreferences sp = getSharedPreferences();
-        Set<String> stringSet = sp.getStringSet("autoconnect_preference", new TreeSet<>());
-        Log.v("auto wifi", stringSet.toString());
-        return stringSet;
+    public static boolean isNoDisplayStart() {
+        final SharedPreferences sp = getSharedPreferences();
+        return sp.getBoolean("noDisplay", false);
+    }
+
+    static int getDisconnectWaitTime() {
+        final SharedPreferences sp = getSharedPreferences();
+        return getDisconnectTime(sp.getString("waitTime", "1"));
+    }
+
+    public static int getDisconnectTime(String num) {
+        int time;
+        try {
+            time = Integer.parseInt(num);
+        } catch (Exception e) {
+            e.printStackTrace();
+            time = 1;
+        }
+        return time;
+    }
+
+    public static boolean isAutoConnectWifi(String ssid) {
+        SharedPreferences share = App.getAppContext().getSharedPreferences(System.SHARED_CONFIG_FILE, Context.MODE_PRIVATE);
+        String str = share.getString(System.SHARED_WIFI_KEY, "");
+        ArrayList<String> save = System.stringToList(str);
+        Log.d("auto wifi", save.toString());
+        if (ssid.length() > 2 && ssid.startsWith("\"") && ssid.endsWith("\"")) {
+            ssid = ssid.substring(1, ssid.length() - 1);
+        }
+        return save.contains(ssid);
     }
 
     public static int getTheme() {
         SharedPreferences sp = getSharedPreferences();
 
-        switch(sp.getString("theme", "0")) {
+        switch (sp.getString("theme", "0")) {
             case "0":
                 return R.style.AppThemeDark;
             case "1":
