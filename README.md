@@ -12,6 +12,13 @@ This project base on swiftp project and you can see the whole complete code at h
 ![rsftp3](https://user-images.githubusercontent.com/9989910/30781036-7981dcc6-a14a-11e7-8b8a-36997ec437d8.png)
 ![rsftp4](https://user-images.githubusercontent.com/9989910/30781037-7bb61480-a14a-11e7-834e-4e2f171937e7.png)
 
+## Download APK
+You can search ‘rsftp’ in the following 7 app stores to download apk.If you don't have any result, then you can try to search in chinese '实简FTP'.
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/9989910/30783331-d7e76ffa-a173-11e7-9ee7-543c4b3e8307.jpg" width="520">
+</p>
+
 ## Appreciated support
 
 If you feel that rsftp open source app is useful to you, please feel free to give me a money support,let me make the software better! If you want to buy a over the wall ladder, I recommend the lantern for you. You can use my invitation code "Y6QG4H" and if you buy two years then both parties will get an extra three months of professional use time.
