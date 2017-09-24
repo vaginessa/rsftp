@@ -154,5 +154,6 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
     <string name="disconnect_wifi_wait_time_label">Wifi断连等待时间（秒）</string>
     <string name="disconnect_wifi_input_error">请输入0-60之间的数字</string>
     <string name="select">选择</string>
+    <string name="no_display_msg">请确保你在 自动开起服务设置 中选择了wifi，否则该功能将不会生效！\n\n应用下次将会以无界面的方式启动，你可以点击通知栏中的通知进入应用主界面。</string>
 
 </resources>

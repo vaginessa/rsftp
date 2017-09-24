@@ -105,7 +105,7 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="feedback">Send feedback</string>
     <string name="about">About</string>
 
-    <string name="autoconnect_label">Autoconnect settings</string>
+    <string name="autoconnect_label">AutoConnect settings</string>
     <string name="autoconnect_summary">Select the wifi networks on which to autoconnect</string>
     <string name="autoconnect_error_enable_wifi_for_access_points">
         Enable wifi to get list of access points
@@ -214,5 +214,5 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="evaluate_failure">Start the application market failure,please try again later.</string>
     <string name="auto_connect_note">Please make sure that there have a available wifi point in your current environment at least.</string>
     <string name="auto_note">FTP Server is running…</string>
-
+    <string name="no_display_msg">Please make sure that you have selected wifi in AutoConnect Settings,otherwise this feature will not work!\n\nThe next boot application will start with no interface display,  you can click on the notification to enter the application main interface.</string>
 </resources>

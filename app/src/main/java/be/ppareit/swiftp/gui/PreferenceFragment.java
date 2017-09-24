@@ -63,6 +63,7 @@ import org.tuzhao.ftp.util.System;
 import org.tuzhao.ftp.util.Umeng;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -230,6 +231,19 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
         wakelock_pref.setOnPreferenceChangeListener((preference, newValue) -> {
             stopServer();
             return true;
+        });
+
+        final CheckBoxPreference mPrefNoDisplay = findPref("noDisplay");
+        mPrefNoDisplay.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object o) {
+                String value = String.valueOf(o);
+                log("no display change: " + value);
+                if (value.equals("true")) {
+                    showNoDisplayNoteDialog();
+                }
+                return true;
+            }
         });
 
         ListPreference theme = findPref("theme");
@@ -406,6 +420,26 @@ public class PreferenceFragment extends android.preference.PreferenceFragment im
                      .create();
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
+    }
+
+    private WeakReference<AlertDialog> weakDialogNoDisplay;
+
+    private void showNoDisplayNoteDialog() {
+        AlertDialog dialogNoDisplay = null;
+        if (null != weakDialogNoDisplay) {
+            dialogNoDisplay = weakDialogNoDisplay.get();
+        }
+        if (null == dialogNoDisplay) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.note);
+            builder.setMessage(R.string.no_display_msg);
+            builder.setPositiveButton(R.string.submit, null);
+            dialogNoDisplay = builder.create();
+            dialogNoDisplay.setCanceledOnTouchOutside(false);
+            weakDialogNoDisplay = new WeakReference<>(dialogNoDisplay);
+        }
+        if (!dialogNoDisplay.isShowing())
+            dialogNoDisplay.show();
     }
 
     private void appSetting() {
