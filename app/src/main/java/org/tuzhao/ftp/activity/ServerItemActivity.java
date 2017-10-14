@@ -21,11 +21,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.apache.commons.net.ftp.FTPFile;
 import org.tuzhao.ftp.R;
+import org.tuzhao.ftp.adapter.ServerItemRecyclerAdapter;
 import org.tuzhao.ftp.entity.RsFTPFile;
 import org.tuzhao.ftp.entity.RsFile;
 import org.tuzhao.ftp.entity.RsMenu;
@@ -39,13 +41,15 @@ import org.tuzhao.ftp.util.FTPFileComparator;
 import org.tuzhao.ftp.util.FileType;
 import org.tuzhao.ftp.util.OnItemClickListener;
 import org.tuzhao.ftp.util.OnItemLongClickListener;
-import org.tuzhao.ftp.adapter.ServerItemRecyclerAdapter;
 import org.tuzhao.ftp.util.System;
 import org.tuzhao.ftp.util.WeakRunnable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+
+import static org.tuzhao.ftp.swipe.SwipeBackActivity.ACTION_SWIPE_BACK;
+import static org.tuzhao.ftp.swipe.SwipeBackActivity.EXTRA_SWIPE_BACK;
 
 public final class ServerItemActivity extends BaseActivity implements OnItemClickListener,
                                                                           OnItemLongClickListener, FileControlFragment.OnMenuClickListener {
@@ -102,6 +106,7 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
         }
 
         IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_SWIPE_BACK);
         filter.addAction(ACTION_SERVER_LIST_FILES);
         filter.addAction(System.ACTION_SERVER_CURRENT_PATH);
         filter.addAction(System.ACTION_SERVER_EXCEPTION_CONNECT);
@@ -435,9 +440,18 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
                     adapter.notifyDataSetChanged();
                 if (null != binder)
                     binder.listFiles(mCurrentPath);
+            } else if (action.equals(ACTION_SWIPE_BACK)) {
+                if (content == null) {
+                    content = ((ViewGroup) getActivity().getWindow().getDecorView()).getChildAt(0);
+                }
+                float screen = intent.getFloatExtra(EXTRA_SWIPE_BACK, 1.0f);
+                float tx = (content.getMeasuredWidth() / 4.5f) * (1 - screen);
+                content.setTranslationX(-tx);
             }
         }
     }
+
+    private View content;
 
     private static class ScrollRunnable extends WeakRunnable<Context> {
 

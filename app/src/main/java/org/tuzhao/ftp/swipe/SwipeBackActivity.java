@@ -1,5 +1,7 @@
 package org.tuzhao.ftp.swipe;
 
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,6 +17,9 @@ import org.tuzhao.ftp.activity.BaseActivity;
 public class SwipeBackActivity extends BaseActivity implements SwipeBackLayout.SwipeBackListener {
 
     private static final SwipeBackLayout.DragEdge DEFAULT_DRAG_EDGE = SwipeBackLayout.DragEdge.LEFT;
+
+    public static final String ACTION_SWIPE_BACK = "swipe_back_action";
+    public static final String EXTRA_SWIPE_BACK = "extra_swipe_back";
 
     private SwipeBackLayout swipeBackLayout;
     private ImageView ivShadow;
@@ -58,6 +63,8 @@ public class SwipeBackActivity extends BaseActivity implements SwipeBackLayout.S
     @Override
     public void onViewPositionChanged(float fractionAnchor, float fractionScreen) {
         ivShadow.setAlpha(1 - fractionScreen);
+        Intent intent = new Intent(ACTION_SWIPE_BACK).putExtra(EXTRA_SWIPE_BACK, fractionScreen);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
 }
