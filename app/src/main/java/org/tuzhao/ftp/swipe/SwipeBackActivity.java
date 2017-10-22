@@ -63,7 +63,11 @@ public class SwipeBackActivity extends BaseActivity implements SwipeBackLayout.S
     @Override
     public void onViewPositionChanged(float fractionAnchor, float fractionScreen) {
         ivShadow.setAlpha(1 - fractionScreen);
-        Intent intent = new Intent(ACTION_SWIPE_BACK).putExtra(EXTRA_SWIPE_BACK, fractionScreen);
+        sendSwipeBackBroadcast(fractionScreen);
+    }
+
+    public void sendSwipeBackBroadcast(float swipe) {
+        Intent intent = new Intent(ACTION_SWIPE_BACK).putExtra(EXTRA_SWIPE_BACK, swipe);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 

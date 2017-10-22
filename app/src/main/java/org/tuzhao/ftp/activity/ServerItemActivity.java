@@ -35,6 +35,7 @@ import org.tuzhao.ftp.entity.ServerEntity;
 import org.tuzhao.ftp.fragment.DeleteDialogFragment;
 import org.tuzhao.ftp.fragment.DownloadDialogFragment;
 import org.tuzhao.ftp.fragment.FileControlFragment;
+import org.tuzhao.ftp.fragment.RenameDialogFragment;
 import org.tuzhao.ftp.service.ServerConnectService;
 import org.tuzhao.ftp.service.StorageUploadService;
 import org.tuzhao.ftp.util.FTPFileComparator;
@@ -52,7 +53,8 @@ import static org.tuzhao.ftp.swipe.SwipeBackActivity.ACTION_SWIPE_BACK;
 import static org.tuzhao.ftp.swipe.SwipeBackActivity.EXTRA_SWIPE_BACK;
 
 public final class ServerItemActivity extends BaseActivity implements OnItemClickListener,
-                                                                          OnItemLongClickListener, FileControlFragment.OnMenuClickListener {
+                                                                          OnItemLongClickListener, FileControlFragment.OnMenuClickListener,
+                                                                          RenameDialogFragment.onEditResultListener {
 
     private static final String ACTION_SERVER_LIST_FILES = "action_server_list_files";
 
@@ -113,6 +115,7 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
         filter.addAction(System.ACTION_SERVER_EXCEPTION_LOGIN);
         filter.addAction(System.ACTION_SERVER_FAILED_LOGIN);
         filter.addAction(System.ACTION_SERVER_CURRENT_UPDATE);
+        filter.addAction(System.ACTION_SERVER_RENAME_FILE);
         receiver = new ServerBroadcastReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
 
@@ -353,7 +356,7 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
         if (menu == RsMenu.Details) {
 
         } else if (menu == RsMenu.Rename) {
-
+            RenameDialogFragment.show(getActivity(), filesList.get(position).getName());
         } else if (menu == RsMenu.Delete) {
             if (null != binder) {
                 DeleteDialogFragment.show(getActivity(), 1);
@@ -363,6 +366,20 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
             }
         } else if (menu == RsMenu.Open) {
 
+        }
+    }
+
+    private String oldName;
+    private String newName;
+
+    @Override
+    public void onRename(String oldName, String newName) {
+        this.oldName = oldName;
+        this.newName = newName;
+        log("old name:" + oldName + " new name: " + newName);
+        if (null != binder) {
+            showLoadingDialog();
+            binder.rename(mCurrentPath, oldName, newName);
         }
     }
 
@@ -394,59 +411,85 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-            if (action.equals(ACTION_SERVER_LIST_FILES)) {
-                Serializable serializable = intent.getSerializableExtra(EXTRA_RESULT);
-                ArrayList<RsFile> list = null;
-                if (null != serializable) {
-                    ArrayList<FTPFile> ftpList = (ArrayList<FTPFile>) serializable;
-                    if (null == comparator) {
-                        comparator = new FTPFileComparator();
+            switch (action) {
+                case ACTION_SERVER_LIST_FILES:
+                    Serializable serializable = intent.getSerializableExtra(EXTRA_RESULT);
+                    ArrayList<RsFile> list = null;
+                    if (null != serializable) {
+                        ArrayList<FTPFile> ftpList = (ArrayList<FTPFile>) serializable;
+                        if (null == comparator) {
+                            comparator = new FTPFileComparator();
+                        }
+                        Collections.sort(ftpList, comparator);
+                        log("array length: " + ftpList.size());
+                        list = System.convertFTPFileToRsFile(ftpList);
+                        filesList.clear();
+                        filesList.addAll(list);
+                        adapter.notifyDataSetChanged();
                     }
-                    Collections.sort(ftpList, comparator);
-                    log("array length: " + ftpList.size());
-                    list = System.convertFTPFileToRsFile(ftpList);
-                    filesList.clear();
-                    filesList.addAll(list);
-                    adapter.notifyDataSetChanged();
+                    updateFileCount(list == null ? 0 : list.size());
+                    updateFolderSize(list);
+                    dismissLoadingDialog();
+                    break;
+                case System.ACTION_SERVER_CURRENT_PATH:
+                    String path = System.getServerCurrentPath(intent);
+                    mCurrentPath = path;
+                    updateCurrentPath(path);
+                    if (null == scrollRunnable) {
+                        scrollRunnable = new ScrollRunnable(getActivity(), mServerSv);
+                    }
+                    getDefaultHandler().post(scrollRunnable);
+                    break;
+                case System.ACTION_SERVER_EXCEPTION_CONNECT: {
+                    String msg = System.getServerErrorConnectMsg(intent);
+                    showNoteDialog(msg);
+                    dismissLoadingDialog();
+                    break;
                 }
-                updateFileCount(list == null ? 0 : list.size());
-                updateFolderSize(list);
-                dismissLoadingDialog();
-            } else if (action.equals(System.ACTION_SERVER_CURRENT_PATH)) {
-                String path = System.getServerCurrentPath(intent);
-                mCurrentPath = path;
-                updateCurrentPath(path);
-                if (null == scrollRunnable) {
-                    scrollRunnable = new ScrollRunnable(getActivity(), mServerSv);
+                case System.ACTION_SERVER_EXCEPTION_LOGIN: {
+                    String msg = System.getServerErrorLoginMsg(intent);
+                    showNoteDialog(msg);
+                    dismissLoadingDialog();
+                    break;
                 }
-                getDefaultHandler().post(scrollRunnable);
-            } else if (action.equals(System.ACTION_SERVER_EXCEPTION_CONNECT)) {
-                String msg = System.getServerErrorConnectMsg(intent);
-                showNoteDialog(msg);
-                dismissLoadingDialog();
-            } else if (action.equals(System.ACTION_SERVER_EXCEPTION_LOGIN)) {
-                String msg = System.getServerErrorLoginMsg(intent);
-                showNoteDialog(msg);
-                dismissLoadingDialog();
-            } else if (action.equals(System.ACTION_SERVER_FAILED_LOGIN)) {
-                String msg = getString(R.string.failed_login);
-                showNoteDialog(msg);
-                dismissLoadingDialog();
-            } else if (action.equals(System.ACTION_SERVER_CURRENT_UPDATE)) {
-                updateAllToDefault();
-                if (null != filesList)
-                    filesList.clear();
-                if (null != adapter)
-                    adapter.notifyDataSetChanged();
-                if (null != binder)
-                    binder.listFiles(mCurrentPath);
-            } else if (action.equals(ACTION_SWIPE_BACK)) {
-                if (content == null) {
-                    content = ((ViewGroup) getActivity().getWindow().getDecorView()).getChildAt(0);
+                case System.ACTION_SERVER_FAILED_LOGIN: {
+                    String msg = getString(R.string.failed_login);
+                    showNoteDialog(msg);
+                    dismissLoadingDialog();
+                    break;
                 }
-                float screen = intent.getFloatExtra(EXTRA_SWIPE_BACK, 1.0f);
-                float tx = (content.getMeasuredWidth() / 4.5f) * (1 - screen);
-                content.setTranslationX(-tx);
+                case System.ACTION_SERVER_CURRENT_UPDATE:
+                    updateAllToDefault();
+                    if (null != filesList)
+                        filesList.clear();
+                    if (null != adapter)
+                        adapter.notifyDataSetChanged();
+                    if (null != binder)
+                        binder.listFiles(mCurrentPath);
+                    break;
+                case ACTION_SWIPE_BACK:
+                    if (content == null) {
+                        content = ((ViewGroup) getActivity().getWindow().getDecorView()).getChildAt(0);
+                    }
+                    float screen = intent.getFloatExtra(EXTRA_SWIPE_BACK, 1.0f);
+                    float tx = (content.getMeasuredWidth() / 4.5f) * (1 - screen);
+                    content.setTranslationX(-tx);
+                    break;
+                case System.ACTION_SERVER_RENAME_FILE:
+                    boolean result = System.getServerRenameResult(intent);
+                    dismissLoadingDialog();
+                    if (result) {
+                        for (RsFile file : filesList) {
+                            if (file.getName().equals(oldName)) {
+                                ((RsFTPFile) file).setName(newName);
+                                adapter.notifyDataSetChanged();
+                                oldName = null;
+                                newName = null;
+                                break;
+                            }
+                        }
+                    }
+                    break;
             }
         }
     }

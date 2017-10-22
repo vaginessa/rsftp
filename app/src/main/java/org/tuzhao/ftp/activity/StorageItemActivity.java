@@ -127,6 +127,7 @@ public class StorageItemActivity extends SwipeBackActivity implements OnItemClic
                 uploadSelectedFile();
                 break;
             case R.id.menu_cloud:
+                sendSwipeBackBroadcast(1.0f);
                 finish();
                 break;
             case R.id.menu_select_all:

@@ -35,15 +35,23 @@ public final class System {
     public static final String ACTION_SERVER_EXCEPTION_CONNECT = "action_server_connect_exception";
     public static final String ACTION_SERVER_EXCEPTION_LOGIN = "action_server_login_exception";
     public static final String ACTION_SERVER_FAILED_LOGIN = "action_server_failed_login";
+    public static final String ACTION_SERVER_RENAME_FILE = "action_server_rename_file";
 
     private static final String EXTRA_CURRENT_PATH = "extra_current_path";
     private static final String EXTRA_ERROR_CONNECT_MSG = "extra_error_msg";
     private static final String EXTRA_ERROR_LOGIN_MSG = "extra_login_msg";
+    private static final String EXTRA_RENAME_FILE = "extra_rename_file";
 
     public static final String SHARED_CONFIG_FILE = "config";
     public static final String SHARED_WIFI_KEY = "wifi_select";
 
     private static final String TAG = "System";
+
+    public static void sendServerRenameBroadcast(Context context, boolean result) {
+        Intent intent = new Intent(ACTION_SERVER_RENAME_FILE);
+        intent.putExtra(EXTRA_RENAME_FILE, result);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
 
     public static void sendServerCurrentPathBroadcast(Context context, String path) {
         Intent intent = new Intent(ACTION_SERVER_CURRENT_PATH);
@@ -66,6 +74,10 @@ public final class System {
     public static void sendServerLoginFailed(Context context) {
         Intent intent = new Intent(ACTION_SERVER_FAILED_LOGIN);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+    }
+
+    public static boolean getServerRenameResult(Intent intent) {
+        return intent.getBooleanExtra(EXTRA_RENAME_FILE, false);
     }
 
     public static String getServerCurrentPath(Intent intent) {

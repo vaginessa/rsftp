@@ -302,4 +302,6 @@ If you have any ideas or suggestions that you can send email to me.\n\n
     <string name="auto_note">FTP Server is running…</string>
     <string name="no_display_msg">Please make sure that you have selected wifi in AutoConnect Settings,otherwise this feature will not work!\n\nThe next boot application will start with no interface display,  you can click on the notification to enter the application main interface.</string>
 
+    <string name="modify_file_title">Modify file name</string>
+    <string name="modify_file_message">Rename file \"%s\" to: </string>
 </resources>

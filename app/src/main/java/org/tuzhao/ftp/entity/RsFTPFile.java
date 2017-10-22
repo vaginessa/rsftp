@@ -10,15 +10,17 @@ public final class RsFTPFile implements RsFile<FTPFile> {
 
     private FTPFile file;
     private boolean selected;
+    private String name;
 
     public RsFTPFile(FTPFile file) {
         this.file = file;
+        this.name = file.getName();
         this.selected = false;
     }
 
     @Override
     public String getName() {
-        return file.getName();
+        return name;
     }
 
     @Override
@@ -69,6 +71,10 @@ public final class RsFTPFile implements RsFile<FTPFile> {
     @Override
     public FTPFile getRealFile() {
         return this.file;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 }

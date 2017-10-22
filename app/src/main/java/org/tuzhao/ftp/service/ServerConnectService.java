@@ -69,18 +69,27 @@ public class ServerConnectService extends BaseService {
         public void delete(ArrayList<RsFile> list, String path) {
             getService().delete(list, path);
         }
+
+        public void rename(String path, String oldName, String newName) {
+            getService().rename(path, oldName, newName);
+        }
     }
 
     private ServerConnectService getService() {
         return this;
     }
 
-    public void delete(ArrayList<RsFile> list, String path) {
+    private void rename(String path, String oldName, String newName) {
+        RunnableRenameFile runnable = new RunnableRenameFile(getService(), server, path, oldName, newName);
+        executor.execute(runnable);
+    }
+
+    private void delete(ArrayList<RsFile> list, String path) {
         RunnableDeleteFiles runnable = new RunnableDeleteFiles(getService(), server, list, path);
         executor.execute(runnable);
     }
 
-    public void downloadFile(ArrayList<RsFile> list, String path) {
+    private void downloadFile(ArrayList<RsFile> list, String path) {
         RunnableDownloadFiles runnableDownloadFiles = new RunnableDownloadFiles(getService(), server, list, path);
         executor.execute(runnableDownloadFiles);
     }
