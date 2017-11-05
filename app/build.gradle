@@ -1,12 +1,9 @@
-plugins {
-    id "me.tatarka.retrolambda" version "3.5.0"
-}
 apply plugin: 'com.android.application'
 
 android {
 
     compileSdkVersion 26
-    buildToolsVersion '26.0.1'
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "org.tuzhao.ftp"
@@ -19,6 +16,8 @@ android {
         // 默认渠道
         manifestPlaceholders = [CHANNEL_VALUE: "normal"]
     }
+
+    flavorDimensions "minApi"
 
     productFlavors {
         normal {
@@ -80,24 +79,11 @@ android {
     }
 
     android.applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            def outputFile = output.outputFile
-            if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                def v = defaultConfig.versionName;
-                if (buildType.name == 'release') {
-                    v = v + "_release";
-                } else if (buildType.name == 'debug') {
-                    v = v + "_debug";
-                }
-                // 输出apk名称
-                def fileName = "rsftp_${v}_${releaseTime()}_${variant.productFlavors[0].name}.apk"
-                //noinspection GroovyAssignabilityCheck
-                output.outputFile = new File(outputFile.parent, fileName)
-            }
+        variant.outputs.all {
+            outputFileName = "rsftp_${variant.buildType.name}_${releaseTime()}_${variant.flavorName}_${variant.versionName}.apk"
         }
     }
 
-    // Needed for retrolambda
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -111,14 +97,15 @@ dependencies {
     compile 'commons-net:commons-net:3.6'
     compile 'net.vrallev.android:cat:1.0.2'
     compile 'com.twofortyfouram:android-plugin-client-sdk-for-locale:4.0.2'
-    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
-    compile 'com.android.support:design:26.0.0-alpha1'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.umeng.analytics:analytics:latest.integration'
+    compile 'com.umeng.analytics:analytics:6.1.2'
     compile 'junit:junit:4.12'
-    compile 'com.android.support:recyclerview-v7:26.0.0-alpha1'
-    compile 'com.android.support:support-v13:26.0.0-alpha1'
-    provided 'org.projectlombok:lombok:1.16.6'
+    compile 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'com.android.support:support-v13:26.1.0'
+    compile 'org.projectlombok:lombok:1.16.6'
+    annotationProcessor 'org.projectlombok:lombok:1.16.6'
 }
 
 android {
@@ -137,5 +124,5 @@ android {
 }
 
 static def releaseTime() {
-    return new Date().format("yy-MM-dd", TimeZone.getTimeZone("GMT+08:00"));
+    return new Date().format("yy-MM-dd", TimeZone.getTimeZone("GMT+08:00"))
 }

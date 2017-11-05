@@ -361,7 +361,7 @@ public class FsService extends Service implements Runnable {
         }
         if (!connected) {
             Log.d(TAG, "isConnectedToLocalNetwork: see if it is an WIFI AP");
-            WifiManager wm = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            WifiManager wm = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             try {
                 Method method = wm.getClass().getDeclaredMethod("isWifiApEnabled");
                 connected = (Boolean) method.invoke(wm);
