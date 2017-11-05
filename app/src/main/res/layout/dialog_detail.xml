@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        style="@style/dialog_detail_ll"
+        android:paddingBottom="6dp"
+        android:paddingTop="6dp"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:id="@+id/dialog_detail_type_iv"
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/file_type_img"
+            android:src="@drawable/file_unknown"
+            android:paddingLeft="-2dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
+            android:gravity="center_vertical"
+            android:text="@string/file_detail"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            />
+    </LinearLayout>
+
+    <LinearLayout style="@style/dialog_detail_ll">
+
+        <TextView
+            style="@style/dialog_detail_left_tv"
+            android:text="@string/file_name"
+            />
+
+        <TextView
+            android:id="@+id/dialog_detail_name_tv"
+            style="@style/dialog_detail_right_tv"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/dialog_detail_ll">
+
+        <TextView
+            style="@style/dialog_detail_left_tv"
+            android:text="@string/path"
+            />
+
+        <TextView
+            android:id="@+id/dialog_detail_path_tv"
+            style="@style/dialog_detail_right_tv"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/dialog_detail_ll">
+
+        <TextView
+            style="@style/dialog_detail_left_tv"
+            android:text="@string/size"
+            />
+
+        <TextView
+            android:id="@+id/dialog_detail_size_tv"
+            style="@style/dialog_detail_right_tv"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/dialog_detail_ll">
+
+        <TextView
+            style="@style/dialog_detail_left_tv"
+            android:text="@string/last_modified"
+            />
+
+        <TextView
+            android:id="@+id/dialog_detail_last_tv"
+            style="@style/dialog_detail_right_tv"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/dialog_detail_ll">
+
+        <TextView
+            style="@style/dialog_detail_left_tv"
+            android:text="@string/hidden_files"
+            />
+
+        <TextView
+            android:id="@+id/dialog_detail_hidden_tv"
+            style="@style/dialog_detail_right_tv"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/dialog_detail_ll">
+
+        <TextView
+            style="@style/dialog_detail_left_tv"
+            android:text="@string/permission"
+            />
+
+        <TextView
+            android:id="@+id/dialog_detail_permission_tv"
+            style="@style/dialog_detail_right_tv"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/dialog_detail_ll">
+
+        <TextView
+            style="@style/dialog_detail_left_tv"
+            android:text="@string/owner"
+            />
+
+        <TextView
+            android:id="@+id/dialog_detail_owner_tv"
+            style="@style/dialog_detail_right_tv"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/dialog_detail_ll">
+
+        <TextView
+            style="@style/dialog_detail_left_tv"
+            android:text="@string/group"
+            />
+
+        <TextView
+            android:id="@+id/dialog_detail_group_tv"
+            style="@style/dialog_detail_right_tv"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/dialog_detail_ll">
+
+        <TextView
+            style="@style/dialog_detail_left_tv"
+            android:text="@string/mime_type"
+            />
+
+        <TextView
+            android:id="@+id/dialog_detail_mime_tv"
+            style="@style/dialog_detail_right_tv"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>

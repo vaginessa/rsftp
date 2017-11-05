@@ -201,4 +201,13 @@ FTP服务运行时保持屏幕长亮，阻止手机休眠。\n\n
     <string name="delete">删除</string>
     <string name="download">下载</string>
     <string name="delete_title">删除</string>
+    <string name="file_name">文件名：</string>
+    <string name="path">路径：</string>
+    <string name="size">大小：</string>
+    <string name="last_modified">修改时间：</string>
+    <string name="permission">权限：</string>
+    <string name="owner">所有者：</string>
+    <string name="group">组：</string>
+    <string name="mime_type">Mime类型：</string>
+    <string name="file_detail">文件细节</string>
 </resources>

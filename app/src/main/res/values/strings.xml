@@ -304,4 +304,15 @@ If you have any ideas or suggestions that you can send email to me.\n\n
 
     <string name="modify_file_title">Modify file name</string>
     <string name="modify_file_message">Rename file \"%s\" to: </string>
+
+    <string name="file_name">File Name:</string>
+    <string name="path">Path:</string>
+    <string name="size">Size:</string>
+    <string name="last_modified">Last Modified:</string>
+    <string name="permission">Permission:</string>
+    <string name="owner">Owner:</string>
+    <string name="group">Group:</string>
+    <string name="mime_type">Mime Type:</string>
+    <string name="file_detail">File Detail</string>
+    <string name="file_type_img">file type img</string>
 </resources>

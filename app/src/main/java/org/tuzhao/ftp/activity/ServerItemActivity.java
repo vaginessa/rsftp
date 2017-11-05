@@ -28,11 +28,13 @@ import android.widget.TextView;
 import org.apache.commons.net.ftp.FTPFile;
 import org.tuzhao.ftp.R;
 import org.tuzhao.ftp.adapter.ServerItemRecyclerAdapter;
+import org.tuzhao.ftp.entity.FileInfo;
 import org.tuzhao.ftp.entity.RsFTPFile;
 import org.tuzhao.ftp.entity.RsFile;
 import org.tuzhao.ftp.entity.RsMenu;
 import org.tuzhao.ftp.entity.ServerEntity;
 import org.tuzhao.ftp.fragment.DeleteDialogFragment;
+import org.tuzhao.ftp.fragment.DetailDialogFragment;
 import org.tuzhao.ftp.fragment.DownloadDialogFragment;
 import org.tuzhao.ftp.fragment.FileControlFragment;
 import org.tuzhao.ftp.fragment.RenameDialogFragment;
@@ -354,7 +356,11 @@ public final class ServerItemActivity extends BaseActivity implements OnItemClic
     public void onMenu(RsMenu menu, int position) {
         log("rsMenu: " + menu + " position: " + position);
         if (menu == RsMenu.Details) {
-
+            RsFile rsFile = filesList.get(position);
+            FileInfo info = new FileInfo();
+            int icon = FileType.getFileDesImg(rsFile);
+            info.setFileInfo((FTPFile) rsFile.getRealFile(), mCurrentPath, icon);
+            DetailDialogFragment.show(getActivity(), info);
         } else if (menu == RsMenu.Rename) {
             RenameDialogFragment.show(getActivity(), filesList.get(position).getName());
         } else if (menu == RsMenu.Delete) {
